@@ -1,0 +1,58 @@
+class BuiltinContest {
+  final String adifName;
+  final String displayName;
+  const BuiltinContest({required this.adifName, required this.displayName});
+}
+
+// Common ham radio contests — used as fallback when the server endpoint
+// (api_mobile/get_contest_list) is not available.
+const List<BuiltinContest> kBuiltinContests = [
+  BuiltinContest(adifName: 'CQ-WW-CW',      displayName: 'CQ World Wide DX (CW)'),
+  BuiltinContest(adifName: 'CQ-WW-SSB',     displayName: 'CQ World Wide DX (SSB)'),
+  BuiltinContest(adifName: 'CQ-WW-RTTY',    displayName: 'CQ World Wide DX (RTTY)'),
+  BuiltinContest(adifName: 'CQ-WPX-CW',     displayName: 'CQ WPX (CW)'),
+  BuiltinContest(adifName: 'CQ-WPX-SSB',    displayName: 'CQ WPX (SSB)'),
+  BuiltinContest(adifName: 'CQ-WPX-RTTY',   displayName: 'CQ WPX (RTTY)'),
+  BuiltinContest(adifName: 'ARRL-DX-CW',    displayName: 'ARRL DX (CW)'),
+  BuiltinContest(adifName: 'ARRL-DX-SSB',   displayName: 'ARRL DX (SSB)'),
+  BuiltinContest(adifName: 'ARRL-SS-CW',    displayName: 'ARRL Sweepstakes (CW)'),
+  BuiltinContest(adifName: 'ARRL-SS-SSB',   displayName: 'ARRL Sweepstakes (SSB)'),
+  BuiltinContest(adifName: 'ARRL-10',        displayName: 'ARRL 10-Meter Contest'),
+  BuiltinContest(adifName: 'ARRL-VHF-JAN',  displayName: 'ARRL January VHF Contest'),
+  BuiltinContest(adifName: 'ARRL-VHF-SEP',  displayName: 'ARRL September VHF Contest'),
+  BuiltinContest(adifName: 'WAE-CW',        displayName: 'WAE DX (CW)'),
+  BuiltinContest(adifName: 'WAE-SSB',       displayName: 'WAE DX (SSB)'),
+  BuiltinContest(adifName: 'WAE-RTTY',      displayName: 'WAE DX (RTTY)'),
+  BuiltinContest(adifName: 'IARU-HF',       displayName: 'IARU HF World Championship'),
+  BuiltinContest(adifName: 'SP-DX',         displayName: 'SP DX Contest (SSB)'),
+  BuiltinContest(adifName: 'SP-DX-RTTY',   displayName: 'SP DX Contest (RTTY)'),
+  BuiltinContest(adifName: 'UBA-DX-CW',    displayName: 'UBA DX Contest (CW)'),
+  BuiltinContest(adifName: 'UBA-DX-SSB',   displayName: 'UBA DX Contest (SSB)'),
+  BuiltinContest(adifName: 'EU-HF',         displayName: 'EU HF Championship'),
+  BuiltinContest(adifName: 'ARI-DX',        displayName: 'ARI DX Contest'),
+  BuiltinContest(adifName: 'ARI-40-80',     displayName: 'ARI 40-80 Contest'),
+  BuiltinContest(adifName: 'KING-OF-SPAIN-CW',   displayName: 'King of Spain (CW)'),
+  BuiltinContest(adifName: 'KING-OF-SPAIN-SSB',  displayName: 'King of Spain (SSB)'),
+  BuiltinContest(adifName: 'KING-OF-SPAIN-RTTY', displayName: 'King of Spain (RTTY)'),
+  BuiltinContest(adifName: 'SAC-CW',        displayName: 'Scandinavian Activity (CW)'),
+  BuiltinContest(adifName: 'SAC-SSB',       displayName: 'Scandinavian Activity (SSB)'),
+  BuiltinContest(adifName: 'DARC-10',       displayName: 'DARC 10-Meter Contest'),
+  BuiltinContest(adifName: 'OK-DX-RTTY',   displayName: 'OK DX RTTY Contest'),
+  BuiltinContest(adifName: 'YOTA',          displayName: 'YOTA Contest'),
+  BuiltinContest(adifName: 'FIELD-DAY',     displayName: 'Field Day'),
+  BuiltinContest(adifName: 'WINTER-FIELD-DAY', displayName: 'Winter Field Day'),
+  BuiltinContest(adifName: 'NAQP-CW',      displayName: 'NA QP (CW)'),
+  BuiltinContest(adifName: 'NAQP-SSB',     displayName: 'NA QP (SSB)'),
+  BuiltinContest(adifName: 'NAQP-RTTY',    displayName: 'NA QP (RTTY)'),
+  BuiltinContest(adifName: 'JARTS-WW-RTTY', displayName: 'JARTS WW RTTY Contest'),
+  BuiltinContest(adifName: 'VK-SHIRES',    displayName: 'VK Shires Contest'),
+  BuiltinContest(adifName: 'RAEM',         displayName: 'RAEM Contest'),
+  BuiltinContest(adifName: 'STEW-PERRY',   displayName: 'Stew Perry Topband Challenge'),
+  BuiltinContest(adifName: 'TEN-TEN',      displayName: 'Ten-Ten International Contest'),
+  BuiltinContest(adifName: 'ALL-ASIAN-DX-CW',  displayName: 'All Asian DX (CW)'),
+  BuiltinContest(adifName: 'ALL-ASIAN-DX-SSB', displayName: 'All Asian DX (SSB)'),
+  BuiltinContest(adifName: 'OCEANIA-DX-CW',    displayName: 'Oceania DX (CW)'),
+  BuiltinContest(adifName: 'OCEANIA-DX-SSB',   displayName: 'Oceania DX (SSB)'),
+  BuiltinContest(adifName: 'HOLYLAND',     displayName: 'IARC Holyland Contest'),
+  BuiltinContest(adifName: 'Other',        displayName: 'Other / Custom'),
+];

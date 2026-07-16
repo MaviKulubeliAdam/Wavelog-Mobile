@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Simple antenna/tower icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,20 L50,45 L46,45 L54,20 Z M54,20 L58,45 L62,45 L54,20 Z M44,42 L64,42 L64,46 L44,46 Z M48,46 L44,88 L48,88 L54,60 L60,88 L64,88 L60,46 Z M38,52 Q30,44 32,34 L36,36 Q34,44 40,50 Z M70,52 Q78,44 76,34 L72,36 Q74,44 68,50 Z"/>
+</vector>
