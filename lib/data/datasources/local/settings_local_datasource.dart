@@ -23,6 +23,7 @@ class SettingsLocalDatasource {
   static const _keyOfflineMode           = 'wl_offline_mode';
   static const _keyPotaAutoSpot         = 'wl_pota_auto_spot';
   static const _keyLocale                = 'wl_locale';
+  static const _keyUseModernNav          = 'wl_use_modern_nav';
 
   Future<SettingsModel> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -63,6 +64,7 @@ class SettingsLocalDatasource {
       offlineModeEnabled:     prefs.getBool(_keyOfflineMode) ?? false,
       potaAutoSpotEnabled:    prefs.getBool(_keyPotaAutoSpot) ?? false,
       locale:                 prefs.getString(_keyLocale),
+      useModernNav:           prefs.getBool(_keyUseModernNav) ?? true,
     );
   }
 
@@ -105,6 +107,7 @@ class SettingsLocalDatasource {
     await prefs.setBool(_keyDarkTheme, settings.darkTheme);
     await prefs.setBool(_keyOfflineMode, settings.offlineModeEnabled);
     await prefs.setBool(_keyPotaAutoSpot, settings.potaAutoSpotEnabled);
+    await prefs.setBool(_keyUseModernNav, settings.useModernNav);
     if (settings.locale != null) {
       await prefs.setString(_keyLocale, settings.locale!);
     } else {

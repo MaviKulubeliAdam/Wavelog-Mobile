@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wavelog Mobile</string>
+    <string name="contest_widget_description">Shows upcoming amateur radio contests</string>
+</resources>

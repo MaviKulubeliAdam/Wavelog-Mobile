@@ -365,6 +365,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ref.read(settingsProvider.notifier).setDarkTheme(v),
             ),
             const SizedBox(height: 4),
+            _NavStyleCard(
+              useModern: settings.useModernNav,
+              onChanged: (v) =>
+                  ref.read(settingsProvider.notifier).setNavStyle(modern: v),
+            ),
+            const SizedBox(height: 4),
             SwitchListTile(
               title: Text(l10n.offlineMode),
               subtitle: Text(l10n.offlineModeHint),
@@ -532,6 +538,79 @@ class _PatchBanner extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ── Nav style card ────────────────────────────────────────────────────────────
+
+class _NavStyleCard extends StatelessWidget {
+  final bool useModern;
+  final ValueChanged<bool> onChanged;
+
+  const _NavStyleCard({required this.useModern, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(Icons.navigation_outlined, size: 20, color: cs.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.navStyleLabel,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    useModern
+                        ? context.l10n.navStyleModern
+                        : context.l10n.navStyleClassic,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            SegmentedButton<bool>(
+              segments: [
+                ButtonSegment(
+                  value: true,
+                  icon: const Icon(Icons.view_quilt_outlined, size: 18),
+                  label: Text(context.l10n.navStyleModern.split(' ').first),
+                ),
+                ButtonSegment(
+                  value: false,
+                  icon: const Icon(Icons.table_rows_outlined, size: 18),
+                  label: Text(context.l10n.navStyleClassic.split(' ').first),
+                ),
+              ],
+              selected: {useModern},
+              showSelectedIcon: false,
+              onSelectionChanged: (s) => onChanged(s.first),
+              style: ButtonStyle(
+                visualDensity: VisualDensity.compact,
+                textStyle: WidgetStateProperty.all(
+                  const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

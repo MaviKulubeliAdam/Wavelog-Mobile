@@ -5,6 +5,7 @@ import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/lookup_provider.dart';
 import '../../widgets/common/error_view.dart';
 import '../../widgets/lookup/callsign_info_card.dart';
+import '../../../router.dart';
 
 class CallsignLookupScreen extends ConsumerStatefulWidget {
   final String? prefillCallsign;
@@ -50,7 +51,7 @@ class _CallsignLookupScreenState
     final history = ref.watch(lookupHistoryProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.lookupTitle)),
+      appBar: AppBar(leading: const DrawerMenuButton(), title: Text(l10n.lookupTitle)),
       body: Column(
         children: [
           Padding(

@@ -14,6 +14,7 @@ import '../../../providers/pota_spot_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/sota_spot_provider.dart';
 import '../../../providers/wwff_spot_provider.dart';
+import '../../../router.dart';
 
 // Currently selected activity type
 final _selectedActivityProvider =
@@ -29,6 +30,7 @@ class SpotScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: const DrawerMenuButton(),
         title: Text(l10n.spotTitle),
         actions: [
           if (selected.available)

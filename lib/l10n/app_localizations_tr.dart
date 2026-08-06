@@ -1618,4 +1618,67 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get patchRequiredContest =>
       'Yarışma oturumu yönetimi güncellenmiş Wavelog Mobile patch gerektirir.';
+
+  @override
+  String get contestCalendarTitle => 'Yarışma Takvimi';
+
+  @override
+  String get contestCalendarNoContests => 'Yarışma bulunamadı.';
+
+  @override
+  String get contestCalendarToday => 'Bugün';
+
+  @override
+  String get contestCalendarThisWeek => 'Bu Hafta';
+
+  @override
+  String get contestCalendarUpcoming => 'Yaklaşan';
+
+  @override
+  String get contestCalendarRecentlyPast => 'Yakın Geçmiş';
+
+  @override
+  String get contestCalendarLoadError => 'Yarışma takvimi yüklenemedi';
+
+  @override
+  String get contestCalendarRefresh => 'Yenile';
+
+  @override
+  String get contestCalendarRetry => 'Tekrar Dene';
+
+  @override
+  String get upcomingContestsTitle => 'Yaklaşan Yarışmalar';
+
+  @override
+  String get viewAll => 'Tümünü Gör';
+
+  @override
+  String get noUpcomingContests => 'Yaklaşan yarışma bulunamadı.';
+
+  @override
+  String get contestTodayBadge => 'BUGÜN';
+
+  @override
+  String get navStyleLabel => 'Navigasyon Stili';
+
+  @override
+  String get navStyleModern => 'Modern — FAB + çekmece';
+
+  @override
+  String get navStyleClassic => 'Klasik — 6 sekme';
+
+  @override
+  String get drawerMap => 'Harita';
+
+  @override
+  String get drawerContestCalendar => 'Yarışma Takvimi';
+
+  @override
+  String get drawerContestSessions => 'Yarışma Oturumları';
+
+  @override
+  String get drawerAdif => 'ADIF';
+
+  @override
+  String get drawerMenu => 'Menü';
 }

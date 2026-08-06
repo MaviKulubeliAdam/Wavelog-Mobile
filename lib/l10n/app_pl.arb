@@ -556,5 +556,27 @@
   "deleteSession": "Usuń sesję",
   "deleteSessionConfirm": "Usunąć tę sesję konkursową? QSO zalogowane w tej sesji pozostaną w dzienniku.",
   "openSession": "Otwórz do logowania",
-  "patchRequiredContest": "Zarządzanie sesjami konkursowymi wymaga zaktualizowanej łatki Wavelog Mobile."
+  "patchRequiredContest": "Zarządzanie sesjami konkursowymi wymaga zaktualizowanej łatki Wavelog Mobile.",
+
+  "contestCalendarTitle": "Kalendarz Zawodów",
+  "contestCalendarNoContests": "Nie znaleziono zawodów.",
+  "contestCalendarToday": "Dzisiaj",
+  "contestCalendarThisWeek": "Ten Tydzień",
+  "contestCalendarUpcoming": "Nadchodzące",
+  "contestCalendarRecentlyPast": "Ostatnio zakończone",
+  "contestCalendarLoadError": "Nie można załadować kalendarza zawodów",
+  "contestCalendarRefresh": "Odśwież",
+  "contestCalendarRetry": "Spróbuj ponownie",
+  "upcomingContestsTitle": "Nadchodzące Zawody",
+  "viewAll": "Zobacz wszystko",
+  "noUpcomingContests": "Nie znaleziono nadchodzących zawodów.",
+  "contestTodayBadge": "DZIŚ",
+  "navStyleLabel": "Styl Nawigacji",
+  "navStyleModern": "Nowoczesny — FAB + szuflada",
+  "navStyleClassic": "Klasyczny — 6 zakładek",
+  "drawerMap": "Mapa",
+  "drawerContestCalendar": "Kalendarz Zawodów",
+  "drawerContestSessions": "Sesje Zawodów",
+  "drawerAdif": "ADIF",
+  "drawerMenu": "Menu"
 }

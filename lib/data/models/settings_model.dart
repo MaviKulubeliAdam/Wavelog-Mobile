@@ -12,6 +12,7 @@ class SettingsModel {
   final bool offlineModeEnabled;
   final bool potaAutoSpotEnabled;
   final String? locale;
+  final bool useModernNav;
 
   const SettingsModel({
     this.serverUrl = '',
@@ -27,6 +28,7 @@ class SettingsModel {
     this.offlineModeEnabled = false,
     this.potaAutoSpotEnabled = false,
     this.locale,
+    this.useModernNav = true,
   });
 
   bool get hasValidConfig => serverUrl.isNotEmpty;
@@ -52,6 +54,7 @@ class SettingsModel {
     bool? potaAutoSpotEnabled,
     String? locale,
     bool clearLocale = false,
+    bool? useModernNav,
   }) {
     return SettingsModel(
       serverUrl: serverUrl ?? this.serverUrl,
@@ -76,6 +79,7 @@ class SettingsModel {
       offlineModeEnabled: offlineModeEnabled ?? this.offlineModeEnabled,
       potaAutoSpotEnabled: potaAutoSpotEnabled ?? this.potaAutoSpotEnabled,
       locale: clearLocale ? null : (locale ?? this.locale),
+      useModernNav: useModernNav ?? this.useModernNav,
     );
   }
 }

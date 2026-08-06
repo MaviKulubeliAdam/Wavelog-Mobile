@@ -628,6 +628,14 @@ class WavelogRemoteDatasource {
             ? e.response!.data['message']?.toString() ?? 'Sunucu hatası'
             : 'Sunucu hatası ($statusCode)';
         return ServerException(msg, statusCode: statusCode);
+      case DioExceptionType.unknown:
+        final inner = e.error;
+        if (inner is HandshakeException) {
+          return const NetworkException(
+              'SSL sertifika hatası — sunucunun sertifika zinciri doğrulanamadı. '
+              'Sunucu yöneticisi intermediate sertifikaları kontrol etmeli.');
+        }
+        return NetworkException(e.message ?? 'Bilinmeyen hata');
       default:
         return NetworkException(e.message ?? 'Bilinmeyen hata');
     }
