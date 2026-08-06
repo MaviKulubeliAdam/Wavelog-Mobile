@@ -3153,6 +3153,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Contest session management requires the updated Wavelog Mobile patch.'**
   String get patchRequiredContest;
+
+  /// No description provided for @contestCalendarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contest Calendar'**
+  String get contestCalendarTitle;
+
+  /// No description provided for @contestCalendarNoContests.
+  ///
+  /// In en, this message translates to:
+  /// **'No contests found.'**
+  String get contestCalendarNoContests;
+
+  /// No description provided for @contestCalendarToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get contestCalendarToday;
+
+  /// No description provided for @contestCalendarThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get contestCalendarThisWeek;
+
+  /// No description provided for @contestCalendarUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get contestCalendarUpcoming;
+
+  /// No description provided for @contestCalendarRecentlyPast.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Past'**
+  String get contestCalendarRecentlyPast;
+
+  /// No description provided for @contestCalendarLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load contest calendar'**
+  String get contestCalendarLoadError;
+
+  /// No description provided for @contestCalendarRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get contestCalendarRefresh;
+
+  /// No description provided for @contestCalendarRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get contestCalendarRetry;
+
+  /// No description provided for @upcomingContestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Contests'**
+  String get upcomingContestsTitle;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get viewAll;
+
+  /// No description provided for @noUpcomingContests.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming contests found.'**
+  String get noUpcomingContests;
+
+  /// No description provided for @contestTodayBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'TODAY'**
+  String get contestTodayBadge;
+
+  /// No description provided for @navStyleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation Style'**
+  String get navStyleLabel;
+
+  /// No description provided for @navStyleModern.
+  ///
+  /// In en, this message translates to:
+  /// **'Modern — FAB + drawer'**
+  String get navStyleModern;
+
+  /// No description provided for @navStyleClassic.
+  ///
+  /// In en, this message translates to:
+  /// **'Classic — 6-tab bar'**
+  String get navStyleClassic;
+
+  /// No description provided for @drawerMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get drawerMap;
+
+  /// No description provided for @drawerContestCalendar.
+  ///
+  /// In en, this message translates to:
+  /// **'Contest Calendar'**
+  String get drawerContestCalendar;
+
+  /// No description provided for @drawerContestSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Contest Sessions'**
+  String get drawerContestSessions;
+
+  /// No description provided for @drawerAdif.
+  ///
+  /// In en, this message translates to:
+  /// **'ADIF'**
+  String get drawerAdif;
+
+  /// No description provided for @drawerMenu.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get drawerMenu;
 }
 
 class _AppLocalizationsDelegate

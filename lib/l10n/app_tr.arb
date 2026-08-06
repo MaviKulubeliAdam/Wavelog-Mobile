@@ -556,5 +556,27 @@
   "deleteSession": "Oturumu Sil",
   "deleteSessionConfirm": "Bu yarışma oturumu silinsin mi? Oturumda kaydedilen QSO'lar logbook'ta kalır.",
   "openSession": "Kayıt İçin Aç",
-  "patchRequiredContest": "Yarışma oturumu yönetimi güncellenmiş Wavelog Mobile patch gerektirir."
+  "patchRequiredContest": "Yarışma oturumu yönetimi güncellenmiş Wavelog Mobile patch gerektirir.",
+
+  "contestCalendarTitle": "Yarışma Takvimi",
+  "contestCalendarNoContests": "Yarışma bulunamadı.",
+  "contestCalendarToday": "Bugün",
+  "contestCalendarThisWeek": "Bu Hafta",
+  "contestCalendarUpcoming": "Yaklaşan",
+  "contestCalendarRecentlyPast": "Yakın Geçmiş",
+  "contestCalendarLoadError": "Yarışma takvimi yüklenemedi",
+  "contestCalendarRefresh": "Yenile",
+  "contestCalendarRetry": "Tekrar Dene",
+  "upcomingContestsTitle": "Yaklaşan Yarışmalar",
+  "viewAll": "Tümünü Gör",
+  "noUpcomingContests": "Yaklaşan yarışma bulunamadı.",
+  "contestTodayBadge": "BUGÜN",
+  "navStyleLabel": "Navigasyon Stili",
+  "navStyleModern": "Modern — FAB + çekmece",
+  "navStyleClassic": "Klasik — 6 sekme",
+  "drawerMap": "Harita",
+  "drawerContestCalendar": "Yarışma Takvimi",
+  "drawerContestSessions": "Yarışma Oturumları",
+  "drawerAdif": "ADIF",
+  "drawerMenu": "Menü"
 }

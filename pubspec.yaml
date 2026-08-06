@@ -1,7 +1,7 @@
 name: wavelog_mobile
 description: Wavelog Amateur Radio Logging Mobile App
 publish_to: 'none'
-version: 3.0.3+28
+version: 3.0.5+33
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -44,6 +44,9 @@ dependencies:
   flutter_map: ^7.0.2
   latlong2: ^0.9.0
 
+  # Location
+  geolocator: ^12.0.0
+
   # Utilities
   package_info_plus: ^8.0.0
   uuid: ^4.4.0
@@ -51,6 +54,7 @@ dependencies:
   json_annotation: ^4.9.0
   collection: ^1.18.0
   xml: ^6.5.0
+  home_widget: ^0.7.0
 
 dev_dependencies:
   flutter_test:

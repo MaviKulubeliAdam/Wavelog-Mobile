@@ -1616,4 +1616,67 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get patchRequiredContest =>
       'Contest session management requires the updated Wavelog Mobile patch.';
+
+  @override
+  String get contestCalendarTitle => 'Contest Calendar';
+
+  @override
+  String get contestCalendarNoContests => 'No contests found.';
+
+  @override
+  String get contestCalendarToday => 'Today';
+
+  @override
+  String get contestCalendarThisWeek => 'This Week';
+
+  @override
+  String get contestCalendarUpcoming => 'Upcoming';
+
+  @override
+  String get contestCalendarRecentlyPast => 'Recently Past';
+
+  @override
+  String get contestCalendarLoadError => 'Could not load contest calendar';
+
+  @override
+  String get contestCalendarRefresh => 'Refresh';
+
+  @override
+  String get contestCalendarRetry => 'Retry';
+
+  @override
+  String get upcomingContestsTitle => 'Upcoming Contests';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get noUpcomingContests => 'No upcoming contests found.';
+
+  @override
+  String get contestTodayBadge => 'TODAY';
+
+  @override
+  String get navStyleLabel => 'Navigation Style';
+
+  @override
+  String get navStyleModern => 'Modern — FAB + drawer';
+
+  @override
+  String get navStyleClassic => 'Classic — 6-tab bar';
+
+  @override
+  String get drawerMap => 'Map';
+
+  @override
+  String get drawerContestCalendar => 'Contest Calendar';
+
+  @override
+  String get drawerContestSessions => 'Contest Sessions';
+
+  @override
+  String get drawerAdif => 'ADIF';
+
+  @override
+  String get drawerMenu => 'Menu';
 }

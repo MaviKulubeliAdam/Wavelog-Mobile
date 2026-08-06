@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/utils/l10n_extension.dart';
+import '../../../core/utils/maidenhead.dart';
 import '../../../core/utils/validators.dart';
 import '../../../data/models/dxcc_entity_model.dart';
 import '../../../data/models/state_subdivision_model.dart';
@@ -69,6 +71,7 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
   // Flags
   bool _isActive        = false;
   bool _linkLogbook     = false;
+  bool _gpsLoading      = false;
   int  _qrzRealtime     = -1;
   bool _webAdifRealtime = false;
   bool _clublogRealtime = false;
@@ -154,6 +157,40 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
       });
     } catch (_) {
       if (mounted) setState(() => _stateLoading = false);
+    }
+  }
+
+  Future<void> _fillGridFromGps() async {
+    setState(() => _gpsLoading = true);
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Location permission denied')),
+          );
+        }
+        return;
+      }
+      final pos = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      final grid = latLngToGrid(pos.latitude, pos.longitude);
+      if (grid != null && mounted) {
+        setState(() => _gridCtrl.text = grid.toUpperCase());
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('GPS error: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _gpsLoading = false);
     }
   }
 
@@ -363,7 +400,21 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
               controller: _gridCtrl,
               decoration: InputDecoration(
                 labelText: l10n.gridField,
-                hintText: 'KN41',
+                hintText: 'KN41AA',
+                suffixIcon: _gpsLoading
+                    ? const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      )
+                    : IconButton(
+                        icon: const Icon(Icons.my_location),
+                        tooltip: 'Fill from GPS',
+                        onPressed: _fillGridFromGps,
+                      ),
               ),
               textCapitalization: TextCapitalization.characters,
               validator: validateGridSquare,

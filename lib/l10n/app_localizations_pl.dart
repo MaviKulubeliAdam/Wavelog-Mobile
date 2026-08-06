@@ -1620,4 +1620,68 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get patchRequiredContest =>
       'Zarządzanie sesjami konkursowymi wymaga zaktualizowanej łatki Wavelog Mobile.';
+
+  @override
+  String get contestCalendarTitle => 'Kalendarz Zawodów';
+
+  @override
+  String get contestCalendarNoContests => 'Nie znaleziono zawodów.';
+
+  @override
+  String get contestCalendarToday => 'Dzisiaj';
+
+  @override
+  String get contestCalendarThisWeek => 'Ten Tydzień';
+
+  @override
+  String get contestCalendarUpcoming => 'Nadchodzące';
+
+  @override
+  String get contestCalendarRecentlyPast => 'Ostatnio zakończone';
+
+  @override
+  String get contestCalendarLoadError =>
+      'Nie można załadować kalendarza zawodów';
+
+  @override
+  String get contestCalendarRefresh => 'Odśwież';
+
+  @override
+  String get contestCalendarRetry => 'Spróbuj ponownie';
+
+  @override
+  String get upcomingContestsTitle => 'Nadchodzące Zawody';
+
+  @override
+  String get viewAll => 'Zobacz wszystko';
+
+  @override
+  String get noUpcomingContests => 'Nie znaleziono nadchodzących zawodów.';
+
+  @override
+  String get contestTodayBadge => 'DZIŚ';
+
+  @override
+  String get navStyleLabel => 'Styl Nawigacji';
+
+  @override
+  String get navStyleModern => 'Nowoczesny — FAB + szuflada';
+
+  @override
+  String get navStyleClassic => 'Klasyczny — 6 zakładek';
+
+  @override
+  String get drawerMap => 'Mapa';
+
+  @override
+  String get drawerContestCalendar => 'Kalendarz Zawodów';
+
+  @override
+  String get drawerContestSessions => 'Sesje Zawodów';
+
+  @override
+  String get drawerAdif => 'ADIF';
+
+  @override
+  String get drawerMenu => 'Menu';
 }

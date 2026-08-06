@@ -107,6 +107,12 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
     state = s;
   }
 
+  Future<void> setNavStyle({required bool modern}) async {
+    final s = state.copyWith(useModernNav: modern);
+    await _repo.saveSettings(s);
+    state = s;
+  }
+
   Future<void> setLocale(String? locale) async {
     final s = locale == null
         ? state.copyWith(clearLocale: true)

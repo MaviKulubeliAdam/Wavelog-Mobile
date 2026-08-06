@@ -75,8 +75,24 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
 
   // ── Contest picker sheet ──────────────────────────────────────────────────
 
+  // Merges server list + builtin list, preferring server entries (real IDs).
+  // Deduplicates by adifName. Returns sorted list.
+  List<ContestTemplate> _buildContestList(List<ContestTemplate> serverList) {
+    final result = <ContestTemplate>[...serverList];
+    final serverAdif = {for (final c in serverList) c.adifName.toUpperCase()};
+    for (final b in kBuiltinContests) {
+      if (!serverAdif.contains(b.adifName.toUpperCase())) {
+        result.add(ContestTemplate(id: 0, name: b.displayName, adifName: b.adifName));
+      }
+    }
+    result.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+    return result;
+  }
+
   Future<void> _pickContest() async {
     final serverList = ref.read(_serverContestListProvider).valueOrNull ?? [];
+    final allContests = _buildContestList(serverList);
+    final other = ContestTemplate(id: 0, name: 'Other / Custom', adifName: 'Other');
     final l10n = context.l10n;
     String query = '';
 
@@ -87,18 +103,16 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setS) {
           final q = query.toLowerCase();
-          final serverFiltered = serverList
-              .where((c) =>
-                  c.name.toLowerCase().contains(q) ||
-                  c.adifName.toLowerCase().contains(q))
-              .toList();
-          final builtinAsTemplate = kBuiltinContests
-              .where((c) =>
-                  c.adifName.toLowerCase().contains(q) ||
-                  c.displayName.toLowerCase().contains(q))
-              .map((b) =>
-                  ContestTemplate(id: 0, name: b.displayName, adifName: b.adifName))
-              .toList();
+          final filtered = q.isEmpty
+              ? allContests
+              : allContests
+                  .where((c) =>
+                      c.name.toLowerCase().contains(q) ||
+                      c.adifName.toLowerCase().contains(q))
+                  .toList();
+          final showOther = q.isEmpty ||
+              'other'.contains(q) ||
+              'custom'.contains(q);
 
           return DraggableScrollableSheet(
             expand: false,
@@ -107,7 +121,8 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
             builder: (ctx, scroll) => Column(
               children: [
                 Container(
-                  width: 36, height: 4, margin: const EdgeInsets.only(top: 12, bottom: 8),
+                  width: 36, height: 4,
+                  margin: const EdgeInsets.only(top: 12, bottom: 8),
                   decoration: BoxDecoration(
                     color: Colors.grey.shade400,
                     borderRadius: BorderRadius.circular(2),
@@ -130,18 +145,17 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
                   child: ListView(
                     controller: scroll,
                     children: [
-                      if (serverFiltered.isNotEmpty) ...[
-                        _SectionHeader(label: l10n.serverContests),
-                        ...serverFiltered.map((c) => _ContestTile(
-                          contest: c,
+                      // "Other" always pinned at top
+                      if (showOther)
+                        _ContestTile(
+                          contest: other,
                           onTap: () {
-                            setState(() => _selectedContest = c);
+                            setState(() => _selectedContest = other);
                             Navigator.of(ctx).pop();
                           },
-                        )),
-                      ],
-                      _SectionHeader(label: l10n.builtinContests),
-                      ...builtinAsTemplate.map((c) => _ContestTile(
+                          pinned: true,
+                        ),
+                      ...filtered.map((c) => _ContestTile(
                         contest: c,
                         onTap: () {
                           setState(() => _selectedContest = c);
@@ -469,33 +483,30 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
 
 // ── Helper widgets ────────────────────────────────────────────────────────────
 
-class _SectionHeader extends StatelessWidget {
-  final String label;
-  const _SectionHeader({required this.label});
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-        child: Text(label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1,
-                )),
-      );
-}
 
 class _ContestTile extends StatelessWidget {
   final ContestTemplate contest;
   final VoidCallback onTap;
-  const _ContestTile({required this.contest, required this.onTap});
+  final bool pinned;
+  const _ContestTile({required this.contest, required this.onTap, this.pinned = false});
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        title: Text(contest.name),
-        subtitle: contest.adifName.isNotEmpty ? Text(contest.adifName) : null,
-        onTap: onTap,
-      );
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return ListTile(
+      leading: pinned
+          ? Icon(Icons.edit_note, color: cs.primary, size: 20)
+          : null,
+      title: Text(contest.name,
+          style: pinned
+              ? TextStyle(fontWeight: FontWeight.w600, color: cs.primary)
+              : null),
+      subtitle: contest.adifName.isNotEmpty && !pinned
+          ? Text(contest.adifName)
+          : null,
+      onTap: onTap,
+    );
+  }
 }
 
 class _QuickBtn extends StatelessWidget {

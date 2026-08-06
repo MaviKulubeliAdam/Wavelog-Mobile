@@ -14,6 +14,7 @@ import '../../../data/models/qso_model.dart';
 import '../../../providers/qso_provider.dart';
 import '../../widgets/common/error_view.dart';
 import '../../widgets/qso/qso_list_tile.dart';
+import '../../../router.dart';
 
 class QsoListScreen extends ConsumerStatefulWidget {
   const QsoListScreen({super.key});
@@ -143,6 +144,7 @@ class _QsoListScreenState extends ConsumerState<QsoListScreen> {
                 ],
               )
             : AppBar(
+                leading: const DrawerMenuButton(),
                 title: Text(l10n.logbookTitle),
                 bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(56),
