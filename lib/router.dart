@@ -140,7 +140,9 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/adif',
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (c, s) => const AdifScreen(),
+      builder: (c, s) => AdifScreen(
+        initialFile: s.extra as ({String name, String content})?,
+      ),
     ),
     GoRoute(
       path: '/settings',

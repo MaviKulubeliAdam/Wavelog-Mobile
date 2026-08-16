@@ -2,11 +2,6 @@ import '../../data/models/qso_model.dart';
 import '../errors/app_exception.dart';
 
 class AdifParser {
-  static final _fieldRegex = RegExp(
-    r'<(\w+)(?::\d+(?::[A-Z])?)?>([^<]*)',
-    caseSensitive: false,
-  );
-
   static List<Map<String, String>> parse(String adifContent) {
     String content = adifContent;
 
@@ -17,25 +12,58 @@ class AdifParser {
     }
 
     // Split on <EOR>
-    final records = content
+    final rawRecords = content
         .split(RegExp(r'<eor>', caseSensitive: false))
         .map((r) => r.trim())
         .where((r) => r.isNotEmpty)
         .toList();
 
-    final result = <Map<String, String>>[];
-    for (final record in records) {
-      final fields = <String, String>{};
-      for (final match in _fieldRegex.allMatches(record)) {
-        final fieldName = match.group(1)!.toUpperCase().trim();
-        final fieldValue = match.group(2)?.trim() ?? '';
-        if (fieldName.isNotEmpty && fieldValue.isNotEmpty) {
-          fields[fieldName] = fieldValue;
+    return rawRecords
+        .map(_parseRecord)
+        .where((m) => m.isNotEmpty)
+        .toList();
+  }
+
+  // LENGTH-aware field parser: <FIELD:N>VALUE reads exactly N chars.
+  // Falls back to next-'<' boundary when no LENGTH is declared.
+  static Map<String, String> _parseRecord(String record) {
+    final fields = <String, String>{};
+    int i = 0;
+    while (i < record.length) {
+      final tagStart = record.indexOf('<', i);
+      if (tagStart == -1) break;
+      final tagEnd = record.indexOf('>', tagStart);
+      if (tagEnd == -1) break;
+
+      final tag = record.substring(tagStart + 1, tagEnd);
+      if (tag.toLowerCase() == 'eor') break;
+
+      final parts = tag.split(':');
+      final fieldName = parts[0].toUpperCase().trim();
+      final length = parts.length > 1 ? int.tryParse(parts[1]) : null;
+
+      if (length != null) {
+        final valueStart = tagEnd + 1;
+        final valueEnd = (valueStart + length).clamp(0, record.length);
+        final value = record.substring(valueStart, valueEnd).trim();
+        if (fieldName.isNotEmpty && value.isNotEmpty) {
+          fields[fieldName] = value;
         }
+        i = valueEnd;
+      } else {
+        // No length declared — read until next '<' (legacy / header fields)
+        final nextTag = record.indexOf('<', tagEnd + 1);
+        final rawValue = nextTag != -1
+            ? record.substring(tagEnd + 1, nextTag)
+            : record.substring(tagEnd + 1);
+        final value = rawValue.trim();
+        if (fieldName.isNotEmpty && value.isNotEmpty) {
+          fields[fieldName] = value;
+        }
+        i = nextTag != -1 ? nextTag : record.length;
       }
-      if (fields.isNotEmpty) result.add(fields);
     }
-    return result;
+    return fields;
   }
 
   static QsoModel mapToQso(Map<String, String> fields, int stationProfileId) {

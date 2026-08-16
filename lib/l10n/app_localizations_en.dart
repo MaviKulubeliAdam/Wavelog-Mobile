@@ -463,6 +463,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get importBtn => 'Import';
 
   @override
+  String get fileReadError => 'Could not read file content, please try again';
+
+  @override
+  String get invalidFileExtension =>
+      'Please select a file with .adi or .adif extension';
+
+  @override
   String get exportFilters => 'Export Filters';
 
   @override
@@ -697,7 +704,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get setupGuidePatchWarning =>
-      'This app requires the Wavelog Mobile patch to be installed on your server. Without it you cannot generate an API v2 token.';
+      'This app requires the Wavelog Mobile patch to be installed on your server. Even if you generate an API v2 token without it, the app will not work correctly.';
 
   @override
   String get setupGuidePatchStepTitle => 'Install Server Patch';

@@ -177,6 +177,8 @@
     "placeholders": { "done": { "type": "int" }, "total": { "type": "int" } }
   },
   "importBtn": "Importieren",
+  "fileReadError": "Dateiinhalt konnte nicht gelesen werden, bitte erneut versuchen",
+  "invalidFileExtension": "Bitte eine Datei mit der Endung .adi oder .adif auswählen",
   "exportFilters": "Export-Filter",
   "stationFilter": "Station",
   "allStations": "Alle Stationen",
@@ -267,7 +269,7 @@
 
   "setupGuideTitle": "Einrichtungsanleitung",
   "setupGuideIntro": "Bevor Sie QSOs loggen können, verbinden Sie die App mit Ihrem Wavelog-Server. Folgen Sie den Schritten unten.",
-  "setupGuidePatchWarning": "Diese App erfordert den Wavelog Mobile-Patch auf Ihrem Server. Ohne ihn können Sie keinen API v2-Token generieren.",
+  "setupGuidePatchWarning": "Diese App erfordert den Wavelog Mobile-Patch auf Ihrem Server. Auch wenn Sie ohne ihn einen API v2-Token erstellen, wird die App nicht korrekt funktionieren.",
   "setupGuidePatchStepTitle": "Server-Patch installieren",
   "setupGuidePatchStepBody": "Die App verwendet Wavelogs API v2, die einen kleinen Patch auf Ihrem Server erfordert. Falls noch nicht installiert, öffnen Sie die Installationsanleitung und folgen Sie den Schritten für Ihre Einrichtung (Klassisch oder Docker).",
   "setupGuidePatchBtn": "Installationsanleitung",

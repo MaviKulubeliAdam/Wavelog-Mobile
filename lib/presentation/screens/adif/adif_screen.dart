@@ -11,7 +11,8 @@ import '../../../providers/adif_provider.dart';
 import '../../../providers/station_provider.dart';
 
 class AdifScreen extends ConsumerStatefulWidget {
-  const AdifScreen({super.key});
+  final ({String name, String content})? initialFile;
+  const AdifScreen({super.key, this.initialFile});
 
   @override
   ConsumerState<AdifScreen> createState() => _AdifScreenState();
@@ -33,6 +34,10 @@ class _AdifScreenState extends ConsumerState<AdifScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    if (widget.initialFile != null) {
+      _selectedFileName    = widget.initialFile!.name;
+      _selectedFileContent = widget.initialFile!.content;
+    }
   }
 
   @override
@@ -42,27 +47,57 @@ class _AdifScreenState extends ConsumerState<AdifScreen>
   }
 
   Future<void> _pickFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['adi', 'adif'],
-      withData: true,
-    );
-    if (result == null || result.files.isEmpty) return;
-    final file = result.files.first;
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        withData: true,
+      );
+      if (result == null || result.files.isEmpty) return;
+      final file = result.files.first;
 
-    // Android'de bytes null gelebilir; path'ten fallback oku
-    String? content;
-    if (file.bytes != null) {
-      content = utf8.decode(file.bytes!, allowMalformed: true);
-    } else if (file.path != null) {
-      final bytes = await File(file.path!).readAsBytes();
-      content = utf8.decode(bytes, allowMalformed: true);
+      // Android SAF uzantı filtresini desteklemiyor; Flutter tarafında kontrol et
+      final ext = file.name.split('.').last.toLowerCase();
+      if (ext != 'adi' && ext != 'adif') {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.invalidFileExtension)),
+          );
+        }
+        return;
+      }
+
+      // Android'de bytes null gelebilir; path'ten fallback oku
+      String? content;
+      if (file.bytes != null) {
+        content = utf8.decode(file.bytes!, allowMalformed: true);
+      } else if (file.path != null) {
+        final bytes = await File(file.path!).readAsBytes();
+        content = utf8.decode(bytes, allowMalformed: true);
+      }
+
+      if (!mounted) return;
+      if (content == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.fileReadError)),
+        );
+        return;
+      }
+
+      setState(() {
+        _selectedFileName = file.name;
+        _selectedFileContent = content;
+      });
+    } on PlatformException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${context.l10n.error}: ${e.message ?? e.code}')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${context.l10n.error}: $e')),
+      );
     }
-
-    setState(() {
-      _selectedFileName = file.name;
-      _selectedFileContent = content;
-    });
   }
 
   Future<void> _pickDate({required bool isFrom}) async {

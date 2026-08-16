@@ -465,6 +465,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get importBtn => 'İçe Aktar';
 
   @override
+  String get fileReadError => 'Dosya içeriği okunamadı, lütfen tekrar deneyin';
+
+  @override
+  String get invalidFileExtension =>
+      'Lütfen .adi veya .adif uzantılı dosya seçin';
+
+  @override
   String get exportFilters => 'Dışa Aktarma Filtreleri';
 
   @override
@@ -700,7 +707,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get setupGuidePatchWarning =>
-      'Bu uygulama, sunucunuzda Wavelog Mobile yamasının kurulu olmasını gerektirir. Yama olmadan API v2 token oluşturamazsınız.';
+      'Bu uygulama, sunucunuzda Wavelog Mobile yamasının kurulu olmasını gerektirir. Bu yamayı uygulamazsanız API v2 token oluştursanız dahi düzgün çalışmayacaktır.';
 
   @override
   String get setupGuidePatchStepTitle => 'Sunucu Yamasını Kurun';
