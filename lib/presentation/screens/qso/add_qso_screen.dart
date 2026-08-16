@@ -51,6 +51,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   late TextEditingController _qthCtrl;
   late TextEditingController _gridCtrl;
   late TextEditingController _commentCtrl;
+  late TextEditingController _potaRefCtrl;
+  late TextEditingController _sotaRefCtrl;
+  late TextEditingController _wwffRefCtrl;
   late FocusNode _callsignFocus;
 
   DateTime _dateTimeOn = DateTime.now().toUtc();
@@ -105,6 +108,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _qthCtrl = TextEditingController(text: edit.qth ?? '');
       _gridCtrl = TextEditingController(text: edit.gridSquare ?? '');
       _commentCtrl = TextEditingController(text: edit.comment ?? '');
+      _potaRefCtrl = TextEditingController(text: edit.rawAdif?['POTA_REF'] ?? '');
+      _sotaRefCtrl = TextEditingController(text: edit.rawAdif?['SOTA_REF'] ?? '');
+      _wwffRefCtrl = TextEditingController(text: edit.rawAdif?['WWFF_REF'] ?? '');
       _dxccCountry = edit.country ?? edit.rawAdif?['COUNTRY'] ?? edit.dxcc;
       _dxccFlag = edit.rawAdif?['APP_WAVELOG_FLAG'];
     } else {
@@ -123,6 +129,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _qthCtrl = TextEditingController();
       _gridCtrl = TextEditingController();
       _commentCtrl = TextEditingController();
+      _potaRefCtrl = TextEditingController();
+      _sotaRefCtrl = TextEditingController();
+      _wwffRefCtrl = TextEditingController();
     }
 
     _callsignFocus = FocusNode();
@@ -170,6 +179,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _qthCtrl.dispose();
     _gridCtrl.dispose();
     _commentCtrl.dispose();
+    _potaRefCtrl.dispose();
+    _sotaRefCtrl.dispose();
+    _wwffRefCtrl.dispose();
     super.dispose();
   }
 
@@ -345,6 +357,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _qthCtrl.clear();
     _gridCtrl.clear();
     _commentCtrl.clear();
+    _potaRefCtrl.clear();
+    _sotaRefCtrl.clear();
+    _wwffRefCtrl.clear();
     _rstSentCtrl.text = getDefaultRst(_mode);
     _rstRcvdCtrl.text = getDefaultRst(_mode);
     setState(() {
@@ -384,6 +399,17 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     final isOnline = ref.read(isOnlineProvider);
     final offlineMode = ref.read(settingsProvider).offlineModeEnabled;
 
+    final rawAdifMap = <String, String>{
+      ...?widget.editQso?.rawAdif,
+      if (_dxccFlag != null) 'APP_WAVELOG_FLAG': _dxccFlag!,
+      if (_potaRefCtrl.text.trim().isNotEmpty)
+        'POTA_REF': _potaRefCtrl.text.trim().toUpperCase(),
+      if (_sotaRefCtrl.text.trim().isNotEmpty)
+        'SOTA_REF': _sotaRefCtrl.text.trim().toUpperCase(),
+      if (_wwffRefCtrl.text.trim().isNotEmpty)
+        'WWFF_REF': _wwffRefCtrl.text.trim().toUpperCase(),
+    };
+
     final qso = QsoModel(
       callsign: _callsignCtrl.text.trim().toUpperCase(),
       dateTimeOn: qsoTime,
@@ -401,13 +427,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       comment:
           _commentCtrl.text.trim().isEmpty ? null : _commentCtrl.text.trim(),
       stationProfileId: stationId,
-      // Preserve all raw ADIF fields; persist flag emoji for edit-mode restoration
-      rawAdif: _dxccFlag != null
-          ? {
-              ...?widget.editQso?.rawAdif,
-              'APP_WAVELOG_FLAG': _dxccFlag!,
-            }
-          : widget.editQso?.rawAdif,
+      rawAdif: rawAdifMap.isEmpty ? null : rawAdifMap,
       country: _dxccCountry,
       dxcc: widget.editQso?.dxcc,
       continent: widget.editQso?.continent,
@@ -971,6 +991,61 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
         decoration: InputDecoration(labelText: l10n.commentField),
         maxLines: 2,
       ),
+
+      // ── P2P referanslar (istasyonda POTA/SOTA/WWFF varsa görünür) ───
+      Builder(builder: (context) {
+        final stationList = stations.valueOrNull ?? [];
+        final settingStationId =
+            ref.read(settingsProvider).activeStationProfileId;
+        final effectiveStation = _selectedStation
+            ?? stationList.where((s) => s.id == settingStationId).firstOrNull
+            ?? stationList.where((s) => s.isActive).firstOrNull
+            ?? stationList.firstOrNull;
+        final showPota = effectiveStation?.pota?.trim().isNotEmpty == true;
+        final showSota = effectiveStation?.sota?.trim().isNotEmpty == true;
+        final showWwff = effectiveStation?.wwff?.trim().isNotEmpty == true;
+        if (!showPota && !showSota && !showWwff) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 12),
+            if (showPota)
+              TextFormField(
+                controller: _potaRefCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'POTA P2P',
+                  hintText: 'US-1234',
+                  prefixIcon: Icon(Icons.park_outlined, size: 20),
+                ),
+                textCapitalization: TextCapitalization.characters,
+              ),
+            if (showSota) ...[
+              if (showPota) const SizedBox(height: 12),
+              TextFormField(
+                controller: _sotaRefCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'SOTA P2P',
+                  hintText: 'SP/KR-001',
+                  prefixIcon: Icon(Icons.terrain_outlined, size: 20),
+                ),
+                textCapitalization: TextCapitalization.characters,
+              ),
+            ],
+            if (showWwff) ...[
+              if (showPota || showSota) const SizedBox(height: 12),
+              TextFormField(
+                controller: _wwffRefCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'WWFF P2P',
+                  hintText: 'SPFF-0001',
+                  prefixIcon: Icon(Icons.forest_outlined, size: 20),
+                ),
+                textCapitalization: TextCapitalization.characters,
+              ),
+            ],
+          ],
+        );
+      }),
       const SizedBox(height: 12),
 
       // ── Station profile ─────────────────────────────────────────────

@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/utils/adif_generator.dart';
 import '../core/utils/adif_parser.dart';
@@ -100,28 +103,35 @@ class AdifNotifier extends StateNotifier<AdifState> {
           ..sort((a, b) => a.dateTimeOn.compareTo(b.dateTimeOn));
       }
 
-      final adif = AdifGenerator.generate(qsos);
+      final allStations = await _ref.read(stationProvider.future);
+      final activeStation = stationId != null
+          ? allStations.where((s) => s.id == stationId).firstOrNull
+          : null;
 
-      // Kullanıcıya kayıt konumunu sor
-      final selectedDir = await FilePicker.platform.getDirectoryPath(
-        dialogTitle: dialogTitle,
-      );
-      if (selectedDir == null) {
-        // Kullanıcı iptal etti
-        state = const AdifState();
-        return;
-      }
+      final adif = AdifGenerator.generate(qsos, station: activeStation);
 
       final now = DateTime.now();
       final stamp =
           '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}'
           '_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
-      final file = File('$selectedDir/wavelog_$stamp.adif');
-      await file.writeAsString(adif);
+      final fileName = 'wavelog_$stamp.adif';
+      final bytes = Uint8List.fromList(utf8.encode(adif));
+
+      // SAF ile kullanıcı kayıt konumunu seçer (Android 13+ izin gerektirmez)
+      final savedPath = await FilePicker.platform.saveFile(
+        dialogTitle: dialogTitle,
+        fileName: fileName,
+        bytes: bytes,
+      );
+
+      // Temp dosyası oluştur ve share et (hem seçilen konuma hem paylaşım)
+      final dir = await getTemporaryDirectory();
+      final file = File('${dir.path}/$fileName');
+      await file.writeAsBytes(bytes);
 
       state = AdifState(
         operation: AdifOperation.success,
-        exportFilePath: file.path,
+        exportFilePath: savedPath ?? file.path,
         processedCount: qsos.length,
       );
 
