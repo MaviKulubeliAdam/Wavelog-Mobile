@@ -464,6 +464,14 @@ class AppLocalizationsPl extends AppLocalizations {
   String get importBtn => 'Importuj';
 
   @override
+  String get fileReadError =>
+      'Nie można odczytać zawartości pliku, spróbuj ponownie';
+
+  @override
+  String get invalidFileExtension =>
+      'Wybierz plik z rozszerzeniem .adi lub .adif';
+
+  @override
   String get exportFilters => 'Filtry eksportu';
 
   @override
@@ -700,7 +708,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get setupGuidePatchWarning =>
-      'Ta aplikacja wymaga zainstalowania łatki Wavelog Mobile na Twoim serwerze. Bez niej nie możesz wygenerować tokenu API v2.';
+      'Ta aplikacja wymaga zainstalowania łatki Wavelog Mobile na Twoim serwerze. Nawet jeśli wygenerujesz token API v2 bez niej, aplikacja nie będzie działać poprawnie.';
 
   @override
   String get setupGuidePatchStepTitle => 'Zainstaluj łatkę serwera';

@@ -984,6 +984,18 @@ abstract class AppLocalizations {
   /// **'Import'**
   String get importBtn;
 
+  /// No description provided for @fileReadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not read file content, please try again'**
+  String get fileReadError;
+
+  /// No description provided for @invalidFileExtension.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a file with .adi or .adif extension'**
+  String get invalidFileExtension;
+
   /// No description provided for @exportFilters.
   ///
   /// In en, this message translates to:
@@ -1431,7 +1443,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuidePatchWarning.
   ///
   /// In en, this message translates to:
-  /// **'This app requires the Wavelog Mobile patch to be installed on your server. Without it you cannot generate an API v2 token.'**
+  /// **'This app requires the Wavelog Mobile patch to be installed on your server. Even if you generate an API v2 token without it, the app will not work correctly.'**
   String get setupGuidePatchWarning;
 
   /// No description provided for @setupGuidePatchStepTitle.

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/intent_handler.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/settings_provider.dart';
+import '../../../router.dart';
 import 'wave_splash.dart';
 
 /// Splash screen — keeps the original routing logic, swaps the body
@@ -36,7 +38,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     } else if (!settings.hasValidConfig || !settings.isLoggedIn) {
       context.go('/setup-guide');
     } else {
+      final pendingFile = await IntentHandler.getInitialFile();
+      if (!mounted) return;
       context.go('/home');
+      if (pendingFile != null) {
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        appRouter.push('/adif', extra: pendingFile);
+      }
     }
   }
 
