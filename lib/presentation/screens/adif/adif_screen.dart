@@ -49,12 +49,19 @@ class _AdifScreenState extends ConsumerState<AdifScreen>
     );
     if (result == null || result.files.isEmpty) return;
     final file = result.files.first;
+
+    // Android'de bytes null gelebilir; path'ten fallback oku
+    String? content;
+    if (file.bytes != null) {
+      content = utf8.decode(file.bytes!, allowMalformed: true);
+    } else if (file.path != null) {
+      final bytes = await File(file.path!).readAsBytes();
+      content = utf8.decode(bytes, allowMalformed: true);
+    }
+
     setState(() {
       _selectedFileName = file.name;
-      final bytes = file.bytes;
-      // UTF-8 çöz — String.fromCharCodes Türkçe karakterleri bozuyordu
-      _selectedFileContent =
-          bytes != null ? utf8.decode(bytes, allowMalformed: true) : null;
+      _selectedFileContent = content;
     });
   }
 
@@ -177,19 +184,35 @@ class _AdifScreenState extends ConsumerState<AdifScreen>
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 8),
-                Text(l10n.importing(
-                    adifState.processedCount, adifState.totalCount)),
-                if (adifState.totalCount > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(l10n.importing(
+                          adifState.processedCount, adifState.totalCount)),
+                      if (adifState.totalCount > 0)
+                        Text(
+                          '%${(adifState.processedCount / adifState.totalCount * 100).toInt()}',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
-                      value: adifState.processedCount / adifState.totalCount,
+                      value: adifState.totalCount > 0
+                          ? adifState.processedCount / adifState.totalCount
+                          : null,
+                      minHeight: 8,
                     ),
                   ),
-              ]),
+                ],
+              ),
             ),
           ),
 

@@ -1,7 +1,6 @@
 import '../datasources/local/settings_local_datasource.dart';
 import '../datasources/remote/wavelog_remote_datasource.dart';
 import '../models/settings_model.dart';
-import '../models/station_model.dart';
 
 class ConnectionTestResult {
   final bool success;
@@ -29,28 +28,13 @@ class SettingsRepository {
 
   Future<ConnectionTestResult> testConnection(
       WavelogRemoteDatasource remote) async {
-    try {
-      final stats = await remote.getStatistics();
-      final version = await remote.getVersion();
-      return ConnectionTestResult(
-        success: true,
-        message: version != null ? 'Wavelog v$version' : null,
-        totalQsos: stats.totalQsos,
-      );
-    } catch (e) {
-      return ConnectionTestResult(
-        success: false,
-        message: e.toString(),
-      );
-    }
+    final stats = await remote.getStatistics();
+    final version = await remote.getVersion();
+    return ConnectionTestResult(
+      success: true,
+      message: version != null ? 'Wavelog v$version' : null,
+      totalQsos: stats.totalQsos,
+    );
   }
 
-  Future<void> setActiveStation(
-      SettingsModel current, StationModel station) async {
-    await _local.saveSettings(current.copyWith(
-      activeStationProfileId: station.id,
-      activeStationCallsign: station.callsign,
-      activeStationName: station.profileName,
-    ));
-  }
 }

@@ -169,7 +169,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String pendingSync(int count) {
-    return '$count QSO senkronize edilmeyi bekliyor';
+    return '$count QSO senkronizasyon bekliyor';
   }
 
   @override
@@ -261,6 +261,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get qslSent => 'Gönderildi';
+
+  @override
+  String get qslRcvd => 'Alındı';
 
   @override
   String get qslReceived => 'Alındı';
@@ -393,7 +396,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noActiveStation => 'Aktif istasyon seçilmedi';
 
   @override
-  String get lookupTitle => 'Çağrı Sorgula';
+  String get lookupTitle => 'Çağrı İşareti Sorgula';
 
   @override
   String get lookupHint => 'Çağrı işareti girin...';
@@ -630,6 +633,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get langPolish => 'Polski';
 
   @override
+  String get langGerman => 'Deutsch';
+
+  @override
   String get aboutTitle => 'Uygulama Hakkında';
 
   @override
@@ -693,6 +699,20 @@ class AppLocalizationsTr extends AppLocalizations {
       'QSO kaydetmeye başlamadan önce uygulamayı Wavelog sunucunuza bağlayın. Aşağıdaki adımları izleyin.';
 
   @override
+  String get setupGuidePatchWarning =>
+      'Bu uygulama, sunucunuzda Wavelog Mobile yamasının kurulu olmasını gerektirir. Yama olmadan API v2 token oluşturamazsınız.';
+
+  @override
+  String get setupGuidePatchStepTitle => 'Sunucu Yamasını Kurun';
+
+  @override
+  String get setupGuidePatchStepBody =>
+      'Uygulama, Wavelog\'un API v2 sistemini kullanır ve sunucunuzda küçük bir yama gerektirir. Henüz kurmadıysanız önce Kurulum Kılavuzu\'nu açıp kurulumu tamamlayın.';
+
+  @override
+  String get setupGuidePatchBtn => 'Kurulum Kılavuzu';
+
+  @override
   String get setupGuideStep1Title => '1. Sunucu Adresi';
 
   @override
@@ -700,28 +720,50 @@ class AppLocalizationsTr extends AppLocalizations {
       'Wavelog\'u tarayıcınızda açarken kullandığınız adresi yazın, örn: https://sizin-domaininiz.com — sonunda eğik çizgi (/) olmadan.';
 
   @override
-  String get setupGuideStep2Title => '2. Sunucu Patch\'i (önce bunu yapın)';
+  String get setupGuideStep2Title => '2. API v2 Token\'ı';
 
   @override
   String get setupGuideStep2Body =>
-      'API anahtarı oluşturmadan önce sunucunuza Wavelog Mobile API patch\'ini kurun. Talimatlar için aşağıya dokunun.';
+      'Wavelog\'da Ayarlar → API → API Token\'ları (v2) → Yeni Token\'a gidin. \"Wavelog Mobile\" ön ayarını seçip onaylayın. Oluşturulan token\'ı (wl2_ ile başlar) kopyalayıp uygulamaya yapıştırın.';
 
   @override
-  String get setupGuideStep3Title => '3. API Anahtarı';
+  String get setupGuideStep3Title => '3. Çağrı İşareti ve Görünen Ad';
 
   @override
   String get setupGuideStep3Body =>
-      'Patch kurulduktan sonra Wavelog\'da Ayarlar → API Anahtarları bölümüne gidin ve \"Create a mobile app key\" butonuna tıklayın. Oluşan anahtarı API Anahtarı alanına yapıştırın.';
-
-  @override
-  String get setupGuideStep4Title => '4. Çağrı İşareti ve Görünen Ad';
-
-  @override
-  String get setupGuideStep4Body =>
       'Çağrı İşareti: kendi amatör telsiz çağrı işaretiniz, istasyonunuzu eşleştirmek için kullanılır. Görünen Ad: bu cihazdaki girişi tanımak için istediğiniz herhangi bir etiket.';
 
   @override
   String get setupGuideContinueBtn => 'Kuruluma Başla';
+
+  @override
+  String get migrationTokenHint => 'wl2_…';
+
+  @override
+  String get migrationTokenLabel => 'API v2 Token';
+
+  @override
+  String get migrationValidateBtn => 'Doğrula ve Devam Et';
+
+  @override
+  String get migrationValidating => 'Doğrulanıyor…';
+
+  @override
+  String get migrationTokenEmpty => 'Lütfen wl2_ token\'ınızı yapıştırın.';
+
+  @override
+  String get migrationTokenInvalid =>
+      'Token geçersiz — lütfen kontrol edip tekrar deneyin.';
+
+  @override
+  String get patchNotInstalledTitle => 'Yama Tespit Edilemedi';
+
+  @override
+  String get patchNotInstalledBody =>
+      'Wavelog Mobile yaması sunucunuzda kurulu görünmüyor.\n\nAPI v2 token (wl2_…) yama olmadan çalışmaz. Lütfen önce 1. adımı tamamlayın.';
+
+  @override
+  String get patchInstallFirst => 'Yamayı Kur';
 
   @override
   String get appSubtitle => 'Amatör Telsiz Log Uygulaması';
@@ -1681,4 +1723,144 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get drawerMenu => 'Menü';
+
+  @override
+  String get antennaCompassTitle => 'Anten Yönü';
+
+  @override
+  String get targetGrid => 'Hedef Grid Karesi';
+
+  @override
+  String get calculate => 'Hesapla';
+
+  @override
+  String get shortPath => 'Kısa Yol';
+
+  @override
+  String get longPath => 'Uzun Yol';
+
+  @override
+  String get azimuth => 'Azimut';
+
+  @override
+  String get myHeading => 'Yön';
+
+  @override
+  String get invalidGrid => 'Geçersiz grid karesi';
+
+  @override
+  String get gpsLocating => 'GPS konumu alınıyor… lütfen bekleyin';
+
+  @override
+  String get gpsUnavailable => 'GPS konumu alınamıyor';
+
+  @override
+  String get drawerAntenna => 'Anten Yönü';
+
+  @override
+  String get achievementsTitle => 'Başarılar';
+
+  @override
+  String get achievementsEmpty =>
+      'Rozet kazanmaya başlamak için ilk QSO\'nuzu kaydedin!';
+
+  @override
+  String get shareAchievement => 'Paylaş';
+
+  @override
+  String get achievementUnlocked => 'Başarı Kazanıldı!';
+
+  @override
+  String progressLabel(int done, int target) {
+    return '$done / $target';
+  }
+
+  @override
+  String get drawerAchievements => 'Başarılar';
+
+  @override
+  String get gifPreparing => 'Video hazırlanıyor...';
+
+  @override
+  String gifCapturing(int percent) {
+    return 'Kareler yakalanıyor... $percent%';
+  }
+
+  @override
+  String get gifEncoding => 'Video oluşturuluyor...';
+
+  @override
+  String get comingSoon => 'Yakında';
+
+  @override
+  String get noCompassSensor => 'Pusula sensörü yok';
+
+  @override
+  String get fillFromGps => 'GPS\'den Doldur';
+
+  @override
+  String get locationPermissionDenied => 'Konum izni reddedildi';
+
+  @override
+  String gpsError(String error) {
+    return 'GPS hatası: $error';
+  }
+
+  @override
+  String get errParse => 'Sunucu yanıtı işlenemedi';
+
+  @override
+  String get errLocalStorage => 'Yerel depolama hatası';
+
+  @override
+  String get errServer => 'Sunucu hatası';
+
+  @override
+  String get wpxPrefix => 'WPX Öneki';
+
+  @override
+  String get nowBtn => 'Şimdi';
+
+  @override
+  String get contestOtherCustom => 'Diğer / Özel';
+
+  @override
+  String get sigInfo => 'SIG Bilgisi';
+
+  @override
+  String get migrationTitle => 'Yeni API v2 Gerekli';
+
+  @override
+  String get migrationBody =>
+      'Wavelog Mobile artık Wavelog\'un yeni API sistemini kullanıyor. Eski API anahtarınız geçersiz — aşağıdaki adımları izleyerek dakikalar içinde geçiş yapabilirsiniz.';
+
+  @override
+  String get migrationStep1Title => 'Sunucu paketini yükleyin';
+
+  @override
+  String get migrationStep1Body =>
+      'Wavelog sunucunuza küçük bir güncelleme dosyası yüklemeniz gerekiyor. Aşağıdaki \"Yükleme Kılavuzu\" butonuna tıklayarak adım adım nasıl yapacağınızı görebilirsiniz.';
+
+  @override
+  String get migrationInstallGuideBtn => 'Yükleme Kılavuzu';
+
+  @override
+  String get migrationStep2Title => 'Yeni API tokeni oluşturun';
+
+  @override
+  String get migrationStep2Body =>
+      'Wavelog web arayüzünde:\n  1. Sağ üst köşedeki ayarlar menüsünü açın\n  2. \"API\" → \"API Tokenler\" bölümüne gidin\n  3. \"Yeni Token\" butonuna tıklayın\n  4. \"Wavelog Mobile\" ön ayarını seçin\n  5. Onaylayın ve çıkan kodu kopyalayın\n  (Token \"wl2_\" ile başlar)';
+
+  @override
+  String get migrationStep3Title => 'Profili güncelleyin';
+
+  @override
+  String get migrationStep3Body =>
+      'Aşağıdaki butona tıklayın. Sunucu adresiniz korunur, sadece kopyaladığınız yeni tokeni ilgili alana yapıştırmanız yeterli.';
+
+  @override
+  String get migrationUpdateTokenBtn => 'Token\'ı Güncelle';
+
+  @override
+  String get migrationHelpBtn => 'Yardım & Yükleme Kılavuzu';
 }

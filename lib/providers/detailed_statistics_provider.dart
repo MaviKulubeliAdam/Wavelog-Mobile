@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/models/detailed_statistics_model.dart';
+import 'qso_provider.dart'; // logbookSummaryProvider lives here
 import 'remote_datasource_provider.dart';
 import 'station_provider.dart';
 import 'statistics_provider.dart';
@@ -8,6 +9,12 @@ final detailedStatisticsProvider =
     FutureProvider<DetailedStatisticsModel>((ref) async {
   // Server-side totals (today/month/year/total)
   final serverStats = await ref.watch(statisticsProvider.future);
+
+  // Watching logbookSummaryProvider (not qsoProvider) ensures we re-run
+  // AFTER Hive is updated. All QSO operations (add/edit/delete) invalidate
+  // logbookSummaryProvider only after the Hive write completes, so computeStats()
+  // below always reads consistent data.
+  await ref.watch(logbookSummaryProvider.future);
 
   // Local cache stats (band/mode/station/streak/unique callsigns)
   final cache = ref.read(qsoCacheDatasourceProvider);
@@ -36,7 +43,7 @@ final detailedStatisticsProvider =
     totalQsos: serverStats.totalQsos,
     yearQsos: serverStats.yearQsos,
     monthQsos: serverStats.monthQsos,
-    todayQsos: serverStats.todayQsos > 0 ? serverStats.todayQsos : cacheStats.todayQsos,
+    todayQsos: cacheStats.todayQsos,
     uniqueCallsigns: cacheStats.uniqueCallsigns,
     currentStreakDays: cacheStats.currentStreakDays,
     qsosByBand: qsosByBand,

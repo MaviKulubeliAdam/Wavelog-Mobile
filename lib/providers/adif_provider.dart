@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import '../core/utils/adif_generator.dart';
+import '../core/utils/adif_parser.dart';
 import '../data/models/qso_model.dart';
 import '../data/repositories/qso_repository.dart';
 import 'remote_datasource_provider.dart';
@@ -38,10 +39,7 @@ class AdifNotifier extends StateNotifier<AdifState> {
   AdifNotifier(this._repo, this._ref) : super(const AdifState());
 
   Future<void> importFile(String adifContent, int stationProfileId) async {
-    final count = adifContent
-        .split(RegExp(r'<eor>', caseSensitive: false))
-        .where((r) => r.trim().isNotEmpty)
-        .length;
+    final count = AdifParser.countRecords(adifContent);
 
     state = AdifState(
       operation: AdifOperation.importing,
@@ -50,7 +48,17 @@ class AdifNotifier extends StateNotifier<AdifState> {
     );
 
     try {
-      final result = await _repo.importAdif(adifContent, stationProfileId);
+      final result = await _repo.streamingImportAdif(
+        adifContent,
+        stationProfileId,
+        (processed, total) {
+          state = AdifState(
+            operation: AdifOperation.importing,
+            totalCount: total,
+            processedCount: processed,
+          );
+        },
+      );
       state = AdifState(
         operation: AdifOperation.success,
         totalCount: result.total,

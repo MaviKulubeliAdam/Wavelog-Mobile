@@ -4,12 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/band_mode_data.dart';
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/validators.dart';
-import '../../../providers/patch_status_provider.dart';
+import '../../../data/datasources/remote/wavelog_remote_datasource.dart';
+import '../../../data/repositories/settings_repository.dart';
+import '../../../providers/dio_provider.dart';
+import '../../../providers/qso_provider.dart';
 import '../../../providers/remote_datasource_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/station_provider.dart';
+import '../../../providers/statistics_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -46,7 +51,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     if (!_formKey.currentState!.validate()) return;
     await ref.read(settingsProvider.notifier).updateServerUrl(_urlCtrl.text);
     await ref.read(settingsProvider.notifier).updateApiKey(_keyCtrl.text);
-    ref.invalidate(patchStatusProvider);
+    // Force data providers to reload with the new token immediately.
+    ref.invalidate(stationProvider);
+    ref.invalidate(qsoProvider);
+    ref.invalidate(statisticsProvider);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -75,28 +83,53 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     });
 
     final repo = ref.read(settingsRepositoryProvider);
-    final remote = ref.read(wavelogRemoteDatasourceProvider);
-    final result = await repo.testConnection(remote);
+    final remote = WavelogRemoteDatasource(
+      dio: buildWavelogDio(_urlCtrl.text.trim(),
+          bearerToken: _keyCtrl.text.trim()),
+    );
+
+    ConnectionTestResult result;
+    try {
+      result = await repo.testConnection(remote);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _testing = false;
+        _testSuccess = false;
+        _testResult = localizeError(context, e);
+      });
+      return;
+    }
+
+    if (!mounted) return;
+    ref.invalidate(stationProvider);
+    ref.invalidate(qsoProvider);
+    ref.invalidate(statisticsProvider);
+    try {
+      final stations = await ref.read(stationProvider.future);
+      if (stations.isNotEmpty && mounted) {
+        final current = ref.read(settingsProvider).activeStationProfileId;
+        final active = stations.where((s) => s.id == current).firstOrNull
+            ?? stations.where((s) => s.isActive).firstOrNull
+            ?? stations.first;
+        await ref.read(settingsProvider.notifier).setActiveStation(active);
+      }
+    } catch (_) {}
 
     if (!mounted) return;
     setState(() {
       _testing = false;
-      _testResult = result.message ??
-          (result.success
-              ? context.l10n.connectionSuccess
-              : context.l10n.connectionFailed);
-      _testSuccess = result.success;
-      if (result.success && result.totalQsos != null) {
-        _testResult = '${result.message} — ${result.totalQsos} QSO';
-      }
+      _testSuccess = true;
+      final label = result.message ?? context.l10n.connectionSuccess;
+      _testResult = result.totalQsos != null
+          ? '$label — ${result.totalQsos} QSO'
+          : label;
     });
 
-    if (result.success && mounted) {
-      await Future.delayed(const Duration(milliseconds: 1200));
-      if (mounted) {
-        final settings = ref.read(settingsProvider);
-        context.go(settings.isLoggedIn ? '/home' : '/login');
-      }
+    await Future.delayed(const Duration(milliseconds: 1200));
+    if (mounted) {
+      final settings = ref.read(settingsProvider);
+      context.go(settings.isLoggedIn ? '/home' : '/login');
     }
   }
 
@@ -105,9 +138,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final l10n = context.l10n;
     final settings = ref.watch(settingsProvider);
     final stations = ref.watch(stationProvider);
-
-    final patchAsync = ref.watch(patchStatusProvider);
-    final patchInstalled = patchAsync.valueOrNull ?? true;
 
     return Scaffold(
       appBar: AppBar(
@@ -121,12 +151,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Patch warning banner
-            if (!patchInstalled) ...[
-              const _PatchBanner(),
-              const SizedBox(height: 16),
-            ],
-
             // Connection section
             _sectionHeader(l10n.connectionSection),
             TextFormField(
@@ -400,6 +424,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 DropdownMenuItem(value: 'en', child: Text(l10n.langEnglish)),
                 DropdownMenuItem(value: 'tr', child: Text(l10n.langTurkish)),
                 DropdownMenuItem(value: 'pl', child: Text(l10n.langPolish)),
+                DropdownMenuItem(value: 'de', child: Text(l10n.langGerman)),
               ],
               onChanged: (v) =>
                   ref.read(settingsProvider.notifier).setLocale(v),
@@ -432,7 +457,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                 );
                 if (confirm == true && context.mounted) {
-                  ref.read(qsoCacheDatasourceProvider).clearCache();
+                  await ref.read(qsoCacheDatasourceProvider).clearCache();
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(l10n.cacheCleared)),
                   );
@@ -457,7 +483,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             Center(
               child: Text(
-                '${l10n.appTitle} v3.0.2',
+                () {
+                  final version = ref.watch(packageInfoProvider).valueOrNull?.version;
+                  return version != null ? '${l10n.appTitle} v$version' : l10n.appTitle;
+                }(),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                     ),
@@ -478,66 +507,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
-      ),
-    );
-  }
-}
-
-// ── Patch warning banner ──────────────────────────────────────────────────────
-
-class _PatchBanner extends StatelessWidget {
-  const _PatchBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade900.withValues(alpha: 0.25),
-        border: Border.all(color: Colors.orange.shade700, width: 1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(children: [
-            Icon(Icons.warning_amber_rounded, color: Colors.orange.shade400, size: 18),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                l10n.patchRequiredTitle,
-                style: TextStyle(
-                  color: Colors.orange.shade300,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ]),
-          const SizedBox(height: 6),
-          Text(
-            l10n.patchRequiredBanner,
-            style: TextStyle(color: Colors.orange.shade200, fontSize: 13),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () => launchUrl(
-                Uri.parse('https://sp9aqg.pl/install.html'),
-                mode: LaunchMode.externalApplication,
-              ),
-              icon: const Icon(Icons.open_in_browser, size: 16),
-              label: Text(l10n.patchViewGuide),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.orange.shade300,
-                side: BorderSide(color: Colors.orange.shade700),
-                visualDensity: VisualDensity.compact,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -581,32 +550,29 @@ class _NavStyleCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: cs.onSurfaceVariant,
                         ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 12),
             SegmentedButton<bool>(
-              segments: [
+              segments: const [
                 ButtonSegment(
                   value: true,
-                  icon: const Icon(Icons.view_quilt_outlined, size: 18),
-                  label: Text(context.l10n.navStyleModern.split(' ').first),
+                  icon: Icon(Icons.view_quilt_outlined, size: 18),
                 ),
                 ButtonSegment(
                   value: false,
-                  icon: const Icon(Icons.table_rows_outlined, size: 18),
-                  label: Text(context.l10n.navStyleClassic.split(' ').first),
+                  icon: Icon(Icons.table_rows_outlined, size: 18),
                 ),
               ],
               selected: {useModern},
               showSelectedIcon: false,
               onSelectionChanged: (s) => onChanged(s.first),
-              style: ButtonStyle(
+              style: const ButtonStyle(
                 visualDensity: VisualDensity.compact,
-                textStyle: WidgetStateProperty.all(
-                  const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                ),
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/contest_event_model.dart';
 import '../../../providers/contest_calendar_provider.dart';
@@ -28,7 +29,7 @@ class ContestCalendarScreen extends ConsumerWidget {
       body: async.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => _ErrorView(
-          message: e.toString(),
+          message: localizeError(context, e),
           onRetry: () => ref.invalidate(contestCalendarProvider),
         ),
         data: (events) => _CalendarBody(events: events),

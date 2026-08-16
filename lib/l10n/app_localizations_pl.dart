@@ -165,7 +165,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get noRecentQsos => 'Brak QSO';
 
   @override
-  String get syncNow => 'Synchronizuj';
+  String get syncNow => 'Synchronizuj Teraz';
 
   @override
   String pendingSync(int count) {
@@ -261,6 +261,9 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get qslSent => 'Wysłano';
+
+  @override
+  String get qslRcvd => 'Odebrano';
 
   @override
   String get qslReceived => 'Odebrano';
@@ -629,6 +632,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get langPolish => 'Polski';
 
   @override
+  String get langGerman => 'Deutsch';
+
+  @override
   String get aboutTitle => 'O aplikacji';
 
   @override
@@ -693,6 +699,20 @@ class AppLocalizationsPl extends AppLocalizations {
       'Zanim zaczniesz logować QSO, połącz aplikację z serwerem Wavelog. Wykonaj poniższe kroki.';
 
   @override
+  String get setupGuidePatchWarning =>
+      'Ta aplikacja wymaga zainstalowania łatki Wavelog Mobile na Twoim serwerze. Bez niej nie możesz wygenerować tokenu API v2.';
+
+  @override
+  String get setupGuidePatchStepTitle => 'Zainstaluj łatkę serwera';
+
+  @override
+  String get setupGuidePatchStepBody =>
+      'Aplikacja korzysta z API v2 Wavelog, które wymaga małej łatki na Twoim serwerze. Jeśli jej jeszcze nie zainstalowałeś, otwórz Przewodnik instalacji i wykonaj kroki dla swojej konfiguracji (klasycznej lub Docker).';
+
+  @override
+  String get setupGuidePatchBtn => 'Przewodnik instalacji';
+
+  @override
   String get setupGuideStep1Title => '1. Adres serwera';
 
   @override
@@ -700,28 +720,50 @@ class AppLocalizationsPl extends AppLocalizations {
       'Wpisz ten sam adres, którego używasz do otwierania Wavelog w przeglądarce, np. https://twojadomena.com — bez ukośnika na końcu.';
 
   @override
-  String get setupGuideStep2Title => '2. Łatka serwera (zrób to najpierw)';
+  String get setupGuideStep2Title => '2. Token API v2';
 
   @override
   String get setupGuideStep2Body =>
-      'Przed utworzeniem klucza API zainstaluj łatkę Wavelog Mobile API na serwerze. Dotknij poniżej, aby zobaczyć instrukcję.';
+      'W Wavelog przejdź do Ustawienia → API → Tokeny API (v2) → Nowy token. Wybierz preset \"Wavelog Mobile\" i potwierdź. Skopiuj wygenerowany token (zaczyna się od wl2_) i wklej go w aplikacji.';
 
   @override
-  String get setupGuideStep3Title => '3. Klucz API';
+  String get setupGuideStep3Title => '3. Znak wywoławczy i nazwa wyświetlana';
 
   @override
   String get setupGuideStep3Body =>
-      'Po zainstalowaniu łatki przejdź w Wavelog do Ustawienia → Klucze API i kliknij \"Create a mobile app key\". Wklej wygenerowany klucz w pole Klucz API.';
-
-  @override
-  String get setupGuideStep4Title => '4. Znak wywoławczy i nazwa wyświetlana';
-
-  @override
-  String get setupGuideStep4Body =>
       'Znak wywoławczy: Twój własny znak krótkofalarski, służy do dopasowania stacji. Nazwa wyświetlana: dowolna etykieta do rozpoznania tego logowania na urządzeniu.';
 
   @override
   String get setupGuideContinueBtn => 'Rozpocznij konfigurację';
+
+  @override
+  String get migrationTokenHint => 'wl2_…';
+
+  @override
+  String get migrationTokenLabel => 'Token API v2';
+
+  @override
+  String get migrationValidateBtn => 'Zatwierdź i kontynuuj';
+
+  @override
+  String get migrationValidating => 'Walidacja…';
+
+  @override
+  String get migrationTokenEmpty => 'Proszę wkleić token wl2_.';
+
+  @override
+  String get migrationTokenInvalid =>
+      'Token jest nieprawidłowy — sprawdź i spróbuj ponownie.';
+
+  @override
+  String get patchNotInstalledTitle => 'Łatka nie wykryta';
+
+  @override
+  String get patchNotInstalledBody =>
+      'Łatka Wavelog Mobile nie wydaje się być zainstalowana na Twoim serwerze.\n\nToken API v2 (wl2_…) nie będzie działał bez łatki. Najpierw wykonaj krok 1.';
+
+  @override
+  String get patchInstallFirst => 'Zainstaluj łatkę';
 
   @override
   String get appSubtitle => 'Aplikacja do logowania krótkofalarskiego';
@@ -1684,4 +1726,143 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get drawerMenu => 'Menu';
+
+  @override
+  String get antennaCompassTitle => 'Kierunek Anteny';
+
+  @override
+  String get targetGrid => 'Docelowy Locator';
+
+  @override
+  String get calculate => 'Oblicz';
+
+  @override
+  String get shortPath => 'Krótka Droga';
+
+  @override
+  String get longPath => 'Długa Droga';
+
+  @override
+  String get azimuth => 'Azymut';
+
+  @override
+  String get myHeading => 'Kierunek';
+
+  @override
+  String get invalidGrid => 'Nieprawidłowy locator';
+
+  @override
+  String get gpsLocating => 'Pobieranie lokalizacji GPS… proszę czekać';
+
+  @override
+  String get gpsUnavailable => 'Lokalizacja GPS niedostępna';
+
+  @override
+  String get drawerAntenna => 'Kierunek Anteny';
+
+  @override
+  String get achievementsTitle => 'Osiągnięcia';
+
+  @override
+  String get achievementsEmpty => 'Zaloguj pierwsze QSO, aby zdobywać odznaki!';
+
+  @override
+  String get shareAchievement => 'Udostępnij';
+
+  @override
+  String get achievementUnlocked => 'Osiągnięcie Odblokowane!';
+
+  @override
+  String progressLabel(int done, int target) {
+    return '$done / $target';
+  }
+
+  @override
+  String get drawerAchievements => 'Osiągnięcia';
+
+  @override
+  String get gifPreparing => 'Przygotowywanie wideo...';
+
+  @override
+  String gifCapturing(int percent) {
+    return 'Przechwytywanie klatek... $percent%';
+  }
+
+  @override
+  String get gifEncoding => 'Kodowanie wideo...';
+
+  @override
+  String get comingSoon => 'Wkrótce';
+
+  @override
+  String get noCompassSensor => 'Brak czujnika kompasu';
+
+  @override
+  String get fillFromGps => 'Wypełnij z GPS';
+
+  @override
+  String get locationPermissionDenied => 'Odmowa dostępu do lokalizacji';
+
+  @override
+  String gpsError(String error) {
+    return 'Błąd GPS: $error';
+  }
+
+  @override
+  String get errParse => 'Błąd przetwarzania odpowiedzi serwera';
+
+  @override
+  String get errLocalStorage => 'Błąd lokalnej pamięci';
+
+  @override
+  String get errServer => 'Błąd serwera';
+
+  @override
+  String get wpxPrefix => 'Prefiks WPX';
+
+  @override
+  String get nowBtn => 'Teraz';
+
+  @override
+  String get contestOtherCustom => 'Inne / Własne';
+
+  @override
+  String get sigInfo => 'Informacje SIG';
+
+  @override
+  String get migrationTitle => 'Wymagane API v2';
+
+  @override
+  String get migrationBody =>
+      'Wavelog Mobile korzysta teraz z nowego systemu API Wavelog. Stary klucz API jest nieważny — wykonaj poniższe kroki, aby przeprowadzić migrację w kilka minut.';
+
+  @override
+  String get migrationStep1Title => 'Zainstaluj pakiet serwera';
+
+  @override
+  String get migrationStep1Body =>
+      'Na serwerze Wavelog należy zainstalować mały plik aktualizacji. Kliknij przycisk Przewodnik instalacji poniżej, aby zobaczyć instrukcje krok po kroku.';
+
+  @override
+  String get migrationInstallGuideBtn => 'Przewodnik instalacji';
+
+  @override
+  String get migrationStep2Title => 'Utwórz nowy token API';
+
+  @override
+  String get migrationStep2Body =>
+      'W interfejsie webowym Wavelog:\n  1. Otwórz menu ustawień w prawym górnym rogu\n  2. Przejdź do \"API\" → \"Tokeny API\"\n  3. Kliknij \"Nowy Token\"\n  4. Wybierz preset \"Wavelog Mobile\"\n  5. Potwierdź i skopiuj wyświetlony kod\n  (Token zaczyna się od \"wl2_\")';
+
+  @override
+  String get migrationStep3Title => 'Zaktualizuj profil';
+
+  @override
+  String get migrationStep3Body =>
+      'Kliknij przycisk poniżej. Adres serwera zostanie zachowany — wystarczy wkleić skopiowany token do odpowiedniego pola.';
+
+  @override
+  String get migrationUpdateTokenBtn => 'Zaktualizuj Token';
+
+  @override
+  String get migrationHelpBtn => 'Pomoc i Przewodnik instalacji';
 }

@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/callsign_lookup_model.dart';
+import '../../../providers/lookup_provider.dart';
 
-class CallsignInfoCard extends StatelessWidget {
+class CallsignInfoCard extends ConsumerWidget {
   final CallsignLookupModel result;
   final VoidCallback? onLogQso;
 
   const CallsignInfoCard({super.key, required this.result, this.onLogQso});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final qslStatus = ref
+        .watch(callsignQslStatusProvider(result.callsign))
+        .valueOrNull;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -20,9 +25,13 @@ class CallsignInfoCard extends StatelessWidget {
             _header(context, theme),
             const Divider(height: 24),
             _infoGrid(context),
-            if (result.qslManager != null || result.lotwMember || result.eqslMember || result.buqslMember) ...[
+            if (result.qslManager != null || result.lotwMember || result.eqslMember || result.buqslMember || result.qslConfirmed) ...[
               const SizedBox(height: 12),
               _qslSection(context, theme),
+            ],
+            if (qslStatus != null && qslStatus.hasAny) ...[
+              const Divider(height: 20),
+              _qslStatusSection(context, theme, qslStatus),
             ],
             if (result.workedBefore &&
                 (result.lastWorkedDate != null || result.lastWorkedBand != null)) ...[
@@ -207,6 +216,8 @@ class CallsignInfoCard extends StatelessWidget {
           spacing: 6,
           runSpacing: 4,
           children: [
+            if (result.qslConfirmed)
+              _qslChip(context.l10n.dxccLegendConfirmed, Colors.green),
             if (result.lotwMember)
               _qslChip('LoTW', Colors.blue),
             if (result.eqslMember)
@@ -231,6 +242,84 @@ class CallsignInfoCard extends StatelessWidget {
               ),
             ],
           ),
+        ],
+      ],
+    );
+  }
+
+  Widget _qslStatusSection(
+      BuildContext context, ThemeData theme, CallsignQslStatus s) {
+    final cs = theme.colorScheme;
+
+    // Rows: [label, sent, rcvd]
+    final rows = <(String, bool, bool)>[
+      ('Kağıt QSL', s.qslSent,  s.qslRcvd),
+      ('LoTW',      s.lotwSent, s.lotwRcvd),
+      ('eQSL',      s.eqslSent, s.eqslRcvd),
+    ];
+    final hasQrz = s.qrzUploaded;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(context.l10n.qslStatus, style: theme.textTheme.labelLarge),
+        const SizedBox(height: 6),
+        Table(
+          columnWidths: const {
+            0: FlexColumnWidth(2),
+            1: FlexColumnWidth(1),
+            2: FlexColumnWidth(1),
+          },
+          children: [
+            TableRow(
+              children: [
+                const SizedBox.shrink(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(context.l10n.qslSent,
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: cs.secondary),
+                      textAlign: TextAlign.center),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(context.l10n.qslRcvd,
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: cs.secondary),
+                      textAlign: TextAlign.center),
+                ),
+              ],
+            ),
+            for (final row in rows)
+              if (row.$2 || row.$3)
+                TableRow(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Text(row.$1,
+                        style: theme.textTheme.bodySmall),
+                  ),
+                  Icon(
+                    row.$2 ? Icons.check_circle : Icons.radio_button_unchecked,
+                    size: 16,
+                    color: row.$2 ? Colors.green : cs.outlineVariant,
+                  ),
+                  Icon(
+                    row.$3 ? Icons.check_circle : Icons.radio_button_unchecked,
+                    size: 16,
+                    color: row.$3 ? Colors.green : cs.outlineVariant,
+                  ),
+                ]),
+          ],
+        ),
+        if (hasQrz) ...[
+          const SizedBox(height: 4),
+          Row(children: [
+            const Icon(Icons.cloud_done, size: 14, color: Colors.green),
+            const SizedBox(width: 4),
+            Text('QRZ uploaded',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: Colors.green)),
+          ]),
         ],
       ],
     );

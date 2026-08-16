@@ -90,6 +90,7 @@ class DxClusterDatasource {
     final body = response.data;
     final spotsMap = (body is Map) ? body['s'] : null;
     if (spotsMap == null) throw Exception('Unexpected fallback response format');
+    if (spotsMap is! Map) throw Exception('Unexpected fallback response format');
 
     return (spotsMap as Map<String, dynamic>)
         .values

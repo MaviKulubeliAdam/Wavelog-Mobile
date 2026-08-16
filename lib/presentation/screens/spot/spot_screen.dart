@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/enums/activity_type.dart';
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/datasources/remote/pota_datasource.dart';
 import '../../../data/datasources/remote/sota_datasource.dart';
@@ -506,7 +507,7 @@ class _SpotListSection extends StatelessWidget {
               if (showErrorDetails) ...[
                 const SizedBox(height: 6),
                 Text(
-                  e.toString(),
+                  localizeError(context, e),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: Theme.of(context)
                           .colorScheme

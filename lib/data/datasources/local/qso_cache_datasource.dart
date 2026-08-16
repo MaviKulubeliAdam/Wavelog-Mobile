@@ -52,7 +52,7 @@ class QsoCacheDatasource {
   }
 
   Future<String> saveLocalQso(QsoModel qso) async {
-    final id = _uuid.v4();
+    final id = qso.localId ?? _uuid.v4();
     final localQso = qso.copyWith(localId: id);
     await _box.put(id, localQso);
     return id;
@@ -61,6 +61,8 @@ class QsoCacheDatasource {
   Future<List<QsoModel>> getUnsyncedQsos() async {
     return _box.values.where((q) => !q.synced).toList();
   }
+
+  int getUnsyncedCount() => _box.values.where((q) => !q.synced).length;
 
   Future<void> markSynced(String localId) async {
     final qso = _box.get(localId);
@@ -159,6 +161,20 @@ class QsoCacheDatasource {
 
   Future<void> clearCache() async {
     await _box.clear();
+  }
+
+  // Clears the Hive cache when the API token changes (e.g., v1→v2 migration).
+  // Stored token is compared without hashing — it never leaves the device.
+  static const _tokenKey = 'wl_cache_token';
+
+  Future<void> clearIfTokenChanged(String currentToken) async {
+    if (currentToken.isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    final stored = prefs.getString(_tokenKey) ?? '';
+    if (stored != currentToken) {
+      await _box.clear();
+      await prefs.setString(_tokenKey, currentToken);
+    }
   }
 
   CacheStats computeStats() {

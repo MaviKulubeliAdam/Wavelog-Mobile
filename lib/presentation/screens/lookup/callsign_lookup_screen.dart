@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/lookup_provider.dart';
 import '../../widgets/common/error_view.dart';
@@ -146,7 +147,7 @@ class _CallsignLookupScreenState
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
               error: (e, _) => ErrorView(
-                message: e.toString(),
+                message: localizeError(context, e),
                 onRetry: _search,
               ),
             ),

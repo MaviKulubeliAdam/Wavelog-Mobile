@@ -7,8 +7,9 @@ class AdifGenerator {
   static const _skipFields = {
     'APP_WAVELOG_QSO_ID',
     'WAVELOG_QSO_ID',
+    'APP_WAVELOG_FLAG',   // sadece görüntü için, ADIF standardı dışı
     'ID',
-    'STATION_PROFILE_ID',  // mobil dahili alan
+    'STATION_PROFILE_ID',
   };
 
   static String generate(
@@ -32,9 +33,22 @@ class AdifGenerator {
 
   static String generateSingle(QsoModel qso) => _qsoToAdif(qso);
 
+  static String fromParsedRecords(List<Map<String, String>> records) {
+    final buf = StringBuffer();
+    for (final record in records) {
+      for (final entry in record.entries) {
+        buf.writeln(_field(entry.key, entry.value));
+      }
+      buf.writeln('<EOR>');
+      buf.writeln();
+    }
+    return buf.toString();
+  }
+
   static String _qsoToAdif(QsoModel qso) {
     final buf = StringBuffer();
     final raw = qso.rawAdif;
+    var wroteFromRaw = false;
 
     if (raw != null && raw.isNotEmpty) {
       // Sunucudan gelen tüm ADIF alanlarını doğrudan kullan
@@ -44,9 +58,13 @@ class AdifGenerator {
         if (_skipFields.contains(key)) continue;
         if (value.isEmpty) continue;
         buf.writeln(_field(key, value));
+        wroteFromRaw = true;
       }
-    } else {
-      // Yedek: yerel olarak eklenen, henüz sunucuyla eşleşmemiş QSO
+    }
+
+    if (!wroteFromRaw) {
+      // Yedek: rawAdif yoksa veya sadece display alanları içeriyorsa (ör. APP_WAVELOG_FLAG)
+      // QSO model alanlarından ADIF üret
       final dt = qso.dateTimeOn.toUtc();
       buf.writeln(_field('CALL', qso.callsign));
       buf.writeln(_field('QSO_DATE', _fmtDate(dt)));

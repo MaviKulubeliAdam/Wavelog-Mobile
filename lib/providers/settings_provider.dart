@@ -1,11 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../data/datasources/local/settings_local_datasource.dart';
 import '../data/models/settings_model.dart';
 import '../data/models/station_model.dart';
 import '../data/models/user_profile_model.dart';
 import '../data/repositories/settings_repository.dart';
+
+final packageInfoProvider =
+    FutureProvider<PackageInfo>((_) => PackageInfo.fromPlatform());
 
 final settingsLocalDatasourceProvider =
     Provider<SettingsLocalDatasource>((ref) => SettingsLocalDatasource());
@@ -50,7 +54,11 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
   }
 
   Future<void> updateServerUrl(String url) async {
-    final s = state.copyWith(serverUrl: url.trimRight().replaceAll(RegExp(r'/+$'), ''));
+    var clean = url.trimRight().replaceAll(RegExp(r'/+$'), '');
+    if (clean.endsWith('/index.php')) {
+      clean = clean.substring(0, clean.length - '/index.php'.length);
+    }
+    final s = state.copyWith(serverUrl: clean);
     await _repo.saveSettings(s);
     state = s;
   }

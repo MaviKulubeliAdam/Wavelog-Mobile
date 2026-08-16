@@ -42,14 +42,14 @@ class _AboutScreenState extends State<AboutScreen> {
           Center(
             child: Column(
               children: [
-                Container(
-                  width: 88,
-                  height: 88,
-                  decoration: BoxDecoration(
-                    color: cs.primary,
-                    borderRadius: BorderRadius.circular(20),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/icon/icon.png',
+                    width: 88,
+                    height: 88,
+                    fit: BoxFit.cover,
                   ),
-                  child: const Icon(Icons.radio, size: 52, color: Colors.white),
                 ),
                 const SizedBox(height: 14),
                 Text('Wavelog Mobile',
@@ -82,6 +82,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   onTap: () => _open('https://ta4rx.tr')),
               _InfoRow(Icons.email_outlined, 'erkin@ta4rx.tr',
                   onTap: () => _mail('erkin@ta4rx.tr')),
+              _InfoRow(Icons.code, 'github.com/MaviKulubeliAdam/Wavelog-Mobile',
+                  onTap: () => _open('https://github.com/MaviKulubeliAdam/Wavelog-Mobile')),
             ],
           ),
 
