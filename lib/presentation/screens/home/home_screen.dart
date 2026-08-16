@@ -152,11 +152,14 @@ class _HomeBody extends ConsumerWidget {
               color: kAccentElectric,
               backgroundColor: Theme.of(context).colorScheme.surface,
               onRefresh: onRefresh,
-              child: _QsoPanel(
-                statistics: statistics,
-                recentQsos: recentQsos,
-                localTodayQsos: localTodayQsos,
-                settings: settings,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: _QsoPanel(
+                  statistics: statistics,
+                  recentQsos: recentQsos,
+                  localTodayQsos: localTodayQsos,
+                  settings: settings,
+                ),
               ),
             ),
           ),

@@ -137,7 +137,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loginFailed => 'Anmeldung fehlgeschlagen';
 
   @override
-  String get noStationFound => 'Keine passende Station gefunden — Rufzeichen wird verwendet';
+  String get noStationFound =>
+      'Keine passende Station gefunden — Rufzeichen wird verwendet';
 
   @override
   String get homeTitle => 'Startseite';
@@ -431,7 +432,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noStations => 'Noch keine Stationen';
 
   @override
-  String get noStationsHint => 'Eine Station über die Wavelog-Weboberfläche hinzufügen.';
+  String get noStationsHint =>
+      'Eine Station über die Wavelog-Weboberfläche hinzufügen.';
 
   @override
   String get addStationOnWeb => 'Station in Wavelog hinzufügen';
@@ -581,7 +583,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get offlineMode => 'Offline-Modus';
 
   @override
-  String get offlineModeHint => 'QSOs zuerst lokal speichern, später synchronisieren';
+  String get offlineModeHint =>
+      'QSOs zuerst lokal speichern, später synchronisieren';
 
   @override
   String get languageLabel => 'Sprache';
@@ -721,7 +724,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get setupGuideStep2Body =>
-      'Gehen Sie in Wavelog zu Einstellungen → API → API-Token (v2) → Neuer Token. Wählen Sie das Preset "Wavelog Mobile" und bestätigen Sie. Kopieren Sie den generierten Token (beginnt mit wl2_) und fügen Sie ihn in die App ein.';
+      'Gehen Sie in Wavelog zu Einstellungen → API → API-Token (v2) → Neuer Token. Wählen Sie das Preset \"Wavelog Mobile\" und bestätigen Sie. Kopieren Sie den generierten Token (beginnt mit wl2_) und fügen Sie ihn in die App ein.';
 
   @override
   String get setupGuideStep3Title => '3. Rufzeichen & Anzeigename';
@@ -1195,7 +1198,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loadDetailsFailed => 'Details konnten nicht geladen werden';
 
   @override
-  String get cannotDeleteActiveStation => 'Die aktive Station kann nicht gelöscht werden.';
+  String get cannotDeleteActiveStation =>
+      'Die aktive Station kann nicht gelöscht werden.';
 
   @override
   String get navStats => 'Statistik';
@@ -1678,7 +1682,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get contestCalendarRecentlyPast => 'Kürzlich vergangen';
 
   @override
-  String get contestCalendarLoadError => 'Contest-Kalender konnte nicht geladen werden';
+  String get contestCalendarLoadError =>
+      'Contest-Kalender konnte nicht geladen werden';
 
   @override
   String get contestCalendarRefresh => 'Aktualisieren';
@@ -1759,7 +1764,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get achievementsTitle => 'Erfolge';
 
   @override
-  String get achievementsEmpty => 'Loggen Sie Ihr erstes QSO, um Abzeichen zu verdienen!';
+  String get achievementsEmpty =>
+      'Loggen Sie Ihr erstes QSO, um Abzeichen zu verdienen!';
 
   @override
   String get shareAchievement => 'Teilen';
@@ -1846,7 +1852,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get migrationStep2Body =>
-      'In der Wavelog-Weboberfläche:\n  1. Einstellungsmenü oben rechts öffnen\n  2. Zu "API" → "API-Token" gehen\n  3. "Neuer Token" klicken\n  4. Preset "Wavelog Mobile" auswählen\n  5. Bestätigen und den angezeigten Code kopieren\n  (Token beginnt mit "wl2_")';
+      'In der Wavelog-Weboberfläche:\n  1. Einstellungsmenü oben rechts öffnen\n  2. Zu \"API\" → \"API-Token\" gehen\n  3. \"Neuer Token\" klicken\n  4. Preset \"Wavelog Mobile\" auswählen\n  5. Bestätigen und den angezeigten Code kopieren\n  (Token beginnt mit \"wl2_\")';
 
   @override
   String get migrationStep3Title => 'Profil aktualisieren';

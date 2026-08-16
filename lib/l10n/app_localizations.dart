@@ -3630,7 +3630,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'pl', 'tr', 'de'].contains(locale.languageCode);
+      <String>['de', 'en', 'pl', 'tr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -3639,14 +3639,14 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
     case 'pl':
       return AppLocalizationsPl();
     case 'tr':
       return AppLocalizationsTr();
-    case 'de':
-      return AppLocalizationsDe();
   }
 
   throw FlutterError(

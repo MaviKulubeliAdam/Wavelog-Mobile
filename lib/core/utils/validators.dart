@@ -3,7 +3,7 @@
 //   Prefix/çağrı   : SV5/SP9AQG, W1/SP9AQG
 //   Suffix (/P /M) : SP9AQG/P, SP9AQG/M, SP9AQG/MM, SP9AQG/QRP, W1AW/1
 final _callsignRegex = RegExp(
-  r'^([A-Z0-9]{1,4}/)?[A-Z0-9]{1,3}[0-9][A-Z0-9]{0,3}[A-Z](/[A-Z0-9]{1,4})?$',
+  r'^([A-Z0-9]{1,4}/)?[A-Z0-9]{1,3}[0-9][A-Z0-9]{0,6}[A-Z](/[A-Z0-9]{1,4})?$',
   caseSensitive: false,
 );
 
