@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/detailed_statistics_model.dart';
 import '../../../data/models/dxcc_entity_model.dart';
@@ -10,6 +11,7 @@ import '../../../data/models/qso_model.dart';
 import '../../../providers/detailed_statistics_provider.dart';
 import '../../../providers/pota_stats_provider.dart';
 import '../../../providers/remote_datasource_provider.dart';
+import '../../../providers/qso_provider.dart';
 import '../../../providers/solar_provider.dart';
 import '../../../providers/statistics_provider.dart';
 import '../../widgets/common/error_view.dart';
@@ -21,6 +23,22 @@ String _titleCase(String s) => s
     .split(' ')
     .map((w) => w.isEmpty ? w : '${w[0].toUpperCase()}${w.substring(1).toLowerCase()}')
     .join(' ');
+
+/// Returns the first segment of a callsign (before any "/"), uppercased.
+/// "G3ABC/P" → "G3ABC", "G/DL1ABC" → "G", "VK9X/VK4ABC" → "VK9X".
+String _normalizeQsoCall(String raw) {
+  if (raw.isEmpty) return '';
+  return raw.toUpperCase().split('/').first.trim();
+}
+
+/// Finds the DXCC entity whose prefix is the longest match for [call].
+/// [sorted] must be sorted by prefix.length descending.
+DxccEntity? _matchDxccByCall(String call, List<DxccEntity> sorted) {
+  for (final e in sorted) {
+    if (call.startsWith(e.prefix.toUpperCase())) return e;
+  }
+  return null;
+}
 
 // Fallback continent derivation from CQ zone when the server omits the field.
 // Zone 40 = Iceland / Faroe Is. (EU). Zone 21 = Canary Is. / Madeira (DXCC continent EU).
@@ -79,6 +97,10 @@ class _DxccData {
 const _totalDxccEntities = 340;
 
 final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
+  // Fetch server-side DXCC summary (worked/confirmed/available).
+  // Used as fallback when local QSOs lack dxcc/country fields (v2 API).
+  final serverStats = await ref.watch(statisticsProvider.future);
+
   final box = Hive.box<QsoModel>('qso_cache');
 
   // Build worked map from QSO cache: adif → confirmation status + continent
@@ -124,6 +146,35 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
         .toList();
   } catch (_) {}
 
+  // v2 API QSOs lack a `dxcc` field, so workedByAdif is empty after the first pass.
+  // Derive DXCC entity from callsign prefix (longest-match against entity prefix list).
+  if (entities.isNotEmpty && workedByAdif.isEmpty) {
+    final sortedByPrefix = entities
+        .where((e) => e.prefix.isNotEmpty && e.adif > 0)
+        .toList()
+        ..sort((a, b) => b.prefix.length.compareTo(a.prefix.length));
+
+    for (final qso in box.values) {
+      final call = _normalizeQsoCall(qso.callsign);
+      if (call.isEmpty) continue;
+      final entity = _matchDxccByCall(call, sortedByPrefix);
+      if (entity == null) continue;
+
+      final lotwY = qso.lotwRcvd?.toUpperCase() == 'Y';
+      final eqslY = qso.eqslRcvd?.toUpperCase() == 'Y';
+      final qslY  = qso.qslRcvd?.toUpperCase()  == 'Y';
+
+      final ex = workedByAdif[entity.adif];
+      workedByAdif[entity.adif] = (
+        count: (ex?.count ?? 0) + 1,
+        lotw:  (ex?.lotw  ?? false) || lotwY,
+        eqsl:  (ex?.eqsl  ?? false) || eqslY,
+        qsl:   (ex?.qsl   ?? false) || qslY,
+        cont:  entity.continent,
+      );
+    }
+  }
+
   List<_DxccEntry> allEntries;
 
   if (entities.isNotEmpty) {
@@ -166,8 +217,8 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
     }).toList();
   }
 
-  final workedCount    = allEntries.where((e) => e.status != _DxccStatus.notWorked).length;
-  final confirmedCount = allEntries.where((e) => e.status == _DxccStatus.confirmed).length;
+  final localWorked    = allEntries.where((e) => e.status != _DxccStatus.notWorked).length;
+  final localConfirmed = allEntries.where((e) => e.status == _DxccStatus.confirmed).length;
   final total          = entities.isNotEmpty ? entities.length : _totalDxccEntities;
 
   // Confirmation breakdown for summary card (still useful per-method)
@@ -185,14 +236,20 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
     }
   }
 
+  // Summary card always shows server-authoritative counts.
+  // Prefix-matched local counts power the per-entity breakdown but may differ slightly.
+  final workedCount    = serverStats.dxccWorked > 0    ? serverStats.dxccWorked    : localWorked;
+  final confirmedCount = serverStats.dxccConfirmed > 0 ? serverStats.dxccConfirmed : localConfirmed;
+  final entityTotal    = serverStats.dxccAvailable > 0 ? serverStats.dxccAvailable : total;
+
   return _DxccData(
-    totalEntities: total,
+    totalEntities: entityTotal,
     worked:        workedCount,
     confirmed:     confirmedCount,
     lotwConfirmed: lotwC,
     eqslConfirmed: eqslC,
     qslConfirmed:  qslC,
-    remaining:     (total - workedCount).clamp(0, total),
+    remaining:     (entityTotal - workedCount).clamp(0, entityTotal),
     entries:       allEntries,
   );
 });
@@ -227,6 +284,7 @@ class StatisticsScreen extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.refresh),
               onPressed: () {
+                ref.invalidate(qsoProvider);
                 ref.invalidate(statisticsProvider);
                 ref.invalidate(detailedStatisticsProvider);
                 ref.invalidate(solarDataProvider);
@@ -376,7 +434,7 @@ class _DxccTab extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => ErrorView(
-        message: e.toString(),
+        message: localizeError(context, e),
         onRetry: () => ref.invalidate(_dxccStatsProvider),
       ),
     );
@@ -539,7 +597,7 @@ class _StatsTab extends ConsumerWidget {
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, _) => ErrorView(
-        message: e.toString(),
+        message: localizeError(context, e),
         onRetry: () {
           ref.invalidate(statisticsProvider);
           ref.invalidate(detailedStatisticsProvider);

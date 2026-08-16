@@ -64,6 +64,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   bool _lookupDone = false;
   bool _lookupSuccess = false;
 
+  String? _dxccCountry;
+  String? _dxccFlag;
+
   // Auto-spot banner
   AutoSpotStatus? _autoSpotStatus;
   Timer? _statusTimer;
@@ -102,6 +105,8 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _qthCtrl = TextEditingController(text: edit.qth ?? '');
       _gridCtrl = TextEditingController(text: edit.gridSquare ?? '');
       _commentCtrl = TextEditingController(text: edit.comment ?? '');
+      _dxccCountry = edit.country ?? edit.rawAdif?['COUNTRY'] ?? edit.dxcc;
+      _dxccFlag = edit.rawAdif?['APP_WAVELOG_FLAG'];
     } else {
       // Restore last submode when band+mode match the remembered combination
       if (_memBand == _band && _memMode == _mode) {
@@ -154,7 +159,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _statusTimer?.cancel();
     _freqSaveDebounce?.cancel();
     _freqCtrl.removeListener(_updateAutoSpotStatus);
-    _freqCtrl.removeListener(_saveFreqDebounced);
+    if (widget.editQso == null) _freqCtrl.removeListener(_saveFreqDebounced);
     _callsignFocus.removeListener(_onCallsignFocusChange);
     _callsignFocus.dispose();
     _callsignCtrl.dispose();
@@ -203,6 +208,8 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
         if (result.name != null) _nameCtrl.text = result.name!;
         if (result.qth != null) _qthCtrl.text = result.qth!;
         if (result.gridSquare != null) _gridCtrl.text = result.gridSquare!;
+        _dxccCountry = result.country;
+        _dxccFlag = result.flag;
       });
     } catch (_) {
       if (mounted) {
@@ -346,6 +353,8 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _currentCallsign = '';
       _lookupDone = false;
       _lookupSuccess = false;
+      _dxccCountry = null;
+      _dxccFlag = null;
       if (_isLive) _dateTimeOn = DateTime.now().toUtc();
     });
   }
@@ -353,8 +362,15 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final stationId = _selectedStation?.id ??
-        ref.read(settingsProvider).activeStationProfileId;
+    // Resolve the effective station: explicit selection → settings ID → first
+    // active station in the loaded list (handles stale or null activeStationProfileId).
+    final stationList = ref.read(stationProvider).valueOrNull ?? [];
+    final settingStationId = ref.read(settingsProvider).activeStationProfileId;
+    final effectiveStation = _selectedStation
+        ?? stationList.where((s) => s.id == settingStationId).firstOrNull
+        ?? stationList.where((s) => s.isActive).firstOrNull
+        ?? stationList.firstOrNull;
+    final stationId = effectiveStation?.id;
     if (stationId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(context.l10n.noActiveStation)),
@@ -385,6 +401,16 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       comment:
           _commentCtrl.text.trim().isEmpty ? null : _commentCtrl.text.trim(),
       stationProfileId: stationId,
+      // Preserve all raw ADIF fields; persist flag emoji for edit-mode restoration
+      rawAdif: _dxccFlag != null
+          ? {
+              ...?widget.editQso?.rawAdif,
+              'APP_WAVELOG_FLAG': _dxccFlag!,
+            }
+          : widget.editQso?.rawAdif,
+      country: _dxccCountry,
+      dxcc: widget.editQso?.dxcc,
+      continent: widget.editQso?.continent,
     );
 
     try {
@@ -707,6 +733,8 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
                 _nameCtrl.clear();
                 _qthCtrl.clear();
                 _gridCtrl.clear();
+                _dxccCountry = null;
+                _dxccFlag = null;
                 _lookupSuccess = false;
               }
             });
@@ -878,15 +906,62 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       ]),
       const SizedBox(height: 12),
 
-      // ── Grid ────────────────────────────────────────────────────────
-      TextFormField(
-        controller: _gridCtrl,
-        decoration: InputDecoration(
-          labelText: l10n.gridField,
-          hintText: 'KN41',
-        ),
-        textCapitalization: TextCapitalization.characters,
-        validator: validateGridSquare,
+      // ── Grid + DXCC country ─────────────────────────────────────────
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Grid — narrower
+          SizedBox(
+            width: 110,
+            child: TextFormField(
+              controller: _gridCtrl,
+              decoration: InputDecoration(
+                labelText: l10n.gridField,
+                hintText: 'KN41',
+              ),
+              textCapitalization: TextCapitalization.characters,
+              validator: validateGridSquare,
+            ),
+          ),
+          const SizedBox(width: 12),
+          // DXCC country — fills remaining width
+          Expanded(
+            child: InputDecorator(
+              decoration: const InputDecoration(
+                labelText: 'DXCC',
+                isDense: true,
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              ),
+              child: _dxccCountry != null
+                  ? Row(
+                      children: [
+                        if (_dxccFlag != null &&
+                            _dxccFlag!.length <= 8)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Text(_dxccFlag!,
+                                style: const TextStyle(fontSize: 16)),
+                          ),
+                        Expanded(
+                          child: Text(
+                            _dxccCountry!,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      '—',
+                      style: TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurfaceVariant),
+                    ),
+            ),
+          ),
+        ],
       ),
       const SizedBox(height: 12),
 

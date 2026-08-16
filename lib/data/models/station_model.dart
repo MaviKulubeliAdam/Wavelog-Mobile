@@ -80,25 +80,30 @@ class StationModel {
   });
 
   factory StationModel.fromJson(Map<String, dynamic> json) {
+    // v2 native API returns short names: id, name, callsign, active (bool)
+    // api_mobile patch returns legacy DB names: station_id, station_profile_name, station_active ('1')
+    final isV2Format = json.containsKey('id') && !json.containsKey('station_id');
     return StationModel(
-      id: _parseInt(json['station_id']) ?? 0,
-      profileName: json['station_profile_name']?.toString() ?? '',
-      callsign: json['station_callsign']?.toString() ?? '',
-      gridSquare: json['station_gridsquare']?.toString(),
-      city: json['station_city']?.toString(),
-      dxcc: _parseInt(json['station_dxcc']),
-      power: _parseInt(json['station_power']),
-      isActive: json['station_active']?.toString() == '1',
+      id: _parseInt(isV2Format ? json['id'] : json['station_id']) ?? 0,
+      profileName: (isV2Format ? json['name'] : json['station_profile_name'])?.toString() ?? '',
+      callsign: (isV2Format ? json['callsign'] : json['station_callsign'])?.toString() ?? '',
+      gridSquare: (isV2Format ? json['gridsquare'] : json['station_gridsquare'])?.toString(),
+      city: (isV2Format ? json['city'] : json['station_city'])?.toString(),
+      dxcc: _parseInt(isV2Format ? json['dxcc'] : json['station_dxcc']),
+      power: _parseInt(isV2Format ? json['power'] : json['station_power']),
+      isActive: isV2Format
+          ? (json['active'] == true)
+          : json['station_active']?.toString() == '1',
       state: json['state']?.toString() ?? json['station_state']?.toString(),
-      county: json['station_cnty']?.toString() ?? json['county']?.toString(),
-      cqZone: _parseInt(json['station_cq']),
-      ituZone: _parseInt(json['station_itu']),
-      iota: json['station_iota']?.toString(),
-      sota: json['station_sota']?.toString(),
-      wwff: json['station_wwff']?.toString(),
-      pota: json['station_pota']?.toString(),
-      sig: json['station_sig']?.toString(),
-      sigInfo: json['station_sig_info']?.toString(),
+      county: (isV2Format ? json['cnty'] : json['station_cnty'])?.toString() ?? json['county']?.toString(),
+      cqZone: _parseInt(isV2Format ? json['cq'] : json['station_cq']),
+      ituZone: _parseInt(isV2Format ? json['itu'] : json['station_itu']),
+      iota: (isV2Format ? json['iota'] : json['station_iota'])?.toString(),
+      sota: (isV2Format ? json['sota'] : json['station_sota'])?.toString(),
+      wwff: (isV2Format ? json['wwff'] : json['station_wwff'])?.toString(),
+      pota: (isV2Format ? json['pota'] : json['station_pota'])?.toString(),
+      sig: (isV2Format ? json['sig'] : json['station_sig'])?.toString(),
+      sigInfo: (isV2Format ? json['sig_info'] : json['station_sig_info'])?.toString(),
       eqslQthNickname: json['eqslqthnickname']?.toString(),
       eqslDefaultQslMsg: json['eqsl_default_qslmsg']?.toString(),
       qrzApiKey: json['qrzapikey']?.toString() ?? json['qrz_api']?.toString(),

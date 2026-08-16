@@ -36,6 +36,11 @@ class SettingsModel {
   bool get isLoggedIn =>
       serverUrl.isNotEmpty && activeProfileId != null && apiKey.isNotEmpty;
 
+  /// True when the stored key is a v1-format key that cannot be used with API v2.
+  /// Triggers the migration screen on next launch.
+  bool get needsMigration =>
+      apiKey.isNotEmpty && !apiKey.startsWith('wl2_');
+
   SettingsModel copyWith({
     String? serverUrl,
     String? apiKey,

@@ -14,7 +14,6 @@ import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/callsign_lookup_model.dart';
 import '../../../data/models/qso_model.dart';
 import '../../../providers/lookup_provider.dart';
-import '../../../providers/patch_status_provider.dart';
 import '../../../providers/qso_provider.dart';
 import 'add_qso_screen.dart';
 
@@ -50,42 +49,6 @@ class _QsoDetailView extends ConsumerWidget {
   final QsoModel qso;
   const _QsoDetailView({required this.qso});
 
-  Future<bool> _isPatchInstalled(WidgetRef ref, BuildContext context) async {
-    final status = await ref.read(patchStatusProvider.future);
-    if (!status && context.mounted) {
-      final l10n = context.l10n;
-      await showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Row(children: [
-            const Icon(Icons.warning_amber_rounded, color: Colors.orange),
-            const SizedBox(width: 8),
-            Text(l10n.patchRequiredTitle),
-          ]),
-          content: Text(l10n.patchRequiredMessage),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(l10n.cancel),
-            ),
-            FilledButton.icon(
-              onPressed: () {
-                Navigator.pop(ctx);
-                launchUrl(
-                  Uri.parse('https://sp9aqg.pl/install.html'),
-                  mode: LaunchMode.externalApplication,
-                );
-              },
-              icon: const Icon(Icons.open_in_browser, size: 16),
-              label: Text(l10n.patchViewGuide),
-            ),
-          ],
-        ),
-      );
-    }
-    return status;
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
@@ -105,7 +68,6 @@ class _QsoDetailView extends ConsumerWidget {
     }
 
     Future<void> handleDelete() async {
-      if (!await _isPatchInstalled(ref, context)) return;
       if (!context.mounted) return;
 
       final confirmed = await showDialog<bool>(
@@ -145,7 +107,6 @@ class _QsoDetailView extends ConsumerWidget {
             icon: const Icon(Icons.edit_outlined),
             tooltip: l10n.editTooltip,
             onPressed: () async {
-              if (!await _isPatchInstalled(ref, context)) return;
               if (!context.mounted) return;
               Navigator.push(
                 context,
@@ -247,7 +208,7 @@ class _QsoDetailView extends ConsumerWidget {
               if (qso.county != null && qso.county!.isNotEmpty)
                 _LabelValue(l10n.county, qso.county!),
               if (qso.pfx != null && qso.pfx!.isNotEmpty)
-                _LabelValue('WPX Prefix', qso.pfx!),
+                _LabelValue(l10n.wpxPrefix, qso.pfx!),
             ],
           ),
           const SizedBox(height: 8),

@@ -31,10 +31,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     final settings = ref.read(settingsProvider);
 
-    // Setup isn't done until the server is configured AND the user is
-    // logged in — show the guide every launch until both are true, since
-    // it's driven by real persisted state rather than a "seen it" flag.
-    if (!settings.hasValidConfig || !settings.isLoggedIn) {
+    if (settings.needsMigration) {
+      context.go('/migration');
+    } else if (!settings.hasValidConfig || !settings.isLoggedIn) {
       context.go('/setup-guide');
     } else {
       context.go('/home');

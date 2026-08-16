@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_pl.dart';
 import 'app_localizations_tr.dart';
@@ -97,7 +98,8 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('tr'),
-    Locale('pl')
+    Locale('pl'),
+    Locale('de')
   ];
 
   /// No description provided for @appTitle.
@@ -597,6 +599,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sent'**
   String get qslSent;
+
+  /// No description provided for @qslRcvd.
+  ///
+  /// In en, this message translates to:
+  /// **'Rcvd'**
+  String get qslRcvd;
 
   /// No description provided for @qslReceived.
   ///
@@ -1300,6 +1308,12 @@ abstract class AppLocalizations {
   /// **'Polski'**
   String get langPolish;
 
+  /// No description provided for @langGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get langGerman;
+
   /// No description provided for @aboutTitle.
   ///
   /// In en, this message translates to:
@@ -1414,6 +1428,30 @@ abstract class AppLocalizations {
   /// **'Before you can log QSOs, connect the app to your Wavelog server. Follow the steps below.'**
   String get setupGuideIntro;
 
+  /// No description provided for @setupGuidePatchWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This app requires the Wavelog Mobile patch to be installed on your server. Without it you cannot generate an API v2 token.'**
+  String get setupGuidePatchWarning;
+
+  /// No description provided for @setupGuidePatchStepTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Server Patch'**
+  String get setupGuidePatchStepTitle;
+
+  /// No description provided for @setupGuidePatchStepBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The app uses Wavelog\'s API v2, which requires a small patch on your server. If you haven\'t installed it yet, open the Installation Guide and follow the steps for your setup (Classic or Docker).'**
+  String get setupGuidePatchStepBody;
+
+  /// No description provided for @setupGuidePatchBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation Guide'**
+  String get setupGuidePatchBtn;
+
   /// No description provided for @setupGuideStep1Title.
   ///
   /// In en, this message translates to:
@@ -1429,44 +1467,86 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuideStep2Title.
   ///
   /// In en, this message translates to:
-  /// **'2. Server Patch (install first)'**
+  /// **'2. API v2 Token'**
   String get setupGuideStep2Title;
 
   /// No description provided for @setupGuideStep2Body.
   ///
   /// In en, this message translates to:
-  /// **'Before creating an API key, install the Wavelog Mobile API patch on your server. Tap below for instructions.'**
+  /// **'In Wavelog, go to Settings → API → API Tokens (v2) → New Token. Select the \"Wavelog Mobile\" preset and confirm. Copy the generated token (starts with wl2_) and paste it into the app.'**
   String get setupGuideStep2Body;
 
   /// No description provided for @setupGuideStep3Title.
   ///
   /// In en, this message translates to:
-  /// **'3. API Key'**
+  /// **'3. Callsign & Display Name'**
   String get setupGuideStep3Title;
 
   /// No description provided for @setupGuideStep3Body.
   ///
   /// In en, this message translates to:
-  /// **'Once the patch is installed, go to Settings → API Keys in Wavelog and tap \"Create a mobile app key\". Paste the generated key into the API Key field.'**
-  String get setupGuideStep3Body;
-
-  /// No description provided for @setupGuideStep4Title.
-  ///
-  /// In en, this message translates to:
-  /// **'4. Callsign & Display Name'**
-  String get setupGuideStep4Title;
-
-  /// No description provided for @setupGuideStep4Body.
-  ///
-  /// In en, this message translates to:
   /// **'Callsign: your own amateur radio callsign, used to match your station. Display Name: any label to recognize this login on your device.'**
-  String get setupGuideStep4Body;
+  String get setupGuideStep3Body;
 
   /// No description provided for @setupGuideContinueBtn.
   ///
   /// In en, this message translates to:
   /// **'Start Setup'**
   String get setupGuideContinueBtn;
+
+  /// No description provided for @migrationTokenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'wl2_…'**
+  String get migrationTokenHint;
+
+  /// No description provided for @migrationTokenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'API v2 Token'**
+  String get migrationTokenLabel;
+
+  /// No description provided for @migrationValidateBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Validate & Continue'**
+  String get migrationValidateBtn;
+
+  /// No description provided for @migrationValidating.
+  ///
+  /// In en, this message translates to:
+  /// **'Validating…'**
+  String get migrationValidating;
+
+  /// No description provided for @migrationTokenEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please paste your wl2_ token.'**
+  String get migrationTokenEmpty;
+
+  /// No description provided for @migrationTokenInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Token is invalid — please check and try again.'**
+  String get migrationTokenInvalid;
+
+  /// No description provided for @patchNotInstalledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Patch Not Detected'**
+  String get patchNotInstalledTitle;
+
+  /// No description provided for @patchNotInstalledBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The Wavelog Mobile patch does not appear to be installed on your server.\n\nAn API v2 token (wl2_…) will not work without the patch. Please complete Step 1 first.'**
+  String get patchNotInstalledBody;
+
+  /// No description provided for @patchInstallFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Install Patch'**
+  String get patchInstallFirst;
 
   /// No description provided for @appSubtitle.
   ///
@@ -3279,6 +3359,264 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Menu'**
   String get drawerMenu;
+
+  /// No description provided for @antennaCompassTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Antenna Direction'**
+  String get antennaCompassTitle;
+
+  /// No description provided for @targetGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Grid Square'**
+  String get targetGrid;
+
+  /// No description provided for @calculate.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate'**
+  String get calculate;
+
+  /// No description provided for @shortPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Path'**
+  String get shortPath;
+
+  /// No description provided for @longPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Long Path'**
+  String get longPath;
+
+  /// No description provided for @azimuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Azimuth'**
+  String get azimuth;
+
+  /// No description provided for @myHeading.
+  ///
+  /// In en, this message translates to:
+  /// **'Heading'**
+  String get myHeading;
+
+  /// No description provided for @invalidGrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid grid square'**
+  String get invalidGrid;
+
+  /// No description provided for @gpsLocating.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS locating… please wait'**
+  String get gpsLocating;
+
+  /// No description provided for @gpsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS location unavailable'**
+  String get gpsUnavailable;
+
+  /// No description provided for @drawerAntenna.
+  ///
+  /// In en, this message translates to:
+  /// **'Antenna Direction'**
+  String get drawerAntenna;
+
+  /// No description provided for @achievementsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get achievementsTitle;
+
+  /// No description provided for @achievementsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Log your first QSO to start earning badges!'**
+  String get achievementsEmpty;
+
+  /// No description provided for @shareAchievement.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get shareAchievement;
+
+  /// No description provided for @achievementUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievement Unlocked!'**
+  String get achievementUnlocked;
+
+  /// No description provided for @progressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} / {target}'**
+  String progressLabel(int done, int target);
+
+  /// No description provided for @drawerAchievements.
+  ///
+  /// In en, this message translates to:
+  /// **'Achievements'**
+  String get drawerAchievements;
+
+  /// No description provided for @gifPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing video...'**
+  String get gifPreparing;
+
+  /// No description provided for @gifCapturing.
+  ///
+  /// In en, this message translates to:
+  /// **'Capturing frames... {percent}%'**
+  String gifCapturing(int percent);
+
+  /// No description provided for @gifEncoding.
+  ///
+  /// In en, this message translates to:
+  /// **'Encoding video...'**
+  String get gifEncoding;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coming soon'**
+  String get comingSoon;
+
+  /// No description provided for @noCompassSensor.
+  ///
+  /// In en, this message translates to:
+  /// **'No compass sensor'**
+  String get noCompassSensor;
+
+  /// No description provided for @fillFromGps.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill from GPS'**
+  String get fillFromGps;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @gpsError.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS error: {error}'**
+  String gpsError(String error);
+
+  /// No description provided for @errParse.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to parse server response'**
+  String get errParse;
+
+  /// No description provided for @errLocalStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Local storage error'**
+  String get errLocalStorage;
+
+  /// No description provided for @errServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error'**
+  String get errServer;
+
+  /// No description provided for @wpxPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'WPX Prefix'**
+  String get wpxPrefix;
+
+  /// No description provided for @nowBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get nowBtn;
+
+  /// No description provided for @contestOtherCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Other / Custom'**
+  String get contestOtherCustom;
+
+  /// No description provided for @sigInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'SIG Info'**
+  String get sigInfo;
+
+  /// No description provided for @migrationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'API v2 Required'**
+  String get migrationTitle;
+
+  /// No description provided for @migrationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Wavelog Mobile now uses Wavelog\'s new API system. Your old API key is no longer valid — follow the steps below to migrate in minutes.'**
+  String get migrationBody;
+
+  /// No description provided for @migrationStep1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Install server patch'**
+  String get migrationStep1Title;
+
+  /// No description provided for @migrationStep1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'A small update file needs to be installed on your Wavelog server. Tap the Installation Guide button below to follow the step-by-step instructions.'**
+  String get migrationStep1Body;
+
+  /// No description provided for @migrationInstallGuideBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation Guide'**
+  String get migrationInstallGuideBtn;
+
+  /// No description provided for @migrationStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a new API token'**
+  String get migrationStep2Title;
+
+  /// No description provided for @migrationStep2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'In the Wavelog web interface:\n  1. Open the settings menu in the top right\n  2. Go to \"API\" → \"API Tokens\"\n  3. Click \"New Token\"\n  4. Select the \"Wavelog Mobile\" preset\n  5. Confirm and copy the code shown\n  (Token starts with \"wl2_\")'**
+  String get migrationStep2Body;
+
+  /// No description provided for @migrationStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your profile'**
+  String get migrationStep3Title;
+
+  /// No description provided for @migrationStep3Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the button below. Your server address will be kept — just paste the new token you copied into the field.'**
+  String get migrationStep3Body;
+
+  /// No description provided for @migrationUpdateTokenBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Token'**
+  String get migrationUpdateTokenBtn;
+
+  /// No description provided for @migrationHelpBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Installation Guide'**
+  String get migrationHelpBtn;
 }
 
 class _AppLocalizationsDelegate
@@ -3292,7 +3630,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'pl', 'tr'].contains(locale.languageCode);
+      <String>['en', 'pl', 'tr', 'de'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -3307,6 +3645,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsPl();
     case 'tr':
       return AppLocalizationsTr();
+    case 'de':
+      return AppLocalizationsDe();
   }
 
   throw FlutterError(

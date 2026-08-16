@@ -13,12 +13,7 @@ final qsoCacheDatasourceProvider =
 
 final wavelogRemoteDatasourceProvider =
     Provider<WavelogRemoteDatasource>((ref) {
-  return WavelogRemoteDatasource(
-    dio: ref.watch(dioProvider),
-    // select: yalnızca apiKey değişince yeniden kur — tüm settings'i izlemek
-    // her ayar değişiminde bağlı provider'ları geçersiz kılıyordu
-    apiKey: ref.watch(settingsProvider.select((s) => s.apiKey)),
-  );
+  return WavelogRemoteDatasource(dio: ref.watch(dioProvider));
 });
 
 final qsoRepositoryProvider = Provider<QsoRepository>((ref) {

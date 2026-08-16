@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
-import '../../../providers/patch_status_provider.dart';
 import '../../../providers/qso_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/statistics_provider.dart';
@@ -32,8 +31,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkPatch();
-      // Trigger initial QSO fetch so home screen data populates on first launch.
       ref.read(qsoProvider);
     });
   }
@@ -49,41 +46,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     if (state == AppLifecycleState.resumed) {
       ref.invalidate(qsoProvider);
     }
-  }
-
-  Future<void> _checkPatch() async {
-    final installed = await ref.read(patchStatusProvider.future);
-    if (installed || !mounted) return;
-
-    final l10n = context.l10n;
-    await showDialog<void>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Row(children: [
-          const Icon(Icons.warning_amber_rounded, color: Colors.orange),
-          const SizedBox(width: 8),
-          Text(l10n.patchRequiredTitle),
-        ]),
-        content: Text(l10n.patchRequiredMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.close),
-          ),
-          FilledButton.icon(
-            onPressed: () {
-              Navigator.pop(ctx);
-              launchUrl(
-                Uri.parse('https://sp9aqg.pl/install.html'),
-                mode: LaunchMode.externalApplication,
-              );
-            },
-            icon: const Icon(Icons.open_in_browser, size: 16),
-            label: Text(l10n.patchViewGuide),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -172,6 +134,7 @@ class _HomeBody extends ConsumerWidget {
     final isTabletLandscape = size.width > 720 && size.width > size.height;
 
     Future<void> onRefresh() async {
+      ref.invalidate(qsoProvider);
       ref.invalidate(statisticsProvider);
       ref.invalidate(recentQsoProvider);
       ref.invalidate(logbookSummaryProvider);
@@ -260,18 +223,19 @@ class _QsoPanel extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        statistics.when(
-          data: (stats) => _StatsRow(stats: stats, localTodayQsos: localTodayQsos),
-          loading: () => const Padding(
+        if (statistics.hasValue)
+          _StatsRow(stats: statistics.value!, localTodayQsos: localTodayQsos)
+        else if (statistics.isLoading)
+          const Padding(
             padding: EdgeInsets.all(16),
             child: LinearProgressIndicator(),
-          ),
-          error: (e, _) => Padding(
+          )
+        else if (statistics.hasError)
+          Padding(
             padding: const EdgeInsets.all(8),
-            child: Text('${l10n.error}: ${localizeError(context, e)}',
+            child: Text('${l10n.error}: ${localizeError(context, statistics.error!)}',
                 style: Theme.of(context).textTheme.bodySmall),
           ),
-        ),
         const SizedBox(height: 8),
         if (settings.activeStationProfileId == null)
           Card(
@@ -308,7 +272,7 @@ class _QsoPanel extends StatelessWidget {
           },
           loading: () => const QsoSkeletonList(count: 6),
           error: (e, _) => ErrorView(
-            message: e.toString(),
+            message: localizeError(context, e),
             onRetry: () {},
           ),
         ),
@@ -501,9 +465,9 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final todayCount = (stats.todayQsos as int) > 0
-        ? stats.todayQsos as int
-        : localTodayQsos;
+    // Local Hive count is always accurate (updates immediately on add/delete).
+    // Server todayQsos can lag due to caching, so never trust it over local.
+    final todayCount = localTodayQsos;
     return Row(
       children: [
         _StatCard(l10n.statsToday, todayCount.toString(), Icons.today),

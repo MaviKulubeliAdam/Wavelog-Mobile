@@ -9,7 +9,10 @@ import '../../../data/models/station_model.dart';
 import '../../../data/models/user_profile_model.dart';
 import '../../../providers/dio_provider.dart';
 import '../../../providers/profile_provider.dart';
+import '../../../providers/qso_provider.dart';
 import '../../../providers/settings_provider.dart';
+import '../../../providers/station_provider.dart';
+import '../../../providers/statistics_provider.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -142,7 +145,7 @@ class _ProfileCard extends ConsumerWidget {
     StationModel? autoStation;
     try {
       final remote = WavelogRemoteDatasource(
-          dio: buildWavelogDio(serverUrl), apiKey: profile.apiKey);
+          dio: buildWavelogDio(serverUrl, bearerToken: profile.apiKey));
       final stations = await remote.getStations();
 
       autoStation = stations.where((s) =>
@@ -165,6 +168,9 @@ class _ProfileCard extends ConsumerWidget {
     await notifier.loginWithProfile(profile, autoStation);
 
     if (context.mounted) {
+      ref.invalidate(stationProvider);
+      ref.invalidate(qsoProvider);
+      ref.invalidate(statisticsProvider);
       Navigator.of(context, rootNavigator: true).pop();
       context.go('/home');
     }
@@ -323,7 +329,7 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
     List<StationModel> stations = [];
     try {
       final remote = WavelogRemoteDatasource(
-          dio: buildWavelogDio(widget.serverUrl), apiKey: apiKey);
+          dio: buildWavelogDio(widget.serverUrl, bearerToken: apiKey));
       stations = await remote.getStations();
     } catch (e) {
       if (!mounted) return;
@@ -354,6 +360,9 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
     await ref.read(settingsProvider.notifier).loginWithProfile(profile, match);
 
     if (mounted) {
+      ref.invalidate(stationProvider);
+      ref.invalidate(qsoProvider);
+      ref.invalidate(statisticsProvider);
       Navigator.of(context).pop();
       context.go('/home');
     }

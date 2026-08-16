@@ -171,7 +171,7 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
           permission == LocationPermission.deniedForever) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Location permission denied')),
+            SnackBar(content: Text(context.l10n.locationPermissionDenied)),
           );
         }
         return;
@@ -186,7 +186,7 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('GPS error: $e')),
+          SnackBar(content: Text(context.l10n.gpsError(e.toString()))),
         );
       }
     } finally {
@@ -749,7 +749,7 @@ class _DxccPickerField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: l10n.dxccCountry,
           border: const OutlineInputBorder(),
-          errorText: hasError ? context.l10n.patchRequiredBanner : null,
+          errorText: hasError ? context.l10n.error : null,
           suffixIcon: loading
               ? const Padding(
                   padding: EdgeInsets.all(12),

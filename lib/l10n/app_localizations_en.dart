@@ -262,6 +262,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get qslSent => 'Sent';
 
   @override
+  String get qslRcvd => 'Rcvd';
+
+  @override
   String get qslReceived => 'Received';
 
   @override
@@ -627,6 +630,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get langPolish => 'Polski';
 
   @override
+  String get langGerman => 'Deutsch';
+
+  @override
   String get aboutTitle => 'About';
 
   @override
@@ -690,6 +696,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Before you can log QSOs, connect the app to your Wavelog server. Follow the steps below.';
 
   @override
+  String get setupGuidePatchWarning =>
+      'This app requires the Wavelog Mobile patch to be installed on your server. Without it you cannot generate an API v2 token.';
+
+  @override
+  String get setupGuidePatchStepTitle => 'Install Server Patch';
+
+  @override
+  String get setupGuidePatchStepBody =>
+      'The app uses Wavelog\'s API v2, which requires a small patch on your server. If you haven\'t installed it yet, open the Installation Guide and follow the steps for your setup (Classic or Docker).';
+
+  @override
+  String get setupGuidePatchBtn => 'Installation Guide';
+
+  @override
   String get setupGuideStep1Title => '1. Server Address';
 
   @override
@@ -697,28 +717,50 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter the same address you use to open Wavelog in your browser, e.g. https://yourdomain.com — without a trailing slash.';
 
   @override
-  String get setupGuideStep2Title => '2. Server Patch (install first)';
+  String get setupGuideStep2Title => '2. API v2 Token';
 
   @override
   String get setupGuideStep2Body =>
-      'Before creating an API key, install the Wavelog Mobile API patch on your server. Tap below for instructions.';
+      'In Wavelog, go to Settings → API → API Tokens (v2) → New Token. Select the \"Wavelog Mobile\" preset and confirm. Copy the generated token (starts with wl2_) and paste it into the app.';
 
   @override
-  String get setupGuideStep3Title => '3. API Key';
+  String get setupGuideStep3Title => '3. Callsign & Display Name';
 
   @override
   String get setupGuideStep3Body =>
-      'Once the patch is installed, go to Settings → API Keys in Wavelog and tap \"Create a mobile app key\". Paste the generated key into the API Key field.';
-
-  @override
-  String get setupGuideStep4Title => '4. Callsign & Display Name';
-
-  @override
-  String get setupGuideStep4Body =>
       'Callsign: your own amateur radio callsign, used to match your station. Display Name: any label to recognize this login on your device.';
 
   @override
   String get setupGuideContinueBtn => 'Start Setup';
+
+  @override
+  String get migrationTokenHint => 'wl2_…';
+
+  @override
+  String get migrationTokenLabel => 'API v2 Token';
+
+  @override
+  String get migrationValidateBtn => 'Validate & Continue';
+
+  @override
+  String get migrationValidating => 'Validating…';
+
+  @override
+  String get migrationTokenEmpty => 'Please paste your wl2_ token.';
+
+  @override
+  String get migrationTokenInvalid =>
+      'Token is invalid — please check and try again.';
+
+  @override
+  String get patchNotInstalledTitle => 'Patch Not Detected';
+
+  @override
+  String get patchNotInstalledBody =>
+      'The Wavelog Mobile patch does not appear to be installed on your server.\n\nAn API v2 token (wl2_…) will not work without the patch. Please complete Step 1 first.';
+
+  @override
+  String get patchInstallFirst => 'Install Patch';
 
   @override
   String get appSubtitle => 'Amateur Radio Log Application';
@@ -1679,4 +1721,143 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get drawerMenu => 'Menu';
+
+  @override
+  String get antennaCompassTitle => 'Antenna Direction';
+
+  @override
+  String get targetGrid => 'Target Grid Square';
+
+  @override
+  String get calculate => 'Calculate';
+
+  @override
+  String get shortPath => 'Short Path';
+
+  @override
+  String get longPath => 'Long Path';
+
+  @override
+  String get azimuth => 'Azimuth';
+
+  @override
+  String get myHeading => 'Heading';
+
+  @override
+  String get invalidGrid => 'Invalid grid square';
+
+  @override
+  String get gpsLocating => 'GPS locating… please wait';
+
+  @override
+  String get gpsUnavailable => 'GPS location unavailable';
+
+  @override
+  String get drawerAntenna => 'Antenna Direction';
+
+  @override
+  String get achievementsTitle => 'Achievements';
+
+  @override
+  String get achievementsEmpty => 'Log your first QSO to start earning badges!';
+
+  @override
+  String get shareAchievement => 'Share';
+
+  @override
+  String get achievementUnlocked => 'Achievement Unlocked!';
+
+  @override
+  String progressLabel(int done, int target) {
+    return '$done / $target';
+  }
+
+  @override
+  String get drawerAchievements => 'Achievements';
+
+  @override
+  String get gifPreparing => 'Preparing video...';
+
+  @override
+  String gifCapturing(int percent) {
+    return 'Capturing frames... $percent%';
+  }
+
+  @override
+  String get gifEncoding => 'Encoding video...';
+
+  @override
+  String get comingSoon => 'Coming soon';
+
+  @override
+  String get noCompassSensor => 'No compass sensor';
+
+  @override
+  String get fillFromGps => 'Fill from GPS';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String gpsError(String error) {
+    return 'GPS error: $error';
+  }
+
+  @override
+  String get errParse => 'Failed to parse server response';
+
+  @override
+  String get errLocalStorage => 'Local storage error';
+
+  @override
+  String get errServer => 'Server error';
+
+  @override
+  String get wpxPrefix => 'WPX Prefix';
+
+  @override
+  String get nowBtn => 'Now';
+
+  @override
+  String get contestOtherCustom => 'Other / Custom';
+
+  @override
+  String get sigInfo => 'SIG Info';
+
+  @override
+  String get migrationTitle => 'API v2 Required';
+
+  @override
+  String get migrationBody =>
+      'Wavelog Mobile now uses Wavelog\'s new API system. Your old API key is no longer valid — follow the steps below to migrate in minutes.';
+
+  @override
+  String get migrationStep1Title => 'Install server patch';
+
+  @override
+  String get migrationStep1Body =>
+      'A small update file needs to be installed on your Wavelog server. Tap the Installation Guide button below to follow the step-by-step instructions.';
+
+  @override
+  String get migrationInstallGuideBtn => 'Installation Guide';
+
+  @override
+  String get migrationStep2Title => 'Create a new API token';
+
+  @override
+  String get migrationStep2Body =>
+      'In the Wavelog web interface:\n  1. Open the settings menu in the top right\n  2. Go to \"API\" → \"API Tokens\"\n  3. Click \"New Token\"\n  4. Select the \"Wavelog Mobile\" preset\n  5. Confirm and copy the code shown\n  (Token starts with \"wl2_\")';
+
+  @override
+  String get migrationStep3Title => 'Update your profile';
+
+  @override
+  String get migrationStep3Body =>
+      'Tap the button below. Your server address will be kept — just paste the new token you copied into the field.';
+
+  @override
+  String get migrationUpdateTokenBtn => 'Update Token';
+
+  @override
+  String get migrationHelpBtn => 'Help & Installation Guide';
 }

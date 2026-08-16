@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../core/errors/app_exception.dart';
 import '../data/models/qso_model.dart';
 import 'remote_datasource_provider.dart';
 import 'settings_provider.dart';
 import 'station_provider.dart';
 import 'statistics_provider.dart';
+import 'sync_count_provider.dart';
 
 class QsoFilter {
   final String? band;
@@ -90,7 +92,12 @@ class QsoNotifier extends AsyncNotifier<List<QsoModel>> {
 
   Future<List<QsoModel>> _fetch() async {
     final settings = ref.read(settingsProvider);
+    final cache = ref.read(qsoCacheDatasourceProvider);
     final repo = ref.read(qsoRepositoryProvider);
+
+    // Clear stale cache when the API token changes (e.g., v1 → v2 migration).
+    // Old entries parsed under the previous token format are no longer valid.
+    await cache.clearIfTokenChanged(settings.apiKey);
 
     // Çevrimdışıyken kaydedilen/silinen QSO'ları sunucuya ilet.
     // Başarısız olursa liste yine de yüklenmeli.
@@ -140,14 +147,18 @@ class QsoNotifier extends AsyncNotifier<List<QsoModel>> {
     final repo = ref.read(qsoRepositoryProvider);
     bool savedToServer = !forceLocal;
 
+    // UUID'yi önceden üret: cache ve state aynı key'i paylaşsın
+    final localId = const Uuid().v4();
+    final qsoWithId = qso.copyWith(localId: localId);
+
     try {
-      await repo.addQso(qso, forceLocal: forceLocal);
+      await repo.addQso(qsoWithId, forceLocal: forceLocal);
     } on NetworkException {
       // Repository already saved locally — treat as success, not an error
       savedToServer = false;
     }
 
-    final savedQso = qso.copyWith(synced: savedToServer);
+    final savedQso = qsoWithId.copyWith(synced: savedToServer);
 
     // Show new QSO immediately without a loading flash
     final current = state.valueOrNull ?? [];
@@ -157,10 +168,39 @@ class QsoNotifier extends AsyncNotifier<List<QsoModel>> {
     ref.invalidate(recentQsoProvider);
     ref.invalidate(statisticsProvider);
     ref.invalidate(logbookSummaryProvider);
+    ref.invalidate(pendingSyncCountProvider);
 
-    // Silently re-fetch in background to get server-assigned fields
+    // Silently re-fetch in background to get server-assigned fields (incl. localId)
     if (savedToServer) {
-      _fetch().then((fresh) => state = AsyncValue.data(fresh), onError: (_) {});
+      _fetch().then((fresh) {
+        // Guard: if a concurrent deleteQso/updateQso already updated state
+        // (our UUID entry is gone), don't overwrite their newer result.
+        final current = state.valueOrNull;
+        if (current == null || !current.any((q) => q.localId == localId)) return;
+
+        // Remap the first server entry that matches our QSO back to the UUID
+        // so any open detail screen can still find it.
+        // Only remap ONE entry (remapped flag) to avoid contest duplicates
+        // where two contacts share the same callsign+band+mode+second.
+        final ts = savedQso.dateTimeOn.millisecondsSinceEpoch ~/ 1000;
+        var remapped = false;
+        final merged = fresh.map((q) {
+          if (!remapped) {
+            final qTs = q.dateTimeOn.millisecondsSinceEpoch ~/ 1000;
+            if (q.callsign == savedQso.callsign &&
+                q.band == savedQso.band &&
+                q.mode == savedQso.mode &&
+                qTs == ts) {
+              remapped = true;
+              return q.copyWith(localId: localId);
+            }
+          }
+          return q;
+        }).toList();
+        state = AsyncValue.data(merged);
+        ref.invalidate(recentQsoProvider);
+        ref.invalidate(logbookSummaryProvider);
+      }, onError: (_) {});
     }
 
     return savedToServer;
@@ -172,10 +212,16 @@ class QsoNotifier extends AsyncNotifier<List<QsoModel>> {
     state = AsyncValue.data(
       current.where((q) => q.localId != qso.localId).toList(),
     );
-    await ref.read(qsoRepositoryProvider).deleteQso(qso);
-    ref.invalidate(recentQsoProvider);
-    ref.invalidate(statisticsProvider);
-    ref.invalidate(logbookSummaryProvider);
+    try {
+      await ref.read(qsoRepositoryProvider).deleteQso(qso);
+    } finally {
+      // Always invalidate — even if the network call threw, the local
+      // Hive delete already happened and the optimistic state is correct.
+      ref.invalidate(recentQsoProvider);
+      ref.invalidate(statisticsProvider);
+      ref.invalidate(logbookSummaryProvider);
+      ref.invalidate(pendingSyncCountProvider);
+    }
   }
 
   Future<bool> updateQso(QsoModel original, QsoModel updated,
@@ -204,6 +250,7 @@ class QsoNotifier extends AsyncNotifier<List<QsoModel>> {
     ref.invalidate(recentQsoProvider);
     ref.invalidate(statisticsProvider);
     ref.invalidate(logbookSummaryProvider);
+    ref.invalidate(pendingSyncCountProvider);
 
     return savedOnline;
   }
@@ -227,23 +274,41 @@ final previousQsosByCallsignProvider =
   return all.where((q) => q.callsign.toUpperCase() == cs).toList();
 });
 
-// Quick list for home screen — reads from Hive cache.
-// Does NOT watch qsoProvider — that caused CircularDependencyError when
-// addQso() changed state and then invalidated this provider in the same tick.
-// QsoNotifier invalidates it explicitly after every state change instead.
+// Quick list for home screen.
+// Uses ref.READ (not watch) on qsoProvider to avoid the circular dependency
+// that arises when addQso() changes state and immediately invalidates this
+// provider in the same tick. QsoNotifier invalidates it explicitly instead.
+// Reading from in-memory state (not Hive) ensures that localIds here always
+// match those in qsoProvider, so QsoDetailScreen can find QSOs by id.
 final recentQsoProvider = FutureProvider<List<QsoModel>>((ref) async {
+  final inMemory = ref.read(qsoProvider).valueOrNull;
+  if (inMemory != null && inMemory.isNotEmpty) {
+    return inMemory.take(20).toList();
+  }
+  // Fallback: read Hive while qsoProvider hasn't loaded yet
   final cache = ref.read(qsoCacheDatasourceProvider);
   final all = await cache.getCachedQsos();
   return all.take(20).toList();
 });
 
 // Son 5 QSO + bugünün sayacı — add QSO ekranında kullanılır.
-// KASITLI OLARAK qsoProvider'ı izlemiyor: QsoNotifier.addQso() zaten bu
-// provider'ı invalidate ediyor, dolayısıyla döngüsel bağımlılık oluşmaz.
+// qsoProvider'ı ref.watch ile değil ref.read ile kullanıyoruz: QsoNotifier
+// zaten this provider'ı invalidate ediyor, dolayısıyla döngüsel bağımlılık
+// oluşmaz. In-memory state her zaman optimistik add/delete'i yansıtır;
+// Hive arka plan fetch'leriyle geçici kirlenebilir (race condition).
 final logbookSummaryProvider =
     FutureProvider<({List<QsoModel> last5, int todayCount})>((ref) async {
-  final cache = ref.read(qsoCacheDatasourceProvider);
-  final all = await cache.getCachedQsos();
+  // In-memory state'i tercih et — Hive'a göre her zaman güncel ve optimistik
+  // operasyonları (add/delete) hemen yansıtır.
+  final inMemory = ref.read(qsoProvider).valueOrNull;
+  final List<QsoModel> all;
+  if (inMemory != null) {
+    all = inMemory;
+  } else {
+    // qsoProvider henüz yüklenmediyse Hive'a düş.
+    final cache = ref.read(qsoCacheDatasourceProvider);
+    all = await cache.getCachedQsos();
+  }
   final now = DateTime.now();
   final todayCount = all.where((q) {
     final d = q.dateTimeOn.toLocal();

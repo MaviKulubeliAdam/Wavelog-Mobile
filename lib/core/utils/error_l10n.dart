@@ -9,5 +9,12 @@ String localizeError(BuildContext context, Object error) {
   if (error is TimeoutException) return l10n.errTimeout;
   if (error is UnauthorizedException) return l10n.errUnauthorized;
   if (error is NetworkException) return l10n.errNetwork;
+  if (error is AdifParseException) return error.message;
+  if (error is ParseException) return l10n.errParse;
+  if (error is LocalStorageException) return l10n.errLocalStorage;
+  if (error is ServerException) {
+    final msg = error.message;
+    return msg.isNotEmpty ? msg : l10n.errServer;
+  }
   return error.toString();
 }

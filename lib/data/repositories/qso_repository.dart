@@ -58,7 +58,9 @@ class QsoRepository {
       final remoteQsos = fetched
           .where((q) =>
               q.serverId == null || !pendingDeleteIds.contains(q.serverId))
-          .map((q) => q.localId != null ? q : q.copyWith(localId: _qsoId(q)))
+          .map((q) => q.localId != null
+              ? q
+              : q.copyWith(localId: q.serverId?.toString() ?? _qsoId(q)))
           .toList();
       // Fark tabanlı önbellek eşitleme: değişmeyen kayıtlar yeniden
       // yazılmaz. Her istasyon kendi alt kümesini eşitlediği için paralel
@@ -112,7 +114,6 @@ class QsoRepository {
 
     try {
       await _remote.importQso(adifContent, stationProfileId);
-      // Cache locally
       final qsos = records
           .map((r) => AdifParser.mapToQso(r, stationProfileId)
               .copyWith(synced: true))
@@ -122,6 +123,48 @@ class QsoRepository {
     } catch (e) {
       return ImportResult(total: total, imported: 0, errors: total);
     }
+  }
+
+  // 50'lik partilerle import; her parti sonrası onProgress çağrılır
+  Future<ImportResult> streamingImportAdif(
+    String adifContent,
+    int stationProfileId,
+    void Function(int processed, int total) onProgress,
+  ) async {
+    AdifParser.validate(adifContent);
+    final records = AdifParser.parse(adifContent);
+    final total = records.length;
+    const batchSize = 50;
+    int imported = 0;
+    int errors = 0;
+    // Track which record indices succeeded so only those go into local cache.
+    final successfulIndices = <int>[];
+
+    for (var i = 0; i < total; i += batchSize) {
+      final end = (i + batchSize).clamp(0, total);
+      final batch = records.sublist(i, end);
+      final batchAdif = AdifGenerator.fromParsedRecords(batch);
+      try {
+        await _remote.importQso(batchAdif, stationProfileId);
+        for (var j = i; j < end; j++) {
+          successfulIndices.add(j);
+        }
+        imported += batch.length;
+      } catch (_) {
+        errors += batch.length;
+      }
+      onProgress(imported + errors, total);
+    }
+
+    // Only cache records that the server accepted.
+    if (successfulIndices.isNotEmpty) {
+      final qsos = successfulIndices
+          .map((i) => AdifParser.mapToQso(records[i], stationProfileId)
+              .copyWith(synced: true))
+          .toList();
+      await _local.cacheQsos(qsos);
+    }
+    return ImportResult(total: total, imported: imported, errors: errors);
   }
 
   Future<List<QsoModel>> exportQsos({
@@ -158,10 +201,10 @@ class QsoRepository {
     if (id != null) {
       try {
         await _remote.deleteQso(id, qso.stationProfileId);
-      } on NetworkException {
-        // Çevrimdışı — kuyruğa al, bağlantı gelince syncPendingQsos işler
-        await _local.addPendingDelete(id, qso.stationProfileId);
-      } on TimeoutException {
+      } catch (_) {
+        // Herhangi bir hata (ağ, zaman aşımı, sunucu hatası) — kuyruğa al.
+        // _processPendingDeletes, 404 gibi "zaten silindi" durumlarını
+        // yakalayıp kuyruktan düşürür.
         await _local.addPendingDelete(id, qso.stationProfileId);
       }
     }
@@ -203,43 +246,53 @@ class QsoRepository {
     }
   }
 
-  // Build COL_* field map with only changed values
-  static Map<String, String> _buildUpdateFields(
+  // Build v2 API field map (flat JSON) with only changed values.
+  // Field names match the v2 PATCH /api/v2/qso/{id} schema, not COL_* columns.
+  static Map<String, dynamic> _buildUpdateFields(
       QsoModel original, QsoModel updated) {
-    final f = <String, String>{};
+    final f = <String, dynamic>{};
 
-    void add(String col, String? val) => f[col] = val ?? '';
-
-    if (original.callsign != updated.callsign) add('COL_CALL', updated.callsign);
-    if (original.band != updated.band) add('COL_BAND', updated.band);
-    if (original.freqMhz != updated.freqMhz && updated.freqMhz != null) {
-      f['COL_FREQ'] = (updated.freqMhz! * 1000000).round().toString();
+    if (original.callsign != updated.callsign) f['call'] = updated.callsign;
+    if (original.band != updated.band) f['band'] = updated.band;
+    if (original.freqMhz != updated.freqMhz) {
+      // v2 PATCH expects Hz; send empty string to clear the field.
+      f['freq'] = updated.freqMhz != null
+          ? (updated.freqMhz! * 1000000).round().toString()
+          : '';
     }
-    if (original.mode != updated.mode) add('COL_MODE', updated.mode);
-    if (original.submode != updated.submode) add('COL_SUBMODE', updated.submode);
-    if (original.rstSent != updated.rstSent) add('COL_RST_SENT', updated.rstSent);
-    if (original.rstRcvd != updated.rstRcvd) add('COL_RST_RCVD', updated.rstRcvd);
+    // mode: v2 handles submode split internally; send submode value when present
+    if (original.mode != updated.mode || original.submode != updated.submode) {
+      f['mode'] = (updated.submode?.isNotEmpty == true)
+          ? updated.submode!
+          : updated.mode;
+    }
+    if (original.rstSent != updated.rstSent) f['rst_sent'] = updated.rstSent;
+    if (original.rstRcvd != updated.rstRcvd) f['rst_rcvd'] = updated.rstRcvd;
+    // date+time must travel together per v2 spec
     if (original.dateTimeOn != updated.dateTimeOn) {
-      f['COL_TIME_ON'] = _mysqlDatetime(updated.dateTimeOn);
+      final dt = updated.dateTimeOn.toUtc();
+      f['qso_date'] = _patchDate(dt); // YYYY-MM-DD
+      f['time_on'] = _patchTime(dt);  // HHMMSS
     }
-    if (original.name != updated.name) add('COL_NAME', updated.name);
-    if (original.qth != updated.qth) add('COL_QTH', updated.qth);
+    if (original.name != updated.name) f['name'] = updated.name ?? '';
+    if (original.qth != updated.qth) f['qth'] = updated.qth ?? '';
     if (original.gridSquare != updated.gridSquare) {
-      add('COL_GRIDSQUARE', updated.gridSquare);
+      f['gridsquare'] = updated.gridSquare ?? '';
     }
-    if (original.comment != updated.comment) add('COL_COMMENT', updated.comment);
-    if (original.notes != updated.notes) add('COL_NOTES', updated.notes);
+    if (original.comment != updated.comment) f['comment'] = updated.comment ?? '';
+    if (original.notes != updated.notes) f['notes'] = updated.notes ?? '';
 
-    // rawAdif-backed fields
+    // rawAdif-backed extension fields
     final oRaw = original.rawAdif ?? {};
     final uRaw = updated.rawAdif ?? {};
-    for (final entry in {
-      'TX_PWR': 'COL_TX_PWR',
-      'IOTA': 'COL_IOTA',
-      'SOTA_REF': 'COL_SOTA_REF',
-      'WWFF_REF': 'COL_WWFF_REF',
-      'POTA_REF': 'COL_POTA_REF',
-    }.entries) {
+    const adifToV2 = {
+      'TX_PWR': 'tx_pwr',
+      'IOTA': 'iota',
+      'SOTA_REF': 'sota_ref',
+      'WWFF_REF': 'wwff_ref',
+      'POTA_REF': 'pota_ref',
+    };
+    for (final entry in adifToV2.entries) {
       final oVal = oRaw[entry.key] ?? '';
       final uVal = uRaw[entry.key] ?? '';
       if (oVal != uVal) f[entry.value] = uVal;
@@ -248,15 +301,17 @@ class QsoRepository {
     return f;
   }
 
-  static String _mysqlDatetime(DateTime dt) {
-    final u = dt.toUtc();
-    return '${u.year.toString().padLeft(4, '0')}-'
-        '${u.month.toString().padLeft(2, '0')}-'
-        '${u.day.toString().padLeft(2, '0')} '
-        '${u.hour.toString().padLeft(2, '0')}:'
-        '${u.minute.toString().padLeft(2, '0')}:'
-        '${u.second.toString().padLeft(2, '0')}';
-  }
+  // YYYY-MM-DD — v2 PATCH date format (strtotime-safe)
+  static String _patchDate(DateTime dt) =>
+      '${dt.year.toString().padLeft(4, '0')}-'
+      '${dt.month.toString().padLeft(2, '0')}-'
+      '${dt.day.toString().padLeft(2, '0')}';
+
+  // HHMMSS — v2 PATCH time format
+  static String _patchTime(DateTime dt) =>
+      '${dt.hour.toString().padLeft(2, '0')}'
+      '${dt.minute.toString().padLeft(2, '0')}'
+      '${dt.second.toString().padLeft(2, '0')}';
 
   Future<void> syncPendingQsos() async {
     await _processPendingDeletes();

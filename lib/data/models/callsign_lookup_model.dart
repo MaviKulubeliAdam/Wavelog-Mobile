@@ -17,6 +17,7 @@ class CallsignLookupModel {
   final bool eqslMember;
   final bool buqslMember;
   final bool workedBefore;
+  final bool qslConfirmed;
   final String? lastWorkedDate;
   final String? lastWorkedBand;
   final String? lastWorkedMode;
@@ -40,6 +41,7 @@ class CallsignLookupModel {
     this.eqslMember = false,
     this.buqslMember = false,
     this.workedBefore = false,
+    this.qslConfirmed = false,
     this.lastWorkedDate,
     this.lastWorkedBand,
     this.lastWorkedMode,
@@ -47,42 +49,58 @@ class CallsignLookupModel {
 
   factory CallsignLookupModel.fromJson(
       String callsign, Map<String, dynamic> json) {
+    // v2 returns a flat object; legacy format had a nested 'callbook' sub-object.
     final callbook = json['callbook'] as Map<String, dynamic>?;
 
-    // Full name: prefer name_fmt ("Erkin Mercan"), else combine fname + name_last
-    final nameFmt = _str(callbook?['name_fmt']);
-    final fname   = _str(callbook?['fname']);
-    final nameLast = _str(callbook?['name_last']);
-    final fullName = nameFmt ??
-        [fname, nameLast].where((s) => s != null && s.isNotEmpty).join(' ').trim();
+    // Name: v2 flat field 'name', or callbook sub-object fields
+    final name = _str(json['name']) ??
+        _str(callbook?['name_fmt']) ??
+        [_str(callbook?['fname']), _str(callbook?['name_last'])]
+            .where((s) => s != null && s.isNotEmpty)
+            .join(' ')
+            .trim();
 
     final rawImage = _str(callbook?['image']);
     final imageUrl = (rawImage != null && rawImage.isNotEmpty && rawImage != 'null')
         ? rawImage
         : null;
 
-    final qslMgr = _str(callbook?['qslmgr']);
+    // lotw_member: v2 returns days-since-upload string when member, false when not
+    final lotwRaw = json['lotw_member'];
+    final lotwMember = (lotwRaw != null && lotwRaw != false && lotwRaw.toString().isNotEmpty)
+        ? true
+        : (callbook?['lotw'] == '1' || callbook?['lotw'] == 1);
+
+    // ITU zone: full detail adds dxcc_ituz; callbook may have ituzone/ituz
+    final ituZone = _str(json['dxcc_ituz']?.toString()) ??
+        _str(callbook?['ituzone']) ??
+        _str(callbook?['ituz']);
+
+    // QSL confirmed: full detail returns call_confirmed
+    final qslConfirmed = json['call_confirmed'] == true || json['call_confirmed'] == 1;
 
     return CallsignLookupModel(
       callsign: callsign.toUpperCase(),
-      name: fullName.isNotEmpty ? fullName : null,
-      country: _str(callbook?['country']) ?? _str(callbook?['land']),
+      name: name.isNotEmpty ? name : null,
+      // v2: 'dxcc' = country name, callbook: 'country' or 'land'
+      country: _str(json['dxcc']) ?? _str(callbook?['country']) ?? _str(callbook?['land']),
       flag: _str(json['dxcc_flag']),
       continent: _str(json['cont']),
       dxcc: _str(json['dxcc_id']),
-      ituZone: _str(callbook?['ituzone']) ?? _str(callbook?['ituz']),
+      ituZone: ituZone,
       cqZone: _str(json['dxcc_cqz']) ?? _str(callbook?['cqzone']) ?? _str(callbook?['cqz']),
-      gridSquare: _str(callbook?['gridsquare']) ?? _str(callbook?['grid']),
-      qth: _str(callbook?['addr2']) ?? _str(callbook?['city']),
+      gridSquare: _str(json['gridsquare']) ?? _str(callbook?['gridsquare']) ?? _str(callbook?['grid']),
+      qth: _str(json['location']) ?? _str(callbook?['addr2']) ?? _str(callbook?['city']),
       addr1: _str(callbook?['addr1']),
       email: _str(callbook?['email']),
       imageUrl: imageUrl,
-      qslManager: qslMgr,
-      lotwMember: callbook?['lotw'] == '1' || callbook?['lotw'] == 1 ||
-          json['lotw_member'] != null,
+      qslManager: _str(json['qsl_manager']) ?? _str(callbook?['qslmgr']),
+      lotwMember: lotwMember,
       eqslMember: callbook?['eqsl'] == '1' || callbook?['eqsl'] == 1,
       buqslMember: callbook?['mqsl'] == '1' || callbook?['mqsl'] == 1,
-      workedBefore: json['call_worked'] == true || json['call_worked'] == 1,
+      workedBefore: json['workedBefore'] == true || json['workedBefore'] == 1 ||
+          json['call_worked'] == true || json['call_worked'] == 1,
+      qslConfirmed: qslConfirmed,
     );
   }
 

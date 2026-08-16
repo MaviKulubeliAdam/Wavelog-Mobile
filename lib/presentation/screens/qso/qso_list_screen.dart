@@ -331,12 +331,6 @@ class _QsoListScreenState extends ConsumerState<QsoListScreen> {
               ),
           ],
         ),
-        floatingActionButton: _selectionMode
-            ? null
-            : FloatingActionButton(
-                onPressed: () => context.push('/add-qso'),
-                child: const Icon(Icons.add),
-              ),
       ),
     );
   }

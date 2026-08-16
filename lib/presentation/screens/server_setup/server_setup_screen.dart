@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/errors/app_exception.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/validators.dart';
-import '../../../providers/remote_datasource_provider.dart';
+import '../../../data/datasources/remote/wavelog_remote_datasource.dart';
+import '../../../providers/dio_provider.dart';
 import '../../../providers/settings_provider.dart';
 
 class ServerSetupScreen extends ConsumerStatefulWidget {
@@ -45,33 +47,49 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
   Future<void> _testConnection() async {
     if (!_formKey.currentState!.validate()) return;
 
-    await ref
-        .read(settingsProvider.notifier)
-        .updateServerUrl(_urlCtrl.text.trim());
-
     setState(() {
       _testing = true;
       _testResult = null;
     });
 
+    // Auth olmadan sadece sunucunun erişilebilir bir Wavelog örneği olup
+    // olmadığını kontrol et — API anahtarı bu adımda henüz girilmedi.
+    final serverUrl = _urlCtrl.text.trim();
+    final remote = WavelogRemoteDatasource(
+      dio: buildWavelogDio(serverUrl, bearerToken: ''),
+    );
+
     try {
-      final repo = ref.read(settingsRepositoryProvider);
-      final remote = ref.read(wavelogRemoteDatasourceProvider);
-      final result = await repo.testConnection(remote);
+      final version = await remote.getVersion();
       if (!mounted) return;
       setState(() {
         _testing = false;
-        _testResult = result.success
-            ? (result.message ?? context.l10n.connectionSuccess)
-            : (result.message ?? context.l10n.connectionFailed);
-        _testSuccess = result.success;
+        _testSuccess = true;
+        _testResult = version != null
+            ? 'Wavelog v$version — ${context.l10n.connectionSuccess}'
+            : context.l10n.connectionSuccess;
       });
-    } catch (e) {
+    } on NetworkException {
       if (!mounted) return;
       setState(() {
         _testing = false;
-        _testResult = e.toString();
         _testSuccess = false;
+        _testResult = context.l10n.errNetwork;
+      });
+    } on TimeoutException {
+      if (!mounted) return;
+      setState(() {
+        _testing = false;
+        _testSuccess = false;
+        _testResult = context.l10n.errTimeout;
+      });
+    } catch (_) {
+      // 401/403 gibi auth hataları da sunucunun erişilebilir olduğunu gösterir
+      if (!mounted) return;
+      setState(() {
+        _testing = false;
+        _testSuccess = true;
+        _testResult = context.l10n.connectionSuccess;
       });
     }
   }

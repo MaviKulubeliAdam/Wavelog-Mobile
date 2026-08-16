@@ -163,53 +163,97 @@ class QsoModel extends HiveObject {
       int.tryParse(rawAdif?['ID'] ?? rawAdif?['APP_WAVELOG_QSO_ID'] ?? '');
 
   factory QsoModel.fromJson(Map<String, dynamic> json) {
+    // Detect API v2 format (lowercase keys) vs ADIF legacy (UPPERCASE keys).
+    // v2 uses 'call', 'band', 'rst_sent', 'qso_date' (full datetime), freq in Hz.
+    final isV2 = json.containsKey('call') || json.containsKey('qso_date');
+
+    // ── Date / time ──────────────────────────────────────────────────────────
     DateTime dateTime;
     try {
-      final dateStr = json['QSO_DATE']?.toString() ?? '';
-      final timeStr = json['TIME_ON']?.toString() ?? '0000';
-      if (dateStr.length >= 8) {
-        final y = int.parse(dateStr.substring(0, 4));
-        final mo = int.parse(dateStr.substring(4, 6));
-        final d = int.parse(dateStr.substring(6, 8));
-        final h = timeStr.length >= 2 ? int.parse(timeStr.substring(0, 2)) : 0;
-        final m = timeStr.length >= 4 ? int.parse(timeStr.substring(2, 4)) : 0;
-        // Saniyeyi de oku — önbellek anahtarı saniye hassasiyetine dayanıyor;
-        // aynı dakikadaki iki QSO aksi hâlde birbirini ezer.
-        final s = timeStr.length >= 6 ? int.parse(timeStr.substring(4, 6)) : 0;
-        dateTime = DateTime.utc(y, mo, d, h, m, s);
+      if (isV2) {
+        // v2 qso_date comes from COL_TIME_ON: "2026-08-11 21:41:00" (UTC)
+        final raw = json['qso_date']?.toString() ?? '';
+        dateTime = DateTime.parse(raw.replaceFirst(' ', 'T') + 'Z').toUtc();
       } else {
-        dateTime = DateTime.now().toUtc();
+        final dateStr = json['QSO_DATE']?.toString() ?? '';
+        final timeStr = json['TIME_ON']?.toString() ?? '0000';
+        if (dateStr.length >= 8) {
+          final y = int.parse(dateStr.substring(0, 4));
+          final mo = int.parse(dateStr.substring(4, 6));
+          final d = int.parse(dateStr.substring(6, 8));
+          final h = timeStr.length >= 2 ? int.parse(timeStr.substring(0, 2)) : 0;
+          final m = timeStr.length >= 4 ? int.parse(timeStr.substring(2, 4)) : 0;
+          final s = timeStr.length >= 6 ? int.parse(timeStr.substring(4, 6)) : 0;
+          dateTime = DateTime.utc(y, mo, d, h, m, s);
+        } else {
+          dateTime = DateTime.now().toUtc();
+        }
       }
     } catch (_) {
       dateTime = DateTime.now().toUtc();
     }
 
+    // ── rawAdif — uppercase all keys; add ADIF aliases for v2 snake_case keys ─
     final raw = <String, String>{};
     for (final entry in json.entries) {
       if (entry.value != null) {
         raw[entry.key.toUpperCase()] = entry.value.toString();
       }
     }
+    if (isV2) {
+      // Map snake_case v2 keys → ADIF uppercase so rawAdif getters work
+      void alias(String v2, String adif) {
+        if (json[v2] != null) raw[adif] = json[v2].toString();
+      }
+      alias('rst_sent',  'RST_SENT');
+      alias('rst_rcvd',  'RST_RCVD');
+      alias('gridsquare','GRIDSQUARE');
+      alias('tx_pwr',    'TX_PWR');
+      alias('prop_mode', 'PROP_MODE');
+      alias('sat_name',  'SAT_NAME');
+      alias('sat_mode',  'SAT_MODE');
+      alias('sota_ref',  'SOTA_REF');
+      alias('pota_ref',  'POTA_REF');
+      alias('wwff_ref',  'WWFF_REF');
+      alias('sig_info',  'SIG_INFO');
+      alias('srx_string','SRX_STRING');
+      alias('stx_string','STX_STRING');
+      alias('band_rx',   'BAND_RX');
+    }
+
+    // ── Frequency — v2 is Hz, ADIF is MHz ────────────────────────────────────
+    double? freqMhz;
+    if (isV2) {
+      final hz = double.tryParse(json['freq']?.toString() ?? '');
+      freqMhz = (hz != null && hz > 0) ? hz / 1000000.0 : null;
+    } else {
+      freqMhz = double.tryParse(json['FREQ']?.toString() ?? '');
+    }
+
+    // ── Field helpers ─────────────────────────────────────────────────────────
+    String? pick(String v2Key, String adifKey) =>
+        (isV2 ? json[v2Key] : json[adifKey])?.toString();
 
     return QsoModel(
-      callsign: json['CALL']?.toString() ?? '',
+      callsign: pick('call',       'CALL')       ?? '',
       dateTimeOn: dateTime,
-      band: json['BAND']?.toString() ?? '',
-      freqMhz: double.tryParse(json['FREQ']?.toString() ?? ''),
-      mode: json['MODE']?.toString() ?? '',
-      submode: json['SUBMODE']?.toString(),
-      rstSent: json['RST_SENT']?.toString() ?? '59',
-      rstRcvd: json['RST_RCVD']?.toString() ?? '59',
-      name: json['NAME']?.toString(),
-      qth: json['QTH']?.toString(),
-      gridSquare: json['GRIDSQUARE']?.toString(),
-      comment: json['COMMENT']?.toString(),
-      notes: json['NOTES']?.toString(),
-      dxcc: json['DXCC']?.toString(),
-      country: json['COUNTRY']?.toString(),
-      continent: json['CONT']?.toString(),
-      stationProfileId:
-          int.tryParse(json['station_profile_id']?.toString() ?? '') ?? 0,
+      band:     pick('band',       'BAND')       ?? '',
+      freqMhz: freqMhz,
+      mode:     pick('mode',       'MODE')       ?? '',
+      submode:  pick('submode',    'SUBMODE'),
+      rstSent:  pick('rst_sent',   'RST_SENT')   ?? '59',
+      rstRcvd:  pick('rst_rcvd',   'RST_RCVD')   ?? '59',
+      name:     pick('name',       'NAME'),
+      qth:      pick('qth',        'QTH'),
+      gridSquare: pick('gridsquare', 'GRIDSQUARE'),
+      comment:  pick('comment',    'COMMENT'),
+      notes:    pick('notes',      'NOTES'),
+      dxcc:     pick('dxcc',       'DXCC'),
+      country:  pick('country',    'COUNTRY'),
+      continent: (isV2 ? json['cont'] : json['CONT'])?.toString(),
+      stationProfileId: isV2
+          ? (int.tryParse(json['station_id']?.toString() ?? '') ?? 0)
+          : (int.tryParse(json['station_profile_id']?.toString() ?? '') ?? 0),
       synced: true,
       rawAdif: raw,
     );

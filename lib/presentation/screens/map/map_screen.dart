@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/qso_model.dart';
 
@@ -231,7 +232,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       ),
       body: markersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(e.toString())),
+        error: (e, _) => Center(child: Text(localizeError(context, e))),
         data: (allMarkers) {
           if (allMarkers.isEmpty) {
             return Center(

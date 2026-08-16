@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/contest_model.dart';
 import '../../../providers/remote_datasource_provider.dart';
@@ -44,7 +45,7 @@ class ContestSessionListScreen extends ConsumerWidget {
       ),
       body: sessions.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => _PatchRequired(message: e.toString()),
+        error: (e, _) => Center(child: Text(localizeError(context, e))),
         data: (list) {
           if (list.isEmpty) {
             return Center(
@@ -294,42 +295,3 @@ class _SessionCard extends ConsumerWidget {
 
 enum _CardAction { log, edit, delete }
 
-// ── Patch required banner ──────────────────────────────────────────────────────
-
-class _PatchRequired extends StatelessWidget {
-  final String message;
-  const _PatchRequired({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.extension_off_outlined, size: 56, color: Colors.orange),
-            const SizedBox(height: 16),
-            Text(l10n.patchRequiredTitle,
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
-            Text(
-              l10n.patchRequiredContest,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-            Text(message,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-                textAlign: TextAlign.center),
-          ],
-        ),
-      ),
-    );
-  }
-}

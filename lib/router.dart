@@ -6,6 +6,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'core/utils/l10n_extension.dart';
 import 'core/utils/maidenhead.dart';
+import 'presentation/screens/achievements/achievements_screen.dart';
+import 'presentation/screens/antenna/antenna_compass_screen.dart';
+import 'providers/pending_sync_provider.dart';
+import 'providers/sync_count_provider.dart';
 import 'presentation/screens/about/about_screen.dart';
 import 'presentation/screens/adif/adif_screen.dart';
 import 'presentation/screens/calendar/contest_calendar_screen.dart';
@@ -21,6 +25,7 @@ import 'presentation/screens/qso/qso_detail_screen.dart';
 import 'presentation/screens/qso/qso_list_screen.dart';
 import 'presentation/screens/server_setup/server_setup_screen.dart';
 import 'presentation/screens/settings/settings_screen.dart';
+import 'presentation/screens/migration/migration_screen.dart';
 import 'presentation/screens/setup_guide/setup_guide_screen.dart';
 import 'presentation/screens/splash/splash_screen.dart';
 import 'data/models/station_logbook_model.dart';
@@ -44,6 +49,7 @@ final appRouter = GoRouter(
   initialLocation: '/splash',
   routes: [
     GoRoute(path: '/splash',      builder: (c, s) => const SplashScreen()),
+    GoRoute(path: '/migration',   builder: (c, s) => const MigrationScreen()),
     GoRoute(path: '/setup-guide', builder: (c, s) => const SetupGuideScreen()),
     GoRoute(path: '/server-setup',builder: (c, s) => const ServerSetupScreen()),
     GoRoute(path: '/login',       builder: (c, s) => const LoginScreen()),
@@ -151,6 +157,16 @@ final appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const MapScreen(),
     ),
+    GoRoute(
+      path: '/antenna',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const AntennaCompassScreen(),
+    ),
+    GoRoute(
+      path: '/achievements',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const AchievementsScreen(),
+    ),
   ],
 );
 
@@ -170,7 +186,7 @@ class MainShell extends ConsumerWidget {
 
 // ── Classic Shell (original 6-tab nav) ────────────────────────────────────────
 
-class _ClassicShell extends StatelessWidget {
+class _ClassicShell extends ConsumerWidget {
   final Widget child;
   const _ClassicShell({required this.child});
 
@@ -193,7 +209,8 @@ class _ClassicShell extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(autoSyncProvider);
     final l10n = context.l10n;
     final location = GoRouterState.of(context).matchedLocation;
     final currentIndex = _indexForLocation(location);
@@ -392,28 +409,60 @@ class _AppDrawer extends ConsumerWidget {
     final settings = ref.watch(settingsProvider);
     final cs = Theme.of(context).colorScheme;
     final l10n = context.l10n;
+    final pendingCount = ref.watch(pendingSyncCountProvider);
+    ref.watch(autoSyncProvider);
 
     void go(String path) {
-      Navigator.of(context).pop(); // close drawer
+      Navigator.of(context).pop();
       context.push(path);
     }
 
     return Drawer(
       child: Column(
         children: [
-          // Header
+          // ── Header ─────────────────────────────────────────────────────
           DrawerHeader(
             decoration: BoxDecoration(color: cs.primaryContainer),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: cs.primary,
-                  child: Icon(Icons.radio, color: cs.onPrimary, size: 22),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: cs.primary,
+                      child: Icon(Icons.radio, color: cs.onPrimary, size: 22),
+                    ),
+                    const Spacer(),
+                    if (pendingCount > 0)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: cs.error.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                              color: cs.error.withValues(alpha: 0.4)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.cloud_off, size: 12, color: cs.error),
+                            const SizedBox(width: 4),
+                            Text(
+                              '$pendingCount',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: cs.error,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 Text(
                   settings.activeStationCallsign ?? 'Wavelog Mobile',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -434,7 +483,7 @@ class _AppDrawer extends ConsumerWidget {
             ),
           ),
 
-          // Nav items
+          // ── Nav items ──────────────────────────────────────────────────
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -454,6 +503,17 @@ class _AppDrawer extends ConsumerWidget {
                   label: l10n.drawerMap,
                   onTap: () => go('/map'),
                 ),
+                _DrawerItem(
+                  icon: Icons.explore_outlined,
+                  label: l10n.drawerAntenna,
+                  onTap: () => go('/antenna'),
+                ),
+                _DrawerItem(
+                  icon: Icons.military_tech_outlined,
+                  label: l10n.drawerAchievements,
+                  onTap: () => go('/achievements'),
+                ),
+                const Divider(indent: 16, endIndent: 16),
                 _DrawerItem(
                   icon: Icons.calendar_month_outlined,
                   label: l10n.drawerContestCalendar,
