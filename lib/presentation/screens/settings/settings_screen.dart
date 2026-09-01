@@ -316,13 +316,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         title: Text(settings.activeStationCallsign!),
                         subtitle: Text(settings.activeStationName ?? ''),
                         trailing: TextButton(
-                          onPressed: () => context.push('/stations'),
+                          onPressed: () => context.push('/station-picker'),
                           child: Text(l10n.change),
                         ),
                       )
                     else
                       OutlinedButton.icon(
-                        onPressed: () => context.push('/stations'),
+                        onPressed: () => context.push('/station-picker'),
                         icon: const Icon(Icons.cell_tower),
                         label: Text(l10n.selectStationBtn),
                       ),

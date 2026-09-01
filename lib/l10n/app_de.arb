@@ -742,5 +742,27 @@
   "migrationTokenInvalid": "Token ungültig — bitte prüfen und erneut versuchen.",
   "patchNotInstalledTitle": "Patch nicht erkannt",
   "patchNotInstalledBody": "Der Wavelog Mobile-Patch scheint nicht auf Ihrem Server installiert zu sein.\n\nEin API v2-Token (wl2_…) funktioniert ohne den Patch nicht. Bitte führen Sie zuerst Schritt 1 aus.",
-  "patchInstallFirst": "Patch installieren"
+  "patchInstallFirst": "Patch installieren",
+
+  "celebTitle": "Wavelog v3.2.0",
+  "celebSubtitle": "Server-Patch nicht mehr erforderlich!",
+  "celebBody": "Alle Funktionen laufen jetzt direkt über die offizielle Wavelog API v2. Den alten Patch, den Sie auf Ihren Server hochgeladen haben, können Sie entfernen.\n\nDiese App erfordert jetzt Wavelog v3.2.0 oder höher.",
+  "celebCreateToken": "API-Token erstellen",
+  "celebSkip": "Überspringen",
+  "celebScopesTitle": "API v2 Token-Berechtigungen",
+  "celebScopesBody": "Beim Erstellen eines neuen Tokens unter Profil → API-Tokens → Neuer Token die folgenden Berechtigungen auswählen:",
+  "celebDone": "Verstanden",
+
+  "scopeQsoRead": "QSO-Einträge lesen",
+  "scopeQsoWrite": "QSOs hinzufügen / aktualisieren / löschen",
+  "scopeStationRead": "Stationsprofile lesen",
+  "scopeStationWrite": "Stationen erstellen / aktualisieren / löschen",
+  "scopeLogbookRead": "Logbücher lesen",
+  "scopeLogbookWrite": "Logbücher erstellen / aktualisieren / löschen",
+  "scopeContestRead": "Wettkampfsitzungen lesen",
+  "scopeContestWrite": "Wettkampfsitzungen erstellen / aktualisieren",
+  "scopeCatalogRead": "DXCC, Gebiete und Wettkampfliste",
+  "scopeLookupRead": "Rufzeichen-Abfrage",
+  "scopeStatisticsRead": "Statistiken lesen",
+  "scopeConfirmationRead": "LoTW / eQSL / QRZ.com Bestätigungen lesen"
 }

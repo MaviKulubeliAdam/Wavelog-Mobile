@@ -54,26 +54,22 @@ class AdifGenerator {
     final buf = StringBuffer();
     final raw = qso.rawAdif;
     final dt = qso.dateTimeOn.toUtc();
-    var wroteFromRaw = false;
 
-    if (raw != null && raw.isNotEmpty) {
-      // Sunucudan gelen tüm ADIF alanlarını doğrudan kullan
+    // rawAdif'te CALL varsa sunucudan gelen tam veri; tüm alanlar oradan yazılır.
+    // CALL yoksa yeni QSO'dur; rawAdif yalnızca ek alanlar (POTA_REF vb.) içerir.
+    final isFullRaw = raw != null && raw.containsKey('CALL');
+
+    if (isFullRaw) {
       for (final entry in raw.entries) {
-        final key = entry.key;
-        final value = entry.value;
-        if (_skipFields.contains(key)) continue;
-        if (value.isEmpty) continue;
-        buf.writeln(_field(key, value));
-        wroteFromRaw = true;
+        if (_skipFields.contains(entry.key)) continue;
+        if (entry.value.isEmpty) continue;
+        buf.writeln(_field(entry.key, entry.value));
       }
       // QSO_DATE ve TIME_ON her zaman model'den yazılır (server formatı non-standard)
       buf.writeln(_field('QSO_DATE', _fmtDate(dt)));
       buf.writeln(_field('TIME_ON', _fmtTime(dt)));
-    }
-
-    if (!wroteFromRaw) {
-      // Yedek: rawAdif yoksa veya sadece display alanları içeriyorsa (ör. APP_WAVELOG_FLAG)
-      // QSO model alanlarından ADIF üret
+    } else {
+      // Yeni QSO: model alanlarından çekirdek ADIF üret
       buf.writeln(_field('CALL', qso.callsign));
       buf.writeln(_field('QSO_DATE', _fmtDate(dt)));
       buf.writeln(_field('TIME_ON', _fmtTime(dt)));
@@ -101,6 +97,14 @@ class AdifGenerator {
       if (qso.dxcc?.isNotEmpty == true) buf.writeln(_field('DXCC', qso.dxcc!));
       if (qso.comment?.isNotEmpty == true) {
         buf.writeln(_field('COMMENT', qso.comment!));
+      }
+      // rawAdif'teki ek alanları ekle (POTA_REF, SOTA_REF, WWFF_REF vb.)
+      if (raw != null) {
+        for (final entry in raw.entries) {
+          if (_skipFields.contains(entry.key)) continue;
+          if (entry.value.isEmpty) continue;
+          buf.writeln(_field(entry.key, entry.value));
+        }
       }
     }
 

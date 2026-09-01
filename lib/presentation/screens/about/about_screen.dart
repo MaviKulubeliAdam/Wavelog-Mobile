@@ -18,7 +18,7 @@ class _AboutScreenState extends State<AboutScreen> {
   void initState() {
     super.initState();
     PackageInfo.fromPlatform().then((info) {
-      if (mounted) setState(() { _version = info.version; _build = info.buildNumber; });
+      if (mounted) setState(() { _version = 'V${info.version}'; _build = info.buildNumber; });
     });
   }
 

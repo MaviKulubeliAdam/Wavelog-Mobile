@@ -643,5 +643,27 @@
   "migrationTokenInvalid": "Token jest nieprawidłowy — sprawdź i spróbuj ponownie.",
   "patchNotInstalledTitle": "Łatka nie wykryta",
   "patchNotInstalledBody": "Łatka Wavelog Mobile nie wydaje się być zainstalowana na Twoim serwerze.\n\nToken API v2 (wl2_…) nie będzie działał bez łatki. Najpierw wykonaj krok 1.",
-  "patchInstallFirst": "Zainstaluj łatkę"
+  "patchInstallFirst": "Zainstaluj łatkę",
+
+  "celebTitle": "Wavelog v3.2.0",
+  "celebSubtitle": "Łatka serwera nie jest już potrzebna!",
+  "celebBody": "Wszystkie funkcje działają teraz bezpośrednio przez oficjalne API v2 Wavelog. Możesz usunąć starą łatkę wgraną na serwer.\n\nAplikacja wymaga teraz Wavelog v3.2.0 lub nowszego.",
+  "celebCreateToken": "Utwórz token API",
+  "celebSkip": "Pomiń",
+  "celebScopesTitle": "Zakresy tokenu API v2",
+  "celebScopesBody": "Tworząc nowy token w interfejsie Wavelog: Profil → Tokeny API → Nowy token, wybierz następujące zakresy:",
+  "celebDone": "Rozumiem",
+
+  "scopeQsoRead": "Odczyt rekordów QSO",
+  "scopeQsoWrite": "Dodaj / aktualizuj / usuń QSO",
+  "scopeStationRead": "Odczyt profili stacji",
+  "scopeStationWrite": "Utwórz / aktualizuj / usuń stacje",
+  "scopeLogbookRead": "Odczyt dzienników",
+  "scopeLogbookWrite": "Utwórz / aktualizuj / usuń dzienniki",
+  "scopeContestRead": "Odczyt sesji konkursowych",
+  "scopeContestWrite": "Utwórz / aktualizuj sesje konkursowe",
+  "scopeCatalogRead": "Lista DXCC, regionów i konkursów",
+  "scopeLookupRead": "Wyszukiwanie znaków wywoławczych",
+  "scopeStatisticsRead": "Odczyt statystyk",
+  "scopeConfirmationRead": "Odczyt potwierdzeń LoTW / eQSL / QRZ.com"
 }

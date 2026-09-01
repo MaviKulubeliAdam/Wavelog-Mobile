@@ -210,8 +210,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final tileUrl = isDark
-        ? 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-        : 'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+        ? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
     return Scaffold(
       appBar: AppBar(

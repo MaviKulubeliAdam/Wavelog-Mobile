@@ -1,57 +1,62 @@
-import 'station_model.dart';
-
 class StationLogbookModel {
   final int id;
   final String name;
+  final bool active;
+  final List<int> stationIds;
+
+  // Legacy fields kept for UI compat — not populated from v2 API.
   final String? publicSlug;
   final bool publicSearch;
-  final List<StationModel> locations;
 
   const StationLogbookModel({
     required this.id,
     required this.name,
+    this.active = false,
+    this.stationIds = const [],
     this.publicSlug,
     this.publicSearch = false,
-    this.locations = const [],
   });
 
   factory StationLogbookModel.fromJson(Map<String, dynamic> json) {
-    final rawLocations = json['locations'];
-    final locations = (rawLocations is List)
-        ? rawLocations
-            .map((l) => StationModel.fromJson(l as Map<String, dynamic>))
-            .toList()
-        : <StationModel>[];
+    // v2 API: {id, name, active, station_ids}
+    // legacy: {logbook_id, logbook_name, ...}
+    final isV2 = json.containsKey('station_ids') || json.containsKey('active');
+
+    List<int> stationIds = const [];
+    if (isV2) {
+      final raw = json['station_ids'];
+      if (raw is List) {
+        stationIds = raw.map((e) => _parseInt(e) ?? 0).where((e) => e > 0).toList();
+      }
+    }
 
     return StationLogbookModel(
-      id: _parseInt(json['logbook_id']) ?? 0,
-      name: json['logbook_name']?.toString() ?? '',
+      id: _parseInt(isV2 ? json['id'] : json['logbook_id']) ?? 0,
+      name: (isV2 ? json['name'] : json['logbook_name'])?.toString() ?? '',
+      active: isV2
+          ? (json['active'] == true)
+          : json['logbook_active']?.toString() == '1',
+      stationIds: stationIds,
       publicSlug: json['public_slug']?.toString(),
       publicSearch: json['public_search']?.toString() == '1',
-      locations: locations,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'logbook_id': id,
-        'logbook_name': name,
-        if (publicSlug != null) 'public_slug': publicSlug,
-        'public_search': publicSearch ? '1' : '0',
-      };
 
   StationLogbookModel copyWith({
     int? id,
     String? name,
+    bool? active,
+    List<int>? stationIds,
     String? publicSlug,
     bool? publicSearch,
-    List<StationModel>? locations,
   }) {
     return StationLogbookModel(
       id: id ?? this.id,
       name: name ?? this.name,
+      active: active ?? this.active,
+      stationIds: stationIds ?? this.stationIds,
       publicSlug: publicSlug ?? this.publicSlug,
       publicSearch: publicSearch ?? this.publicSearch,
-      locations: locations ?? this.locations,
     );
   }
 

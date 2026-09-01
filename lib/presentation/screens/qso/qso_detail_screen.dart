@@ -13,6 +13,7 @@ import '../../../core/utils/adif_generator.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/callsign_lookup_model.dart';
 import '../../../data/models/qso_model.dart';
+import '../../../providers/confirmation_provider.dart';
 import '../../../providers/lookup_provider.dart';
 import '../../../providers/qso_provider.dart';
 import 'add_qso_screen.dart';
@@ -766,12 +767,12 @@ class _HeroCard extends StatelessWidget {
 
 // ── QSL Section ──────────────────────────────────────────────────────────────
 
-class _QslSection extends StatelessWidget {
+class _QslSection extends ConsumerWidget {
   final QsoModel qso;
   const _QslSection({required this.qso});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
     final hasAny = (qso.qslSent != null) ||
@@ -785,7 +786,13 @@ class _QslSection extends StatelessWidget {
         (qso.clublogStatus != null) ||
         (qso.hrdlogStatus != null);
 
-    if (!hasAny) return const SizedBox.shrink();
+    // Confirmation data from /api/v2/confirmation
+    final confirmationMap = ref.watch(confirmationProvider).valueOrNull ?? {};
+    final confirmedTypes = qso.serverId != null
+        ? (confirmationMap[qso.serverId!] ?? [])
+        : <String>[];
+
+    if (!hasAny && confirmedTypes.isEmpty) return const SizedBox.shrink();
 
     String uploadStatusLabel(String s) {
       switch (s.toUpperCase()) {
@@ -801,6 +808,19 @@ class _QslSection extends StatelessWidget {
       title: l10n.qslStatus,
       icon: Icons.mail_outline,
       children: [
+        // Confirmed via /api/v2/confirmation
+        if (confirmedTypes.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: confirmedTypes
+                  .map((type) => _ConfirmedChip(type: type))
+                  .toList(),
+            ),
+          ),
+        ],
         _QslRow(
           label: l10n.paperQsl,
           sent: qso.qslSent,
@@ -833,6 +853,49 @@ class _QslSection extends StatelessWidget {
         if (qso.hrdlogStatus != null)
           _LabelValue('HRDLog', uploadStatusLabel(qso.hrdlogStatus!)),
       ],
+    );
+  }
+}
+
+class _ConfirmedChip extends StatelessWidget {
+  final String type;
+  const _ConfirmedChip({required this.type});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.primary;
+    final bg = Theme.of(context).colorScheme.primaryContainer;
+    final textColor = Theme.of(context).colorScheme.onPrimaryContainer;
+
+    final icon = switch (type) {
+      'LoTW'    => Icons.cloud_done_outlined,
+      'eQSL'    => Icons.mark_email_read_outlined,
+      'QRZ.com' => Icons.language_outlined,
+      'ClubLog' => Icons.bar_chart_outlined,
+      _         => Icons.check_circle_outline,
+    };
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: color),
+          const SizedBox(width: 5),
+          Text(
+            '$type ✓',
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: textColor),
+          ),
+        ],
+      ),
     );
   }
 }

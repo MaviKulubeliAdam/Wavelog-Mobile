@@ -1867,4 +1867,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get migrationHelpBtn => 'Help & Installation Guide';
+
+  @override
+  String get celebTitle => 'Wavelog v3.2.0';
+
+  @override
+  String get celebSubtitle => 'Server Patch No Longer Needed!';
+
+  @override
+  String get celebBody =>
+      'All features now work directly via Wavelog\'s official API v2. You can remove the old patch you uploaded to your server.\n\nThis app now requires Wavelog v3.2.0 or later.';
+
+  @override
+  String get celebCreateToken => 'Create API Token';
+
+  @override
+  String get celebSkip => 'Skip';
+
+  @override
+  String get celebScopesTitle => 'API v2 Token Scopes';
+
+  @override
+  String get celebScopesBody =>
+      'When creating a new token in the Wavelog interface under Profile → API Tokens → New Token, select the following scopes:';
+
+  @override
+  String get celebDone => 'Got It';
+
+  @override
+  String get scopeQsoRead => 'Read QSO records';
+
+  @override
+  String get scopeQsoWrite => 'Add / update / delete QSOs';
+
+  @override
+  String get scopeStationRead => 'Read station profiles';
+
+  @override
+  String get scopeStationWrite => 'Create / update / delete stations';
+
+  @override
+  String get scopeLogbookRead => 'Read logbooks';
+
+  @override
+  String get scopeLogbookWrite => 'Create / update / delete logbooks';
+
+  @override
+  String get scopeContestRead => 'Read contest sessions';
+
+  @override
+  String get scopeContestWrite => 'Create / update contest sessions';
+
+  @override
+  String get scopeCatalogRead => 'DXCC, subdivisions and contest list';
+
+  @override
+  String get scopeLookupRead => 'Callsign lookup';
+
+  @override
+  String get scopeStatisticsRead => 'Read statistics';
+
+  @override
+  String get scopeConfirmationRead =>
+      'Read LoTW / eQSL / QRZ.com confirmations';
 }

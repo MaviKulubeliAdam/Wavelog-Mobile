@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import '../../../core/constants/api_endpoints.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../models/callsign_lookup_model.dart';
+import '../../models/confirmation_model.dart';
 import '../../models/contest_model.dart';
 import '../../models/dxcc_entity_model.dart';
 import '../../models/qso_model.dart';
@@ -218,22 +219,18 @@ class WavelogRemoteDatasource {
   Future<StationModel> createStation(
       StationModel station, {bool linkActiveLogbook = false}) async {
     try {
-      final body = station.toJson();
-      if (linkActiveLogbook) body['link_active_logbook'] = '1';
-
-      final response = await _dio.post(ApiEndpoints.station, data: body);
+      final response = await _dio.post(
+        ApiEndpoints.station,
+        data: _stationV2Body(station),
+      );
       final data = response.data;
-
       if (response.statusCode == 201 || response.statusCode == 200) {
-        final id = data is Map ? (data['station_id'] ?? data['id']) : null;
+        final inner = data is Map ? data['data'] : null;
+        final id = inner is Map ? inner['id'] : null;
         if (id != null) {
-          return station.copyWith(
-              id: int.tryParse(id.toString()) ?? station.id);
+          return station.copyWith(id: _parseInt(id) ?? station.id);
         }
         return station;
-      }
-      if (data is Map && data['status'] == 'dupe') {
-        throw const ServerException('Station already exists');
       }
       throw const ServerException('Could not create station');
     } on DioException catch (e) {
@@ -241,17 +238,14 @@ class WavelogRemoteDatasource {
     }
   }
 
-  // ── Station extensions — patch (remove when v2 gains these) ─────────────────
+  // ── Station extensions — v2 ──────────────────────────────────────────────────
 
   Future<StationModel> getStationDetail(int stationId) async {
     try {
-      final response = await _dio.post(
-        ApiEndpoints.mobileGetStationDetail,
-        data: {'station_id': stationId},
-      );
+      final response = await _dio.get(ApiEndpoints.stationById(stationId));
       final data = response.data;
-      if (data is Map && data['station'] is Map) {
-        return StationModel.fromJson(data['station'] as Map<String, dynamic>);
+      if (data is Map && data['data'] is Map) {
+        return StationModel.fromJson(data['data'] as Map<String, dynamic>);
       }
       throw const ServerException('Invalid server response');
     } on DioException catch (e) {
@@ -261,9 +255,10 @@ class WavelogRemoteDatasource {
 
   Future<void> updateStation(StationModel station) async {
     try {
-      final body = station.toJson();
-      body['station_id'] = station.id;
-      await _dio.post(ApiEndpoints.mobileUpdateStation, data: body);
+      await _dio.patch(
+        ApiEndpoints.stationById(station.id),
+        data: _stationV2Body(station),
+      );
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -271,9 +266,9 @@ class WavelogRemoteDatasource {
 
   Future<void> setActiveStation(int stationId) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileSetActiveStation,
-        data: {'station_id': stationId},
+      await _dio.patch(
+        ApiEndpoints.stationById(stationId),
+        data: {'set_active': true},
       );
     } on DioException catch (e) {
       throw _mapDioException(e);
@@ -282,10 +277,7 @@ class WavelogRemoteDatasource {
 
   Future<void> deleteStation(int stationId) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileDeleteStation,
-        data: {'station_id': stationId},
-      );
+      await _dio.delete(ApiEndpoints.stationById(stationId));
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -293,26 +285,37 @@ class WavelogRemoteDatasource {
 
   Future<int> cloneStation(int stationId, String newName) async {
     try {
-      final response = await _dio.post(
-        ApiEndpoints.mobileCloneStation,
-        data: {'station_id': stationId, 'new_name': newName},
-      );
-      final data = response.data;
-      if (data is Map) return _parseInt(data['station_id']) ?? 0;
+      final srcResp = await _dio.get(ApiEndpoints.stationById(stationId));
+      final srcData = srcResp.data;
+      if (srcData is! Map || srcData['data'] is! Map) return 0;
+
+      final src = Map<String, dynamic>.from(srcData['data'] as Map);
+      src['name'] = newName;
+      // active and uuid are server-generated; exclude them
+      src.remove('active');
+      src.remove('uuid');
+      src.remove('id');
+      src.remove('country');
+
+      final resp = await _dio.post(ApiEndpoints.station, data: src);
+      final d = resp.data;
+      if (d is Map && d['data'] is Map) {
+        return _parseInt((d['data'] as Map)['id']) ?? 0;
+      }
       return 0;
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
   }
 
-  // ── Logbook — patch (remove when v2 logbook resource ships) ─────────────────
+  // ── Logbook — v2 ────────────────────────────────────────────────────────────
 
   Future<List<StationLogbookModel>> getLogbooks() async {
     try {
-      final response = await _dio.post(ApiEndpoints.mobileGetLogbooks);
+      final response = await _dio.get(ApiEndpoints.logbook);
       final data = response.data;
-      if (data is Map && data['logbooks'] is List) {
-        return (data['logbooks'] as List)
+      if (data is Map && data['data'] is List) {
+        return (data['data'] as List)
             .map((j) => StationLogbookModel.fromJson(j as Map<String, dynamic>))
             .toList();
       }
@@ -325,11 +328,13 @@ class WavelogRemoteDatasource {
   Future<int> createLogbook(String name) async {
     try {
       final response = await _dio.post(
-        ApiEndpoints.mobileCreateLogbook,
-        data: {'logbook_name': name},
+        ApiEndpoints.logbook,
+        data: {'name': name},
       );
       final data = response.data;
-      if (data is Map) return _parseInt(data['logbook_id']) ?? 0;
+      if (data is Map && data['data'] is Map) {
+        return _parseInt((data['data'] as Map)['id']) ?? 0;
+      }
       return 0;
     } on DioException catch (e) {
       throw _mapDioException(e);
@@ -338,9 +343,9 @@ class WavelogRemoteDatasource {
 
   Future<void> updateLogbook(int logbookId, String name) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileUpdateLogbook,
-        data: {'logbook_id': logbookId, 'logbook_name': name},
+      await _dio.patch(
+        ApiEndpoints.logbookById(logbookId),
+        data: {'name': name},
       );
     } on DioException catch (e) {
       throw _mapDioException(e);
@@ -349,10 +354,7 @@ class WavelogRemoteDatasource {
 
   Future<void> deleteLogbook(int logbookId) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileDeleteLogbook,
-        data: {'logbook_id': logbookId},
-      );
+      await _dio.delete(ApiEndpoints.logbookById(logbookId));
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -360,9 +362,9 @@ class WavelogRemoteDatasource {
 
   Future<void> setActiveLogbook(int logbookId) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileSetActiveLogbook,
-        data: {'logbook_id': logbookId},
+      await _dio.patch(
+        ApiEndpoints.logbookById(logbookId),
+        data: {'set_active': true},
       );
     } on DioException catch (e) {
       throw _mapDioException(e);
@@ -371,10 +373,13 @@ class WavelogRemoteDatasource {
 
   Future<void> linkStationToLogbook(int logbookId, int stationId) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileLinkStation,
-        data: {'logbook_id': logbookId, 'station_id': stationId},
-      );
+      final current = await _getLogbookStationIds(logbookId);
+      if (!current.contains(stationId)) {
+        await _dio.patch(
+          ApiEndpoints.logbookById(logbookId),
+          data: {'station_ids': [...current, stationId]},
+        );
+      }
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -382,24 +387,38 @@ class WavelogRemoteDatasource {
 
   Future<void> unlinkStationFromLogbook(int logbookId, int stationId) async {
     try {
-      await _dio.post(
-        ApiEndpoints.mobileUnlinkStation,
-        data: {'logbook_id': logbookId, 'station_id': stationId},
+      final current = await _getLogbookStationIds(logbookId);
+      final updated = current.where((id) => id != stationId).toList();
+      await _dio.patch(
+        ApiEndpoints.logbookById(logbookId),
+        data: {'station_ids': updated},
       );
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
   }
 
-  // ── DXCC — patch (remove when v2 dxcc resource ships) ───────────────────────
+  Future<List<int>> _getLogbookStationIds(int logbookId) async {
+    final resp = await _dio.get(ApiEndpoints.logbookById(logbookId));
+    final d = resp.data;
+    if (d is Map && d['data'] is Map) {
+      final ids = (d['data'] as Map)['station_ids'];
+      if (ids is List) return ids.map((e) => _parseInt(e) ?? 0).where((e) => e > 0).toList();
+    }
+    return [];
+  }
+
+  // ── DXCC / Catalog — v2 ─────────────────────────────────────────────────────
 
   Future<List<DxccEntity>> getDxccList() async {
     try {
-      final response = await _dio.post(ApiEndpoints.mobileGetDxccList);
+      final response = await _dio.get(
+        ApiEndpoints.catalog,
+        queryParameters: {'topic': 'dxcc'},
+      );
       final data = response.data;
-      if (data is Map && data['status'] == 'ok') {
-        final list = data['data'] as List? ?? [];
-        return list
+      if (data is Map && data['data'] is List) {
+        return (data['data'] as List)
             .map((j) => DxccEntity.fromJson(j as Map<String, dynamic>))
             .toList();
       }
@@ -411,14 +430,13 @@ class WavelogRemoteDatasource {
 
   Future<List<StateSubdivision>> getStateList(int dxcc) async {
     try {
-      final response = await _dio.post(
-        ApiEndpoints.mobileGetStateList,
-        data: {'dxcc': dxcc},
+      final response = await _dio.get(
+        ApiEndpoints.catalog,
+        queryParameters: {'topic': 'subdivisions', 'dxcc': dxcc},
       );
       final data = response.data;
-      if (data is Map && data['status'] == 'ok') {
-        final list = data['data'] as List? ?? [];
-        return list
+      if (data is Map && data['data'] is List) {
+        return (data['data'] as List)
             .map((j) => StateSubdivision.fromJson(j as Map<String, dynamic>))
             .toList();
       }
@@ -428,20 +446,19 @@ class WavelogRemoteDatasource {
     }
   }
 
-  // ── Contest — patch (remove when v2 contest resource ships) ─────────────────
+  // ── Contest — v2 ────────────────────────────────────────────────────────────
 
   Future<List<ContestTemplate>> getContestList() async {
     try {
-      final response = await _dio.post(ApiEndpoints.mobileGetContestList);
+      final response = await _dio.get(
+        ApiEndpoints.catalog,
+        queryParameters: {'topic': 'contest'},
+      );
       final data = response.data;
-      if (data is Map &&
-          (data['status'] == 'ok' || data['status'] == 'success')) {
-        final list = data['contests'];
-        if (list is List) {
-          return list
-              .map((j) => ContestTemplate.fromJson(j as Map<String, dynamic>))
-              .toList();
-        }
+      if (data is Map && data['data'] is List) {
+        return (data['data'] as List)
+            .map((j) => ContestTemplate.fromJson(j as Map<String, dynamic>))
+            .toList();
       }
       return [];
     } on DioException catch (_) {
@@ -451,16 +468,12 @@ class WavelogRemoteDatasource {
 
   Future<List<ContestSession>> getContestSessions() async {
     try {
-      final response = await _dio.post(ApiEndpoints.mobileGetContestSessions);
+      final response = await _dio.get(ApiEndpoints.contest);
       final data = response.data;
-      if (data is Map &&
-          (data['status'] == 'ok' || data['status'] == 'success')) {
-        final list = data['sessions'];
-        if (list is List) {
-          return list
-              .map((j) => ContestSession.fromJson(j as Map<String, dynamic>))
-              .toList();
-        }
+      if (data is Map && data['data'] is List) {
+        return (data['data'] as List)
+            .map((j) => ContestSession.fromJson(j as Map<String, dynamic>))
+            .toList();
       }
       return [];
     } on DioException catch (e) {
@@ -487,24 +500,23 @@ class WavelogRemoteDatasource {
           '${dt.minute.toString().padLeft(2, '0')}:00';
 
       final response = await _dio.post(
-        ApiEndpoints.mobileCreateContestSession,
+        ApiEndpoints.contest,
         data: {
-          'contest_adif_id': contestAdifId,
-          'adif_name': adifName,
+          'contest': adifName,
           'time_start': fmt(timeStart.toUtc()),
           'time_end': fmt(timeEnd.toUtc()),
           'station_id': stationId,
-          'custom_name': customName,
-          'exchange_fields': exchangeFields,
-          'copy_exchange_to': copyExchangeTo,
+          'settings': {
+            'exchangefields': exchangeFields,
+            'copyexchangeto': copyExchangeTo,
+          },
         },
       );
       final data = response.data;
-      if (data is Map && (data['status'] == 'ok' || data['status'] == 'success')) {
-        return int.tryParse(data['session_id']?.toString() ?? '') ?? 0;
+      if (data is Map && data['data'] is Map) {
+        return _parseInt((data['data'] as Map)['id']) ?? 0;
       }
-      throw ServerException(
-          data is Map ? (data['reason']?.toString() ?? 'Error') : 'Error');
+      throw const ServerException('Could not create contest session');
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -529,25 +541,19 @@ class WavelogRemoteDatasource {
           '${dt.hour.toString().padLeft(2, '0')}:'
           '${dt.minute.toString().padLeft(2, '0')}:00';
 
-      final response = await _dio.post(
-        ApiEndpoints.mobileUpdateContestSession,
+      await _dio.patch(
+        ApiEndpoints.contestById(contestSessionId),
         data: {
-          'contest_session_id': contestSessionId,
-          'contest_adif_id': contestAdifId,
-          'adif_name': adifName,
+          'contest': adifName,
           'time_start': fmt(timeStart.toUtc()),
           'time_end': fmt(timeEnd.toUtc()),
           'station_id': stationId,
-          'custom_name': customName,
-          'exchange_fields': exchangeFields,
-          'copy_exchange_to': copyExchangeTo,
+          'settings': {
+            'exchangefields': exchangeFields,
+            'copyexchangeto': copyExchangeTo,
+          },
         },
       );
-      final data = response.data;
-      if (data is Map && data['status'] == 'failed') {
-        throw ServerException(
-            data['reason']?.toString() ?? 'Update failed');
-      }
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -555,14 +561,7 @@ class WavelogRemoteDatasource {
 
   Future<void> deleteContestSession(int contestSessionId) async {
     try {
-      final response = await _dio.post(
-        ApiEndpoints.mobileDeleteContestSession,
-        data: {'contest_session_id': contestSessionId},
-      );
-      final data = response.data;
-      if (data is Map && data['status'] == 'failed') {
-        throw ServerException(data['reason']?.toString() ?? 'Delete failed');
-      }
+      await _dio.delete(ApiEndpoints.contestById(contestSessionId));
     } on DioException catch (e) {
       throw _mapDioException(e);
     }
@@ -573,27 +572,100 @@ class WavelogRemoteDatasource {
     required int stationProfileId,
     required String adifString,
   }) async {
+    int? qsoId;
     try {
       final response = await _dio.post(
-        ApiEndpoints.mobileLogContestQso,
+        ApiEndpoints.qso,
         data: {
-          'contest_session_id': contestSessionId,
           'station_profile_id': stationProfileId,
-          'adif_string': adifString,
+          'import_type': 'adif',
+          'adif': adifString,
         },
       );
-      final data = response.data;
-      if (data is Map && data['status'] == 'failed') {
-        throw ServerException(data['reason']?.toString() ?? 'Error');
+      final raw = response.data;
+      if (raw is Map) {
+        final d = raw['data'];
+        qsoId = _parseInt(d is Map ? d['id'] : null);
       }
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404 ||
-          e.type == DioExceptionType.connectionError) {
+      if (e.type == DioExceptionType.connectionError) {
         await importQso(adifString, stationProfileId);
         return;
       }
       throw _mapDioException(e);
     }
+
+    if (qsoId != null && qsoId > 0) {
+      try {
+        await _dio.patch(
+          ApiEndpoints.contestById(contestSessionId),
+          data: {'link_qso_ids': [qsoId]},
+        );
+      } on DioException catch (_) {
+        // QSO logged but not linked to session — non-critical
+      }
+    }
+  }
+
+  // ── Confirmations — v2 ──────────────────────────────────────────────────────
+
+  /// Fetches all confirmation pages and returns a map of qsoId → list of types.
+  Future<Map<int, List<String>>> getConfirmations() async {
+    final all = <ConfirmationRecord>[];
+    int page = 1;
+    while (true) {
+      try {
+        final response = await _dio.get(
+          ApiEndpoints.confirmation,
+          queryParameters: {'page': page},
+        );
+        final data = response.data;
+        if (data is! Map) break;
+        final list = data['data'];
+        if (list is List) {
+          all.addAll(list
+              .whereType<Map<String, dynamic>>()
+              .map(ConfirmationRecord.fromJson));
+        }
+        final meta = data['meta'];
+        if (meta is! Map || meta['has_more'] != true) break;
+        page++;
+      } on DioException catch (_) {
+        break;
+      }
+    }
+    final map = <int, List<String>>{};
+    for (final r in all) {
+      if (r.qsoId > 0) {
+        map.putIfAbsent(r.qsoId, () => []);
+        if (!map[r.qsoId]!.contains(r.type)) map[r.qsoId]!.add(r.type);
+      }
+    }
+    return map;
+  }
+
+  // ── Station v2 body builder ──────────────────────────────────────────────────
+
+  static Map<String, dynamic> _stationV2Body(StationModel s) {
+    final body = <String, dynamic>{
+      'name': s.profileName,
+      'callsign': s.callsign,
+      'gridsquare': s.gridSquare ?? '',
+      'city': s.city ?? '',
+    };
+    if (s.dxcc != null) body['dxcc'] = s.dxcc;
+    if (s.cqZone != null) body['cq'] = s.cqZone;
+    if (s.ituZone != null) body['itu'] = s.ituZone;
+    if (s.state != null && s.state!.isNotEmpty) body['state'] = s.state;
+    if (s.county != null && s.county!.isNotEmpty) body['cnty'] = s.county;
+    if (s.iota != null && s.iota!.isNotEmpty) body['iota'] = s.iota;
+    if (s.sota != null && s.sota!.isNotEmpty) body['sota'] = s.sota;
+    if (s.wwff != null && s.wwff!.isNotEmpty) body['wwff'] = s.wwff;
+    if (s.pota != null && s.pota!.isNotEmpty) body['pota'] = s.pota;
+    if (s.sig != null && s.sig!.isNotEmpty) body['sig'] = s.sig;
+    if (s.sigInfo != null && s.sigInfo!.isNotEmpty) body['sig_info'] = s.sigInfo;
+    if (s.power != null) body['power'] = s.power;
+    return body;
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────────

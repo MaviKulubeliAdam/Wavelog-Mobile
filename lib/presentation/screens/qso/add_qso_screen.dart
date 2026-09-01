@@ -15,6 +15,7 @@ import '../../../core/utils/validators.dart';
 import '../../../data/models/callsign_lookup_model.dart';
 import '../../../data/models/qso_model.dart';
 import '../../../data/models/station_model.dart';
+import '../../../data/datasources/remote/pota_datasource.dart';
 import '../../../providers/auto_spot_provider.dart';
 import '../../../services/auto_spot_service.dart';
 import '../../../providers/connectivity_provider.dart';
@@ -51,9 +52,13 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   late TextEditingController _qthCtrl;
   late TextEditingController _gridCtrl;
   late TextEditingController _commentCtrl;
-  late TextEditingController _potaRefCtrl;
+  late TextEditingController _potaInputCtrl;
   late TextEditingController _sotaRefCtrl;
   late TextEditingController _wwffRefCtrl;
+
+  final _pota = PotaDatasource();
+  final Map<String, String?> _potaNameCache = {};
+  List<String> _potaRefs = [];
   late FocusNode _callsignFocus;
 
   DateTime _dateTimeOn = DateTime.now().toUtc();
@@ -108,7 +113,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _qthCtrl = TextEditingController(text: edit.qth ?? '');
       _gridCtrl = TextEditingController(text: edit.gridSquare ?? '');
       _commentCtrl = TextEditingController(text: edit.comment ?? '');
-      _potaRefCtrl = TextEditingController(text: edit.rawAdif?['POTA_REF'] ?? '');
+      _potaRefs = (edit.rawAdif?['POTA_REF'] ?? '')
+          .split(',').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+      _potaInputCtrl = TextEditingController();
       _sotaRefCtrl = TextEditingController(text: edit.rawAdif?['SOTA_REF'] ?? '');
       _wwffRefCtrl = TextEditingController(text: edit.rawAdif?['WWFF_REF'] ?? '');
       _dxccCountry = edit.country ?? edit.rawAdif?['COUNTRY'] ?? edit.dxcc;
@@ -129,7 +136,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _qthCtrl = TextEditingController();
       _gridCtrl = TextEditingController();
       _commentCtrl = TextEditingController();
-      _potaRefCtrl = TextEditingController();
+      _potaInputCtrl = TextEditingController();
       _sotaRefCtrl = TextEditingController();
       _wwffRefCtrl = TextEditingController();
     }
@@ -138,6 +145,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _callsignFocus.addListener(_onCallsignFocusChange);
     _freqCtrl.addListener(_updateAutoSpotStatus);
     if (widget.editQso == null) _freqCtrl.addListener(_saveFreqDebounced);
+    _potaInputCtrl.addListener(_onPotaInputChanged);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (edit == null &&
@@ -149,6 +157,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _updateAutoSpotStatus();
       _startStatusTimer();
       if (edit == null) _loadLastFreq();
+      if (_potaRefs.isNotEmpty) _lookupPotaRefs();
     });
   }
 
@@ -169,6 +178,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _freqSaveDebounce?.cancel();
     _freqCtrl.removeListener(_updateAutoSpotStatus);
     if (widget.editQso == null) _freqCtrl.removeListener(_saveFreqDebounced);
+    _potaInputCtrl.removeListener(_onPotaInputChanged);
     _callsignFocus.removeListener(_onCallsignFocusChange);
     _callsignFocus.dispose();
     _callsignCtrl.dispose();
@@ -179,10 +189,50 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _qthCtrl.dispose();
     _gridCtrl.dispose();
     _commentCtrl.dispose();
-    _potaRefCtrl.dispose();
+    _potaInputCtrl.dispose();
     _sotaRefCtrl.dispose();
     _wwffRefCtrl.dispose();
     super.dispose();
+  }
+
+  void _onPotaInputChanged() {
+    final text = _potaInputCtrl.text;
+    if (text.endsWith(',')) {
+      final ref = text.replaceAll(',', '').trim().toUpperCase();
+      _potaInputCtrl.clear();
+      if (ref.isNotEmpty) _addPotaRef(ref);
+    }
+  }
+
+  void _addPotaRef(String ref) {
+    if (_potaRefs.contains(ref)) return;
+    setState(() => _potaRefs.add(ref));
+    _lookupPotaRef(ref);
+  }
+
+  void _removePotaRef(String ref) {
+    setState(() {
+      _potaRefs.remove(ref);
+      _potaNameCache.remove(ref);
+    });
+  }
+
+  Future<void> _lookupPotaRef(String ref) async {
+    if (!ref.contains('-')) return;
+    if (_potaNameCache.containsKey(ref)) return;
+    if (mounted) setState(() => _potaNameCache[ref] = null);
+    try {
+      final info = await _pota.getPark(ref);
+      if (mounted) setState(() => _potaNameCache[ref] = info?.name ?? '');
+    } catch (_) {
+      if (mounted) setState(() => _potaNameCache.remove(ref));
+    }
+  }
+
+  Future<void> _lookupPotaRefs() async {
+    for (final ref in List.of(_potaRefs)) {
+      await _lookupPotaRef(ref);
+    }
   }
 
   void _onCallsignFocusChange() {
@@ -357,9 +407,11 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _qthCtrl.clear();
     _gridCtrl.clear();
     _commentCtrl.clear();
-    _potaRefCtrl.clear();
+    _potaInputCtrl.clear();
     _sotaRefCtrl.clear();
     _wwffRefCtrl.clear();
+    _potaRefs = [];
+    _potaNameCache.clear();
     _rstSentCtrl.text = getDefaultRst(_mode);
     _rstRcvdCtrl.text = getDefaultRst(_mode);
     setState(() {
@@ -402,12 +454,16 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     final rawAdifMap = <String, String>{
       ...?widget.editQso?.rawAdif,
       if (_dxccFlag != null) 'APP_WAVELOG_FLAG': _dxccFlag!,
-      if (_potaRefCtrl.text.trim().isNotEmpty)
-        'POTA_REF': _potaRefCtrl.text.trim().toUpperCase(),
+      if (_potaRefs.isNotEmpty)
+        'POTA_REF': _potaRefs.join(','),
       if (_sotaRefCtrl.text.trim().isNotEmpty)
         'SOTA_REF': _sotaRefCtrl.text.trim().toUpperCase(),
       if (_wwffRefCtrl.text.trim().isNotEmpty)
-        'WWFF_REF': _wwffRefCtrl.text.trim().toUpperCase(),
+        'WWFF_REF': _wwffRefCtrl.text
+            .split(',')
+            .map((e) => e.trim().toUpperCase())
+            .where((e) => e.isNotEmpty)
+            .join(','),
     };
 
     final qso = QsoModel(
@@ -1009,16 +1065,99 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12),
-            if (showPota)
+            if (showPota) ...[
+              if (_potaRefs.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(left: 48, bottom: 4),
+                  child: Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: [
+                      for (final potaRef in _potaRefs)
+                        Builder(builder: (ctx) {
+                          final cs = Theme.of(ctx).colorScheme;
+                          return InputChip(
+                            label: Text(potaRef,
+                                style: TextStyle(
+                                    fontSize: 13, color: cs.onInverseSurface)),
+                            onDeleted: () => _removePotaRef(potaRef),
+                            deleteIconColor: cs.onInverseSurface,
+                            backgroundColor: cs.inverseSurface,
+                            side: BorderSide.none,
+                            visualDensity: VisualDensity.compact,
+                          );
+                        }),
+                    ],
+                  ),
+                ),
               TextFormField(
-                controller: _potaRefCtrl,
+                controller: _potaInputCtrl,
                 decoration: const InputDecoration(
                   labelText: 'POTA P2P',
-                  hintText: 'US-1234',
+                  hintText: 'US-1234, Enter veya virgülle ekle',
                   prefixIcon: Icon(Icons.park_outlined, size: 20),
                 ),
                 textCapitalization: TextCapitalization.characters,
+                onFieldSubmitted: (value) {
+                  final r = value.trim().toUpperCase();
+                  _potaInputCtrl.clear();
+                  if (r.isNotEmpty) _addPotaRef(r);
+                },
               ),
+              if (_potaRefs.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(left: 48, top: 4),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (int i = 0; i < _potaRefs.length; i++)
+                        Builder(builder: (ctx) {
+                          final potaRef = _potaRefs[i];
+                          final cs = Theme.of(ctx).colorScheme;
+                          final labelStyle = TextStyle(
+                              fontSize: 12, color: cs.onSurfaceVariant);
+                          if (!_potaNameCache.containsKey(potaRef)) {
+                            return Row(children: [
+                              Text('${i + 1}. ', style: labelStyle),
+                              SizedBox(
+                                width: 10,
+                                height: 10,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 1.5,
+                                    color: cs.onSurfaceVariant),
+                              ),
+                            ]);
+                          }
+                          final name = _potaNameCache[potaRef];
+                          if (name == null) {
+                            return Row(children: [
+                              Text('${i + 1}. ', style: labelStyle),
+                              SizedBox(
+                                width: 10,
+                                height: 10,
+                                child: CircularProgressIndicator(
+                                    strokeWidth: 1.5,
+                                    color: cs.onSurfaceVariant),
+                              ),
+                            ]);
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 1),
+                            child: Text(
+                              '${i + 1}. ${name.isEmpty ? potaRef : name}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color:
+                                    name.isEmpty ? cs.error : cs.primary,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }),
+                    ],
+                  ),
+                ),
+            ],
             if (showSota) ...[
               if (showPota) const SizedBox(height: 12),
               TextFormField(
@@ -1037,7 +1176,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
                 controller: _wwffRefCtrl,
                 decoration: const InputDecoration(
                   labelText: 'WWFF P2P',
-                  hintText: 'SPFF-0001',
+                  hintText: 'SPFF-0001, TAFF-0001',
                   prefixIcon: Icon(Icons.forest_outlined, size: 20),
                 ),
                 textCapitalization: TextCapitalization.characters,
@@ -1052,7 +1191,11 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       stations.when(
         data: (list) {
           if (list.isEmpty) return const SizedBox.shrink();
+          final editStationId = widget.editQso?.stationProfileId;
           final initial = _selectedStation ??
+              (editStationId != null && editStationId != 0
+                  ? list.where((s) => s.id == editStationId).firstOrNull
+                  : null) ??
               list
                   .where((s) =>
                       s.id ==

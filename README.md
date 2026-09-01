@@ -11,6 +11,7 @@ Android companion app for [Wavelog](https://github.com/wavelog/wavelog) — the 
 ## Features
 
 - **QSO Logging** — callsign lookup via QRZ/HamQTH, band, mode, RST, DXCC info, grid square and signal map
+- **QSL Confirmation Status** — LoTW, eQSL and QRZ.com confirmation chips displayed in QSO detail view
 - **Contest Mode** — dedicated contest logger with serial/exchange fields and session management
 - **DX Spots** — live cluster spots with filtering by band and mode
 - **Logbook** — browse, search, edit and delete your QSOs
@@ -25,25 +26,38 @@ Android companion app for [Wavelog](https://github.com/wavelog/wavelog) — the 
 
 ## Requirements
 
-- Android 8.0 (API 26) or higher
-- A self-hosted [Wavelog](https://github.com/wavelog/wavelog) instance (recent version)
-- A **Wavelog API v2 token** (`wl2_…`) — generated in Wavelog → Settings → API
+- Android 7.0 (API 24) or higher
+- A self-hosted [Wavelog](https://github.com/wavelog/wavelog) instance **v3.2.0 or later**
+- A **Wavelog API v2 token** (`wl2_…`) — generated in Wavelog → Settings → API Tokens
 
-### Server-side patch
+> **No server patch required.** Starting with v3.2.0 of Wavelog Mobile, all features run directly on the official Wavelog API v2. No files need to be uploaded to your server beyond a standard Wavelog installation.
 
-A small patch is required on your Wavelog server. Even if you generate an API v2 token without it, the app will not work correctly. Installation takes about a minute:
+### API Token Scopes
 
-👉 **[sp9aqg.pl/install.html](https://sp9aqg.pl/install.html)**
+When creating the token in Wavelog under **Settings → API Tokens → New Token**, select these scopes:
 
-## Getting started
+| Scope | Purpose |
+|---|---|
+| `qso:read` / `qso:write` | Log and browse QSOs |
+| `station:read` / `station:write` | Manage station profiles |
+| `logbook:read` / `logbook:write` | Manage logbooks |
+| `contest:read` / `contest:write` | Contest sessions |
+| `catalog:read` | DXCC list, subdivisions, contest catalogue |
+| `lookup:read` | Callsign lookup |
+| `statistics:read` | Statistics screen |
+| `confirmation:read` | LoTW / eQSL / QRZ.com confirmation status |
 
-1. Install the server patch (see above)
-2. In Wavelog, go to **Settings → API** and create an API v2 token (`wl2_…`)
+## Getting Started
+
+1. Make sure your Wavelog server is at **v3.2.0 or later**
+2. In Wavelog, go to **Settings → API Tokens** and create a new token with the scopes listed above
 3. Install the app from Google Play
-4. Open the app, enter your server URL and paste the API v2 token
+4. Open the app, enter your server URL and paste the API token
 5. Select your station profile and start logging
 
-## ADIF Import — Open with
+The app will guide you through token creation on first launch.
+
+## ADIF Import — Open With
 
 On Android, `.adif` and `.adi` files are registered to open with Wavelog Mobile. Tap a file in your file manager or email client, select **Wavelog Mobile — İçe Aktar**, and the app opens directly on the import screen with the file pre-loaded. Select your station profile and tap **Import**.
 
@@ -51,7 +65,7 @@ On Android, `.adif` and `.adi` files are registered to open with Wavelog Mobile.
 
 The app is available in English, Turkish, German and Polish.
 
-## Tech stack
+## Tech Stack
 
 - [Flutter](https://flutter.dev) / Dart
 - [Riverpod](https://riverpod.dev) — state management

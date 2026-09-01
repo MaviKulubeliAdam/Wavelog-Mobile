@@ -29,6 +29,10 @@ class StationLogbookDetailScreen extends ConsumerWidget {
     }).valueOrNull ??
         initialLogbook;
 
+    final allStations = ref.watch(stationProvider).valueOrNull ?? [];
+    final linkedIds = logbook?.stationIds.toSet() ?? <int>{};
+    final locations = allStations.where((s) => linkedIds.contains(s.id)).toList();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(logbook?.name ?? l10n.logbooks),
@@ -41,13 +45,13 @@ class StationLogbookDetailScreen extends ConsumerWidget {
       ),
       body: logbook == null
           ? const Center(child: CircularProgressIndicator())
-          : logbook.locations.isEmpty
+          : locations.isEmpty
               ? const _EmptyLocations()
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(0, 8, 0, 88),
-                  itemCount: logbook.locations.length,
+                  itemCount: locations.length,
                   itemBuilder: (ctx, i) => _LinkedLocationTile(
-                    station: logbook.locations[i],
+                    station: locations[i],
                     logbookId: logbookId,
                   ),
                 ),
@@ -58,8 +62,7 @@ class StationLogbookDetailScreen extends ConsumerWidget {
       BuildContext context, WidgetRef ref, StationLogbookModel? logbook) async {
     final l10n = context.l10n;
     final allStations = ref.read(stationProvider).valueOrNull ?? [];
-    final linkedIds =
-        (logbook?.locations.map((s) => s.id).toSet()) ?? <int>{};
+    final linkedIds = logbook?.stationIds.toSet() ?? <int>{};
     final available =
         allStations.where((s) => !linkedIds.contains(s.id)).toList();
 

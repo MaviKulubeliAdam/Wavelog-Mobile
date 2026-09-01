@@ -27,6 +27,7 @@ import 'presentation/screens/server_setup/server_setup_screen.dart';
 import 'presentation/screens/settings/settings_screen.dart';
 import 'presentation/screens/migration/migration_screen.dart';
 import 'presentation/screens/setup_guide/setup_guide_screen.dart';
+import 'presentation/screens/celebration/api_v2_celebration_screen.dart';
 import 'presentation/screens/splash/splash_screen.dart';
 import 'data/models/station_logbook_model.dart';
 import 'data/models/station_model.dart';
@@ -47,8 +48,17 @@ final shellScaffoldKey = GlobalKey<ScaffoldState>();
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/splash',
+  redirect: (context, state) {
+    final uri = state.uri.toString();
+    if (uri.startsWith('content://') || uri.startsWith('file://')) {
+      return '/splash';
+    }
+    return null;
+  },
+  onException: (context, state, router) => router.go('/splash'),
   routes: [
     GoRoute(path: '/splash',      builder: (c, s) => const SplashScreen()),
+    GoRoute(path: '/v32-notice',  builder: (c, s) => const ApiV2CelebrationScreen()),
     GoRoute(path: '/migration',   builder: (c, s) => const MigrationScreen()),
     GoRoute(path: '/setup-guide', builder: (c, s) => const SetupGuideScreen()),
     GoRoute(path: '/server-setup',builder: (c, s) => const ServerSetupScreen()),
@@ -148,6 +158,11 @@ final appRouter = GoRouter(
       path: '/settings',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/station-picker',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const StationListScreen(),
     ),
     GoRoute(
       path: '/about',

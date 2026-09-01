@@ -4,6 +4,7 @@ class StationModel {
   final String callsign;
   final String? gridSquare;
   final String? city;
+  final String? country;
   final int? dxcc;
   final int? power;
   final bool isActive;
@@ -50,6 +51,7 @@ class StationModel {
     required this.callsign,
     this.gridSquare,
     this.city,
+    this.country,
     this.dxcc,
     this.power,
     this.isActive = false,
@@ -89,6 +91,7 @@ class StationModel {
       callsign: (isV2Format ? json['callsign'] : json['station_callsign'])?.toString() ?? '',
       gridSquare: (isV2Format ? json['gridsquare'] : json['station_gridsquare'])?.toString(),
       city: (isV2Format ? json['city'] : json['station_city'])?.toString(),
+      country: json['country']?.toString(),
       dxcc: _parseInt(isV2Format ? json['dxcc'] : json['station_dxcc']),
       power: _parseInt(isV2Format ? json['power'] : json['station_power']),
       isActive: isV2Format
@@ -177,6 +180,7 @@ class StationModel {
     String? callsign,
     String? gridSquare,
     String? city,
+    String? country,
     int? dxcc,
     int? power,
     bool? isActive,
@@ -211,6 +215,7 @@ class StationModel {
       callsign: callsign ?? this.callsign,
       gridSquare: gridSquare ?? this.gridSquare,
       city: city ?? this.city,
+      country: country ?? this.country,
       dxcc: dxcc ?? this.dxcc,
       power: power ?? this.power,
       isActive: isActive ?? this.isActive,
