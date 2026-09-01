@@ -8,6 +8,7 @@ import '../../../data/models/detailed_statistics_model.dart';
 import '../../../data/models/dxcc_entity_model.dart';
 import '../../../data/models/pota_stats_model.dart';
 import '../../../data/models/qso_model.dart';
+import '../../../providers/confirmation_provider.dart';
 import '../../../providers/detailed_statistics_provider.dart';
 import '../../../providers/pota_stats_provider.dart';
 import '../../../providers/remote_datasource_provider.dart';
@@ -101,6 +102,9 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
   // Used as fallback when local QSOs lack dxcc/country fields (v2 API).
   final serverStats = await ref.watch(statisticsProvider.future);
 
+  // v2 QSO list does not return QSL fields — use /api/v2/confirmation as source of truth.
+  final confirmationMap = ref.watch(confirmationProvider).valueOrNull ?? {};
+
   final box = Hive.box<QsoModel>('qso_cache');
 
   // Build worked map from QSO cache: adif → confirmation status + continent
@@ -109,9 +113,10 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
   final workedByName = <String, ({String cont, int count, bool lotw, bool eqsl, bool qsl})>{};
 
   for (final qso in box.values) {
-    final lotwY = qso.lotwRcvd?.toUpperCase() == 'Y';
-    final eqslY = qso.eqslRcvd?.toUpperCase() == 'Y';
-    final qslY  = qso.qslRcvd?.toUpperCase()  == 'Y';
+    final types = confirmationMap[qso.serverId] ?? [];
+    final lotwY = qso.lotwRcvd?.toUpperCase() == 'Y' || types.contains('LoTW');
+    final eqslY = qso.eqslRcvd?.toUpperCase() == 'Y' || types.contains('eQSL');
+    final qslY  = qso.qslRcvd?.toUpperCase()  == 'Y' || types.contains('QSL');
 
     final adif = int.tryParse(qso.dxcc?.trim() ?? '');
     if (adif != null && adif > 0) {
@@ -160,9 +165,10 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
       final entity = _matchDxccByCall(call, sortedByPrefix);
       if (entity == null) continue;
 
-      final lotwY = qso.lotwRcvd?.toUpperCase() == 'Y';
-      final eqslY = qso.eqslRcvd?.toUpperCase() == 'Y';
-      final qslY  = qso.qslRcvd?.toUpperCase()  == 'Y';
+      final types = confirmationMap[qso.serverId] ?? [];
+      final lotwY = qso.lotwRcvd?.toUpperCase() == 'Y' || types.contains('LoTW');
+      final eqslY = qso.eqslRcvd?.toUpperCase() == 'Y' || types.contains('eQSL');
+      final qslY  = qso.qslRcvd?.toUpperCase()  == 'Y' || types.contains('QSL');
 
       final ex = workedByAdif[entity.adif];
       workedByAdif[entity.adif] = (
