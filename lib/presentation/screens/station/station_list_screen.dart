@@ -195,7 +195,7 @@ class _LogbookTile extends ConsumerWidget {
         ),
         title: Text(logbook.name),
         subtitle: Text(
-            '${logbook.locations.length} ${l10n.locations.toLowerCase()}'),
+            '${logbook.stationIds.length} ${l10n.locations.toLowerCase()}'),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

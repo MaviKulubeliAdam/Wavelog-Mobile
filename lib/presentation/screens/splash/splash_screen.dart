@@ -5,6 +5,7 @@ import '../../../core/services/intent_handler.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../router.dart';
+import '../celebration/api_v2_celebration_screen.dart';
 import 'wave_splash.dart';
 
 /// Splash screen — keeps the original routing logic, swaps the body
@@ -38,6 +39,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     } else if (!settings.hasValidConfig || !settings.isLoggedIn) {
       context.go('/setup-guide');
     } else {
+      // Show one-time v3.2.0 patch-removal notice
+      if (await ApiV2CelebrationScreen.shouldShow()) {
+        if (!mounted) return;
+        context.go('/v32-notice');
+        return;
+      }
       final pendingFile = await IntentHandler.getInitialFile();
       if (!mounted) return;
       context.go('/home');

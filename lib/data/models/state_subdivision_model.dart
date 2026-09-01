@@ -5,7 +5,7 @@ class StateSubdivision {
   const StateSubdivision({required this.code, required this.name});
 
   factory StateSubdivision.fromJson(Map<String, dynamic> j) => StateSubdivision(
-        code: j['code']?.toString() ?? '',
+        code: (j['state'] ?? j['code'])?.toString() ?? '',
         name: j['name']?.toString() ?? '',
       );
 

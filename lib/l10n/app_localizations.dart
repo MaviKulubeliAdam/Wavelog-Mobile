@@ -3629,6 +3629,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & Installation Guide'**
   String get migrationHelpBtn;
+
+  /// No description provided for @celebTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wavelog v3.2.0'**
+  String get celebTitle;
+
+  /// No description provided for @celebSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server Patch No Longer Needed!'**
+  String get celebSubtitle;
+
+  /// No description provided for @celebBody.
+  ///
+  /// In en, this message translates to:
+  /// **'All features now work directly via Wavelog\'s official API v2. You can remove the old patch you uploaded to your server.\n\nThis app now requires Wavelog v3.2.0 or later.'**
+  String get celebBody;
+
+  /// No description provided for @celebCreateToken.
+  ///
+  /// In en, this message translates to:
+  /// **'Create API Token'**
+  String get celebCreateToken;
+
+  /// No description provided for @celebSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get celebSkip;
+
+  /// No description provided for @celebScopesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'API v2 Token Scopes'**
+  String get celebScopesTitle;
+
+  /// No description provided for @celebScopesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When creating a new token in the Wavelog interface under Profile → API Tokens → New Token, select the following scopes:'**
+  String get celebScopesBody;
+
+  /// No description provided for @celebDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Got It'**
+  String get celebDone;
+
+  /// No description provided for @scopeQsoRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read QSO records'**
+  String get scopeQsoRead;
+
+  /// No description provided for @scopeQsoWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Add / update / delete QSOs'**
+  String get scopeQsoWrite;
+
+  /// No description provided for @scopeStationRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read station profiles'**
+  String get scopeStationRead;
+
+  /// No description provided for @scopeStationWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create / update / delete stations'**
+  String get scopeStationWrite;
+
+  /// No description provided for @scopeLogbookRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read logbooks'**
+  String get scopeLogbookRead;
+
+  /// No description provided for @scopeLogbookWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create / update / delete logbooks'**
+  String get scopeLogbookWrite;
+
+  /// No description provided for @scopeContestRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read contest sessions'**
+  String get scopeContestRead;
+
+  /// No description provided for @scopeContestWrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Create / update contest sessions'**
+  String get scopeContestWrite;
+
+  /// No description provided for @scopeCatalogRead.
+  ///
+  /// In en, this message translates to:
+  /// **'DXCC, subdivisions and contest list'**
+  String get scopeCatalogRead;
+
+  /// No description provided for @scopeLookupRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Callsign lookup'**
+  String get scopeLookupRead;
+
+  /// No description provided for @scopeStatisticsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read statistics'**
+  String get scopeStatisticsRead;
+
+  /// No description provided for @scopeConfirmationRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Read LoTW / eQSL / QRZ.com confirmations'**
+  String get scopeConfirmationRead;
 }
 
 class _AppLocalizationsDelegate

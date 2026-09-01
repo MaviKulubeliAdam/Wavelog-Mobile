@@ -1874,4 +1874,70 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get migrationHelpBtn => 'Hilfe & Installationsanleitung';
+
+  @override
+  String get celebTitle => 'Wavelog v3.2.0';
+
+  @override
+  String get celebSubtitle => 'Server-Patch nicht mehr erforderlich!';
+
+  @override
+  String get celebBody =>
+      'Alle Funktionen laufen jetzt direkt über die offizielle Wavelog API v2. Den alten Patch, den Sie auf Ihren Server hochgeladen haben, können Sie entfernen.\n\nDiese App erfordert jetzt Wavelog v3.2.0 oder höher.';
+
+  @override
+  String get celebCreateToken => 'API-Token erstellen';
+
+  @override
+  String get celebSkip => 'Überspringen';
+
+  @override
+  String get celebScopesTitle => 'API v2 Token-Berechtigungen';
+
+  @override
+  String get celebScopesBody =>
+      'Beim Erstellen eines neuen Tokens unter Profil → API-Tokens → Neuer Token die folgenden Berechtigungen auswählen:';
+
+  @override
+  String get celebDone => 'Verstanden';
+
+  @override
+  String get scopeQsoRead => 'QSO-Einträge lesen';
+
+  @override
+  String get scopeQsoWrite => 'QSOs hinzufügen / aktualisieren / löschen';
+
+  @override
+  String get scopeStationRead => 'Stationsprofile lesen';
+
+  @override
+  String get scopeStationWrite =>
+      'Stationen erstellen / aktualisieren / löschen';
+
+  @override
+  String get scopeLogbookRead => 'Logbücher lesen';
+
+  @override
+  String get scopeLogbookWrite =>
+      'Logbücher erstellen / aktualisieren / löschen';
+
+  @override
+  String get scopeContestRead => 'Wettkampfsitzungen lesen';
+
+  @override
+  String get scopeContestWrite =>
+      'Wettkampfsitzungen erstellen / aktualisieren';
+
+  @override
+  String get scopeCatalogRead => 'DXCC, Gebiete und Wettkampfliste';
+
+  @override
+  String get scopeLookupRead => 'Rufzeichen-Abfrage';
+
+  @override
+  String get scopeStatisticsRead => 'Statistiken lesen';
+
+  @override
+  String get scopeConfirmationRead =>
+      'LoTW / eQSL / QRZ.com Bestätigungen lesen';
 }

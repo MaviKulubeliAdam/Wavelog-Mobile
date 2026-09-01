@@ -643,5 +643,27 @@
   "migrationStep3Title": "Profili güncelleyin",
   "migrationStep3Body": "Aşağıdaki butona tıklayın. Sunucu adresiniz korunur, sadece kopyaladığınız yeni tokeni ilgili alana yapıştırmanız yeterli.",
   "migrationUpdateTokenBtn": "Token'ı Güncelle",
-  "migrationHelpBtn": "Yardım & Yükleme Kılavuzu"
+  "migrationHelpBtn": "Yardım & Yükleme Kılavuzu",
+
+  "celebTitle": "Wavelog v3.2.0",
+  "celebSubtitle": "Sunucu Yaması Artık Gerekmiyor!",
+  "celebBody": "Tüm özellikler artık doğrudan Wavelog'un resmi API v2 üzerinden çalışıyor. Sunucunuza yüklediğiniz eski yamayı kaldırabilirsiniz.\n\nBu uygulama artık Wavelog v3.2.0 veya üstü gerektirmektedir.",
+  "celebCreateToken": "API Token Oluştur",
+  "celebSkip": "Atla",
+  "celebScopesTitle": "API v2 Token Kapsamları",
+  "celebScopesBody": "Wavelog arayüzünde Profil → API Tokens → Yeni Token oluştururken aşağıdaki kapsamları seçin:",
+  "celebDone": "Tamam, Anladım",
+
+  "scopeQsoRead": "QSO kayıtlarını oku",
+  "scopeQsoWrite": "QSO ekle / güncelle / sil",
+  "scopeStationRead": "İstasyon profillerini oku",
+  "scopeStationWrite": "İstasyon oluştur / güncelle / sil",
+  "scopeLogbookRead": "Defterları oku",
+  "scopeLogbookWrite": "Defter oluştur / güncelle / sil",
+  "scopeContestRead": "Yarışma oturumlarını oku",
+  "scopeContestWrite": "Yarışma oturumu oluştur / güncelle",
+  "scopeCatalogRead": "DXCC, bölge ve yarışma listesi",
+  "scopeLookupRead": "Çağrı işareti sorgulama",
+  "scopeStatisticsRead": "İstatistikleri oku",
+  "scopeConfirmationRead": "LoTW / eQSL / QRZ.com onaylarını oku"
 }

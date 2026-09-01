@@ -12,7 +12,7 @@ class ContestTemplate {
   factory ContestTemplate.fromJson(Map<String, dynamic> j) => ContestTemplate(
         id:       int.tryParse(j['id']?.toString() ?? '') ?? 0,
         name:     j['name']?.toString() ?? '',
-        adifName: (j['adif_name'] ?? j['adifname'])?.toString() ?? '',
+        adifName: (j['contest'] ?? j['adif_name'] ?? j['adifname'])?.toString() ?? '',
       );
 }
 
@@ -47,9 +47,11 @@ class ContestSession {
 
     String customName = j['custom_name']?.toString() ?? '';
 
-    // exchange_fields comes as a flat array from the API (PHP decodes settings for us)
+    // v2: settings.exchangefields; legacy: exchange_fields flat array
     List<String> exchangeFields = const ['serial'];
-    final ef = j['exchange_fields'];
+    final settings = j['settings'];
+    final efV2 = settings is Map ? settings['exchangefields'] : null;
+    final ef = efV2 ?? j['exchange_fields'];
     if (ef is List && ef.isNotEmpty) {
       exchangeFields = ef.map((e) => e.toString()).toList();
     }
@@ -57,7 +59,7 @@ class ContestSession {
     return ContestSession(
       id:             int.tryParse(j['id']?.toString() ?? '') ?? 0,
       contestName:    j['contest_name']?.toString() ?? '',
-      adifName:       (j['adif_name'] ?? j['adifname'])?.toString() ?? '',
+      adifName:       (j['contest'] ?? j['adif_name'] ?? j['adifname'])?.toString() ?? '',
       timeStart:      parseDate(j['time_start']?.toString()),
       timeEnd:        j['time_end'] != null && j['time_end'].toString().isNotEmpty
                           ? DateTime.tryParse(j['time_end'].toString())?.toUtc()

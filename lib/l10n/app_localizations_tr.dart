@@ -1870,4 +1870,66 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get migrationHelpBtn => 'Yardım & Yükleme Kılavuzu';
+
+  @override
+  String get celebTitle => 'Wavelog v3.2.0';
+
+  @override
+  String get celebSubtitle => 'Sunucu Yaması Artık Gerekmiyor!';
+
+  @override
+  String get celebBody =>
+      'Tüm özellikler artık doğrudan Wavelog\'un resmi API v2 üzerinden çalışıyor. Sunucunuza yüklediğiniz eski yamayı kaldırabilirsiniz.\n\nBu uygulama artık Wavelog v3.2.0 veya üstü gerektirmektedir.';
+
+  @override
+  String get celebCreateToken => 'API Token Oluştur';
+
+  @override
+  String get celebSkip => 'Atla';
+
+  @override
+  String get celebScopesTitle => 'API v2 Token Kapsamları';
+
+  @override
+  String get celebScopesBody =>
+      'Wavelog arayüzünde Profil → API Tokens → Yeni Token oluştururken aşağıdaki kapsamları seçin:';
+
+  @override
+  String get celebDone => 'Tamam, Anladım';
+
+  @override
+  String get scopeQsoRead => 'QSO kayıtlarını oku';
+
+  @override
+  String get scopeQsoWrite => 'QSO ekle / güncelle / sil';
+
+  @override
+  String get scopeStationRead => 'İstasyon profillerini oku';
+
+  @override
+  String get scopeStationWrite => 'İstasyon oluştur / güncelle / sil';
+
+  @override
+  String get scopeLogbookRead => 'Defterları oku';
+
+  @override
+  String get scopeLogbookWrite => 'Defter oluştur / güncelle / sil';
+
+  @override
+  String get scopeContestRead => 'Yarışma oturumlarını oku';
+
+  @override
+  String get scopeContestWrite => 'Yarışma oturumu oluştur / güncelle';
+
+  @override
+  String get scopeCatalogRead => 'DXCC, bölge ve yarışma listesi';
+
+  @override
+  String get scopeLookupRead => 'Çağrı işareti sorgulama';
+
+  @override
+  String get scopeStatisticsRead => 'İstatistikleri oku';
+
+  @override
+  String get scopeConfirmationRead => 'LoTW / eQSL / QRZ.com onaylarını oku';
 }
