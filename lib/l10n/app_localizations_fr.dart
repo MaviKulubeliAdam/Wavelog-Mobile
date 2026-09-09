@@ -1804,6 +1804,76 @@ class AppLocalizationsFr extends AppLocalizations {
   String get drawerAchievements => 'Succès';
 
   @override
+  String get drawerCommunity => 'Communauté';
+
+  @override
+  String get communityTitle => 'Communauté';
+
+  @override
+  String get communityNoActivations =>
+      'Aucune activation planifiée pour l\'instant';
+
+  @override
+  String get communityBeFirst => 'Soyez le premier à en annoncer une !';
+
+  @override
+  String get communityAnnounce => 'Annoncer une activation';
+
+  @override
+  String get communityFollow => 'Suivre';
+
+  @override
+  String get communityUnfollow => 'Ne plus suivre';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count abonnés';
+  }
+
+  @override
+  String get communityTypeGeneral => 'Général';
+
+  @override
+  String get communityCallsign => 'Indicatif';
+
+  @override
+  String get communityReference => 'Référence';
+
+  @override
+  String get communitySotaRef => 'Référence SOTA (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'Référence POTA (TA-0001)';
+
+  @override
+  String get communityScheduledTime => 'Heure prévue';
+
+  @override
+  String get communityNote => 'Note (optionnelle)';
+
+  @override
+  String get communityNoteHint => 'Brève info sur l\'activation...';
+
+  @override
+  String get communityAnnounceButton => 'Annoncer';
+
+  @override
+  String get communityAnnounced => 'Activation annoncée !';
+
+  @override
+  String get communityRateLimit =>
+      'Vous venez d\'annoncer. Veuillez patienter quelques minutes.';
+
+  @override
+  String get communityCallsignRequired => 'Indicatif requis';
+
+  @override
+  String get communityReferenceRequired => 'Référence requise';
+
+  @override
+  String get communityBandRequired => 'Sélectionnez au moins une bande';
+
+  @override
   String get gifPreparing => 'Préparation de la vidéo...';
 
   @override

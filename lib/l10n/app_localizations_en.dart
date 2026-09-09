@@ -1795,6 +1795,75 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawerAchievements => 'Achievements';
 
   @override
+  String get drawerCommunity => 'Community';
+
+  @override
+  String get communityTitle => 'Community';
+
+  @override
+  String get communityNoActivations => 'No planned activations yet';
+
+  @override
+  String get communityBeFirst => 'Be the first to announce one!';
+
+  @override
+  String get communityAnnounce => 'Announce Activation';
+
+  @override
+  String get communityFollow => 'Follow';
+
+  @override
+  String get communityUnfollow => 'Unfollow';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count followers';
+  }
+
+  @override
+  String get communityTypeGeneral => 'General';
+
+  @override
+  String get communityCallsign => 'Callsign';
+
+  @override
+  String get communityReference => 'Reference';
+
+  @override
+  String get communitySotaRef => 'SOTA Reference (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'POTA Reference (TA-0001)';
+
+  @override
+  String get communityScheduledTime => 'Scheduled time';
+
+  @override
+  String get communityNote => 'Note (optional)';
+
+  @override
+  String get communityNoteHint => 'Brief info about the activation...';
+
+  @override
+  String get communityAnnounceButton => 'Announce';
+
+  @override
+  String get communityAnnounced => 'Activation announced!';
+
+  @override
+  String get communityRateLimit =>
+      'You posted recently. Please wait a few minutes.';
+
+  @override
+  String get communityCallsignRequired => 'Callsign is required';
+
+  @override
+  String get communityReferenceRequired => 'Reference is required';
+
+  @override
+  String get communityBandRequired => 'Select at least one band';
+
+  @override
   String get gifPreparing => 'Preparing video...';
 
   @override

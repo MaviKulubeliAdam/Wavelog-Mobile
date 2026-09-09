@@ -1780,6 +1780,74 @@ class AppLocalizationsKo extends AppLocalizations {
   String get drawerAchievements => '업적';
 
   @override
+  String get drawerCommunity => '커뮤니티';
+
+  @override
+  String get communityTitle => '커뮤니티';
+
+  @override
+  String get communityNoActivations => '예정된 활성화가 없습니다';
+
+  @override
+  String get communityBeFirst => '첫 번째로 발표해보세요!';
+
+  @override
+  String get communityAnnounce => '활성화 발표';
+
+  @override
+  String get communityFollow => '팔로우';
+
+  @override
+  String get communityUnfollow => '팔로우 취소';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count명 팔로워';
+  }
+
+  @override
+  String get communityTypeGeneral => '일반';
+
+  @override
+  String get communityCallsign => '콜사인';
+
+  @override
+  String get communityReference => '참조번호';
+
+  @override
+  String get communitySotaRef => 'SOTA 참조 (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'POTA 참조 (TA-0001)';
+
+  @override
+  String get communityScheduledTime => '예정 시간';
+
+  @override
+  String get communityNote => '메모 (선택사항)';
+
+  @override
+  String get communityNoteHint => '활성화에 대한 간단한 정보...';
+
+  @override
+  String get communityAnnounceButton => '발표';
+
+  @override
+  String get communityAnnounced => '활성화가 발표되었습니다!';
+
+  @override
+  String get communityRateLimit => '방금 발표하셨습니다. 몇 분 기다려 주세요.';
+
+  @override
+  String get communityCallsignRequired => '콜사인이 필요합니다';
+
+  @override
+  String get communityReferenceRequired => '참조번호가 필요합니다';
+
+  @override
+  String get communityBandRequired => '최소 하나의 밴드를 선택하세요';
+
+  @override
   String get gifPreparing => '동영상 준비 중...';
 
   @override

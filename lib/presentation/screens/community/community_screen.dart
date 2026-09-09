@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/planned_activation_model.dart';
 import '../../../providers/community_provider.dart';
 
@@ -12,11 +13,11 @@ class CommunityScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Topluluk'),
+        title: Text(context.l10n.communityTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_alert_outlined),
-            tooltip: 'Aktivasyon Duyur',
+            tooltip: context.l10n.communityAnnounce,
             onPressed: () => context.push('/community/plan'),
           ),
         ],
@@ -41,7 +42,7 @@ class _ActivationList extends ConsumerWidget {
           children: [
             const Icon(Icons.cloud_off, size: 48),
             const SizedBox(height: 12),
-            Text('Bağlantı hatası', style: Theme.of(context).textTheme.titleMedium),
+            Text('Connection error', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text('$e', style: Theme.of(context).textTheme.bodySmall),
           ],
@@ -49,17 +50,17 @@ class _ActivationList extends ConsumerWidget {
       ),
       data: (activations) {
         if (activations.isEmpty) {
-          return const Center(
+          return Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.radio_outlined, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text('Henüz planlanan aktivasyon yok'),
-                SizedBox(height: 8),
+                const Icon(Icons.radio_outlined, size: 64, color: Colors.grey),
+                const SizedBox(height: 16),
+                Text(context.l10n.communityNoActivations),
+                const SizedBox(height: 8),
                 Text(
-                  'İlk duyuruyu sen yap!',
-                  style: TextStyle(color: Colors.grey),
+                  context.l10n.communityBeFirst,
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -197,7 +198,7 @@ class _ActivationCard extends ConsumerWidget {
                         size: 14, color: cs.onSurfaceVariant),
                     const SizedBox(width: 4),
                     Text(
-                      '${activation.subscriberCount} abone',
+                      context.l10n.communityFollowers(activation.subscriberCount),
                       style: TextStyle(
                           fontSize: 12, color: cs.onSurfaceVariant),
                     ),
@@ -213,7 +214,9 @@ class _ActivationCard extends ConsumerWidget {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       child: Text(
-                        subscribed ? 'Abonelikten çık' : 'Bildir beni',
+                        subscribed
+                            ? context.l10n.communityUnfollow
+                            : context.l10n.communityFollow,
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),

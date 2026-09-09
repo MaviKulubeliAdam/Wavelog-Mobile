@@ -3506,6 +3506,138 @@ abstract class AppLocalizations {
   /// **'Achievements'**
   String get drawerAchievements;
 
+  /// No description provided for @drawerCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get drawerCommunity;
+
+  /// No description provided for @communityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get communityTitle;
+
+  /// No description provided for @communityNoActivations.
+  ///
+  /// In en, this message translates to:
+  /// **'No planned activations yet'**
+  String get communityNoActivations;
+
+  /// No description provided for @communityBeFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Be the first to announce one!'**
+  String get communityBeFirst;
+
+  /// No description provided for @communityAnnounce.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce Activation'**
+  String get communityAnnounce;
+
+  /// No description provided for @communityFollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get communityFollow;
+
+  /// No description provided for @communityUnfollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get communityUnfollow;
+
+  /// No description provided for @communityFollowers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} followers'**
+  String communityFollowers(int count);
+
+  /// No description provided for @communityTypeGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get communityTypeGeneral;
+
+  /// No description provided for @communityCallsign.
+  ///
+  /// In en, this message translates to:
+  /// **'Callsign'**
+  String get communityCallsign;
+
+  /// No description provided for @communityReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference'**
+  String get communityReference;
+
+  /// No description provided for @communitySotaRef.
+  ///
+  /// In en, this message translates to:
+  /// **'SOTA Reference (TA/AN-001)'**
+  String get communitySotaRef;
+
+  /// No description provided for @communityPotaRef.
+  ///
+  /// In en, this message translates to:
+  /// **'POTA Reference (TA-0001)'**
+  String get communityPotaRef;
+
+  /// No description provided for @communityScheduledTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled time'**
+  String get communityScheduledTime;
+
+  /// No description provided for @communityNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get communityNote;
+
+  /// No description provided for @communityNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Brief info about the activation...'**
+  String get communityNoteHint;
+
+  /// No description provided for @communityAnnounceButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce'**
+  String get communityAnnounceButton;
+
+  /// No description provided for @communityAnnounced.
+  ///
+  /// In en, this message translates to:
+  /// **'Activation announced!'**
+  String get communityAnnounced;
+
+  /// No description provided for @communityRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You posted recently. Please wait a few minutes.'**
+  String get communityRateLimit;
+
+  /// No description provided for @communityCallsignRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Callsign is required'**
+  String get communityCallsignRequired;
+
+  /// No description provided for @communityReferenceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference is required'**
+  String get communityReferenceRequired;
+
+  /// No description provided for @communityBandRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Select at least one band'**
+  String get communityBandRequired;
+
   /// No description provided for @gifPreparing.
   ///
   /// In en, this message translates to:

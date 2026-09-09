@@ -1801,6 +1801,75 @@ class AppLocalizationsPl extends AppLocalizations {
   String get drawerAchievements => 'Osiągnięcia';
 
   @override
+  String get drawerCommunity => 'Społeczność';
+
+  @override
+  String get communityTitle => 'Społeczność';
+
+  @override
+  String get communityNoActivations => 'Brak zaplanowanych aktywacji';
+
+  @override
+  String get communityBeFirst => 'Bądź pierwszym, który ogłosi aktywację!';
+
+  @override
+  String get communityAnnounce => 'Ogłoś aktywację';
+
+  @override
+  String get communityFollow => 'Obserwuj';
+
+  @override
+  String get communityUnfollow => 'Przestań obserwować';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count obserwujących';
+  }
+
+  @override
+  String get communityTypeGeneral => 'Ogólne';
+
+  @override
+  String get communityCallsign => 'Znak wywoławczy';
+
+  @override
+  String get communityReference => 'Referencja';
+
+  @override
+  String get communitySotaRef => 'Referencja SOTA (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'Referencja POTA (TA-0001)';
+
+  @override
+  String get communityScheduledTime => 'Planowany czas';
+
+  @override
+  String get communityNote => 'Notatka (opcjonalnie)';
+
+  @override
+  String get communityNoteHint => 'Krótka informacja o aktywacji...';
+
+  @override
+  String get communityAnnounceButton => 'Ogłoś';
+
+  @override
+  String get communityAnnounced => 'Aktywacja ogłoszona!';
+
+  @override
+  String get communityRateLimit =>
+      'Właśnie ogłosiłeś aktywację. Poczekaj kilka minut.';
+
+  @override
+  String get communityCallsignRequired => 'Znak wywoławczy jest wymagany';
+
+  @override
+  String get communityReferenceRequired => 'Referencja jest wymagana';
+
+  @override
+  String get communityBandRequired => 'Wybierz co najmniej jedno pasmo';
+
+  @override
   String get gifPreparing => 'Przygotowywanie wideo...';
 
   @override

@@ -1802,6 +1802,75 @@ class AppLocalizationsIt extends AppLocalizations {
   String get drawerAchievements => 'Obiettivi';
 
   @override
+  String get drawerCommunity => 'Comunità';
+
+  @override
+  String get communityTitle => 'Comunità';
+
+  @override
+  String get communityNoActivations => 'Nessuna attivazione pianificata';
+
+  @override
+  String get communityBeFirst => 'Sii il primo ad annunciarne una!';
+
+  @override
+  String get communityAnnounce => 'Annuncia attivazione';
+
+  @override
+  String get communityFollow => 'Segui';
+
+  @override
+  String get communityUnfollow => 'Smetti di seguire';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count iscritti';
+  }
+
+  @override
+  String get communityTypeGeneral => 'Generale';
+
+  @override
+  String get communityCallsign => 'Nominativo';
+
+  @override
+  String get communityReference => 'Riferimento';
+
+  @override
+  String get communitySotaRef => 'Riferimento SOTA (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'Riferimento POTA (TA-0001)';
+
+  @override
+  String get communityScheduledTime => 'Orario pianificato';
+
+  @override
+  String get communityNote => 'Nota (opzionale)';
+
+  @override
+  String get communityNoteHint => 'Breve info sull\'attivazione...';
+
+  @override
+  String get communityAnnounceButton => 'Annuncia';
+
+  @override
+  String get communityAnnounced => 'Attivazione annunciata!';
+
+  @override
+  String get communityRateLimit =>
+      'Hai appena fatto un annuncio. Aspetta qualche minuto.';
+
+  @override
+  String get communityCallsignRequired => 'Nominativo obbligatorio';
+
+  @override
+  String get communityReferenceRequired => 'Riferimento obbligatorio';
+
+  @override
+  String get communityBandRequired => 'Seleziona almeno una banda';
+
+  @override
   String get gifPreparing => 'Preparazione video...';
 
   @override

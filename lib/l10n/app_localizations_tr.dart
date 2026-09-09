@@ -1798,6 +1798,75 @@ class AppLocalizationsTr extends AppLocalizations {
   String get drawerAchievements => 'Başarılar';
 
   @override
+  String get drawerCommunity => 'Topluluk';
+
+  @override
+  String get communityTitle => 'Topluluk';
+
+  @override
+  String get communityNoActivations => 'Henüz planlanan aktivasyon yok';
+
+  @override
+  String get communityBeFirst => 'İlk duyuruyu sen yap!';
+
+  @override
+  String get communityAnnounce => 'Aktivasyon Duyur';
+
+  @override
+  String get communityFollow => 'Takip et';
+
+  @override
+  String get communityUnfollow => 'Takibi bırak';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count takipçi';
+  }
+
+  @override
+  String get communityTypeGeneral => 'Genel';
+
+  @override
+  String get communityCallsign => 'Çağrı işareti';
+
+  @override
+  String get communityReference => 'Referans';
+
+  @override
+  String get communitySotaRef => 'SOTA Referans (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'POTA Referans (TA-0001)';
+
+  @override
+  String get communityScheduledTime => 'Planlanan saat';
+
+  @override
+  String get communityNote => 'Not (opsiyonel)';
+
+  @override
+  String get communityNoteHint => 'Aktivasyon hakkında kısa bilgi...';
+
+  @override
+  String get communityAnnounceButton => 'Duyur';
+
+  @override
+  String get communityAnnounced => 'Aktivasyon duyuruldu!';
+
+  @override
+  String get communityRateLimit =>
+      'Az önce duyuru yaptınız. Lütfen birkaç dakika bekleyin.';
+
+  @override
+  String get communityCallsignRequired => 'Çağrı işareti gerekli';
+
+  @override
+  String get communityReferenceRequired => 'Referans gerekli';
+
+  @override
+  String get communityBandRequired => 'En az bir band seçin';
+
+  @override
   String get gifPreparing => 'Video hazırlanıyor...';
 
   @override

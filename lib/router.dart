@@ -546,7 +546,7 @@ class _AppDrawer extends ConsumerWidget {
                 ),
                 _DrawerItem(
                   icon: Icons.groups_outlined,
-                  label: 'Topluluk',
+                  label: l10n.drawerCommunity,
                   onTap: () => go('/community'),
                 ),
                 const Divider(indent: 16, endIndent: 16),

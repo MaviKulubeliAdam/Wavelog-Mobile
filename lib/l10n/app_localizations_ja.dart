@@ -1780,6 +1780,74 @@ class AppLocalizationsJa extends AppLocalizations {
   String get drawerAchievements => '実績';
 
   @override
+  String get drawerCommunity => 'コミュニティ';
+
+  @override
+  String get communityTitle => 'コミュニティ';
+
+  @override
+  String get communityNoActivations => '予定されたアクティベーションはありません';
+
+  @override
+  String get communityBeFirst => '最初に告知してみましょう！';
+
+  @override
+  String get communityAnnounce => 'アクティベーションを告知';
+
+  @override
+  String get communityFollow => 'フォロー';
+
+  @override
+  String get communityUnfollow => 'フォロー解除';
+
+  @override
+  String communityFollowers(int count) {
+    return '$count フォロワー';
+  }
+
+  @override
+  String get communityTypeGeneral => '一般';
+
+  @override
+  String get communityCallsign => 'コールサイン';
+
+  @override
+  String get communityReference => 'リファレンス';
+
+  @override
+  String get communitySotaRef => 'SOTAリファレンス (TA/AN-001)';
+
+  @override
+  String get communityPotaRef => 'POTAリファレンス (TA-0001)';
+
+  @override
+  String get communityScheduledTime => '予定時刻';
+
+  @override
+  String get communityNote => 'メモ（任意）';
+
+  @override
+  String get communityNoteHint => 'アクティベーションの簡単な説明...';
+
+  @override
+  String get communityAnnounceButton => '告知する';
+
+  @override
+  String get communityAnnounced => 'アクティベーションを告知しました！';
+
+  @override
+  String get communityRateLimit => '直前に告知しました。しばらく待ってください。';
+
+  @override
+  String get communityCallsignRequired => 'コールサインは必須です';
+
+  @override
+  String get communityReferenceRequired => 'リファレンスは必須です';
+
+  @override
+  String get communityBandRequired => '少なくとも1つのバンドを選択してください';
+
+  @override
   String get gifPreparing => '動画を準備中...';
 
   @override
