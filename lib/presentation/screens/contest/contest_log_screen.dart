@@ -136,8 +136,26 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
   void _onFreqChanged() {
     _freqDebounce?.cancel();
     _freqDebounce = Timer(const Duration(milliseconds: 600), () {
-      final parsed = double.tryParse(_freqCtrl.text.trim());
-      if (parsed != null && mounted) {
+      if (!mounted) return;
+      final text = _freqCtrl.text.trim();
+      if (text.isEmpty) {
+        final center = kBandCenterFreqMhz[_band];
+        if (center != null) _freqCtrl.text = center.toStringAsFixed(3);
+        return;
+      }
+
+      // kHz → MHz: nokta yoksa otomatik dönüştür (÷1000 veya ÷10000)
+      final freqText = autoFormatFreqInput(text);
+      if (freqText != text) {
+        _freqCtrl.value = TextEditingValue(
+          text: freqText,
+          selection: TextSelection.collapsed(offset: freqText.length),
+        );
+        return; // listener yeniden tetiklenir, band tespiti orada yapılır
+      }
+
+      final parsed = double.tryParse(freqText);
+      if (parsed != null) {
         final detected = getBandFromFreq(parsed);
         if (detected != null && detected != _band) {
           setState(() => _band = detected);

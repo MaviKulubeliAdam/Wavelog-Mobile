@@ -68,3 +68,26 @@ String? bandFromKhz(double khz) {
 }
 
 String? getBandFromFreq(double freqMhz) => bandFromKhz(freqMhz * 1000);
+
+/// Noktasız ham frekans girdisini MHz string'e dönüştürür.
+///
+/// Strateji (öncelik sırasıyla):
+///   1. Zaten nokta varsa → dokunma.
+///   2. ÷ 1000 (kHz girişi): sonuç bilinen bir banttaysa kullan.
+///      Örn: 14200 → 14.200 MHz (20m)
+///   3. ÷ 10000 (10 Hz çözünürlüklü kHz): sonuç banttaysa kullan.
+///      Örn: 142005 → 14.2005 MHz (20m), 142.005 değil
+///   4. Yedek: ÷ 1000 (en yaygın varsayım).
+String autoFormatFreqInput(String raw) {
+  if (raw.contains('.')) return raw;
+  final val = double.tryParse(raw);
+  if (val == null || val < 1000) return raw;
+
+  final mhz = val / 1000.0;
+  if (getBandFromFreq(mhz) != null) return mhz.toStringAsFixed(3);
+
+  final mhz2 = val / 10000.0;
+  if (getBandFromFreq(mhz2) != null) return mhz2.toStringAsFixed(4);
+
+  return mhz.toStringAsFixed(3); // yedek
+}

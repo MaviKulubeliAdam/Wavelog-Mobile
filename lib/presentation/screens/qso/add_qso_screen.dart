@@ -168,17 +168,28 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   void _saveFreqDebounced() {
     _freqSaveDebounce?.cancel();
     _freqSaveDebounce = Timer(const Duration(milliseconds: 800), () {
-      final freq = _freqCtrl.text.trim();
-      if (freq.isNotEmpty) {
-        final ds = ref.read(settingsLocalDatasourceProvider);
-        ds.saveLastFreq(freq);
-        final parsed = double.tryParse(freq);
-        if (parsed != null) {
-          final detectedBand = getBandFromFreq(parsed);
-          if (detectedBand != null && detectedBand != _band && mounted) {
-            setState(() => _band = detectedBand);
-            ds.saveLastBand(detectedBand);
-          }
+      if (!mounted) return;
+      final rawText = _freqCtrl.text.trim();
+      if (rawText.isEmpty) return;
+
+      // kHz → MHz: nokta yoksa otomatik dönüştür (÷1000 veya ÷10000)
+      final freqText = autoFormatFreqInput(rawText);
+      if (freqText != rawText) {
+        _freqCtrl.value = TextEditingValue(
+          text: freqText,
+          selection: TextSelection.collapsed(offset: freqText.length),
+        );
+        return; // listener yeniden tetiklenir, bant tespiti orada yapılır
+      }
+
+      final ds = ref.read(settingsLocalDatasourceProvider);
+      ds.saveLastFreq(freqText);
+      final parsed = double.tryParse(freqText);
+      if (parsed != null) {
+        final detectedBand = getBandFromFreq(parsed);
+        if (detectedBand != null && detectedBand != _band) {
+          setState(() => _band = detectedBand);
+          ds.saveLastBand(detectedBand);
         }
       }
     });
@@ -316,7 +327,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     setState(() {
       _band = last;
       final freq = kBandCenterFreqMhz[last];
-      if (freq != null) _freqCtrl.text = freq.toString();
+      if (freq != null) _freqCtrl.text = freq.toStringAsFixed(3);
     });
   }
 
@@ -411,7 +422,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _band = band;
       _submode = null;
       final freq = kBandCenterFreqMhz[band];
-      if (freq != null) _freqCtrl.text = freq.toString();
+      if (freq != null) _freqCtrl.text = freq.toStringAsFixed(3);
     });
     ref.read(settingsLocalDatasourceProvider).saveLastBand(band);
   }
