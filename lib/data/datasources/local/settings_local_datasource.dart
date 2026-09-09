@@ -149,4 +149,26 @@ class SettingsLocalDatasource {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('wl_last_freq', freq.trim());
   }
+
+  Future<String?> getLastBand() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('wl_last_band');
+  }
+
+  Future<void> saveLastBand(String band) async {
+    if (band.trim().isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('wl_last_band', band.trim());
+  }
+
+  Future<String?> getLastSubmode(String mode) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('wl_last_submode_${mode.toLowerCase()}');
+  }
+
+  Future<void> saveLastSubmode(String mode, String submode) async {
+    if (mode.trim().isEmpty || submode.trim().isEmpty) return;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('wl_last_submode_${mode.toLowerCase()}', submode.trim());
+  }
 }

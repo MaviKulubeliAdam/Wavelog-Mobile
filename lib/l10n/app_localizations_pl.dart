@@ -643,6 +643,18 @@ class AppLocalizationsPl extends AppLocalizations {
   String get langGerman => 'Deutsch';
 
   @override
+  String get langFrench => 'Français';
+
+  @override
+  String get langItalian => 'Italiano';
+
+  @override
+  String get langJapanese => '日本語';
+
+  @override
+  String get langKorean => '한국어';
+
+  @override
   String get aboutTitle => 'O aplikacji';
 
   @override
@@ -1904,25 +1916,37 @@ class AppLocalizationsPl extends AppLocalizations {
   String get scopeQsoRead => 'Odczyt rekordów QSO';
 
   @override
-  String get scopeQsoWrite => 'Dodaj / aktualizuj / usuń QSO';
+  String get scopeQsoWrite => 'Dodaj / aktualizuj QSO';
+
+  @override
+  String get scopeQsoDelete => 'Usuń QSO';
 
   @override
   String get scopeStationRead => 'Odczyt profili stacji';
 
   @override
-  String get scopeStationWrite => 'Utwórz / aktualizuj / usuń stacje';
+  String get scopeStationWrite => 'Utwórz / aktualizuj stacje';
+
+  @override
+  String get scopeStationDelete => 'Usuń stacje';
 
   @override
   String get scopeLogbookRead => 'Odczyt dzienników';
 
   @override
-  String get scopeLogbookWrite => 'Utwórz / aktualizuj / usuń dzienniki';
+  String get scopeLogbookWrite => 'Utwórz / aktualizuj dzienniki';
+
+  @override
+  String get scopeLogbookDelete => 'Usuń dzienniki';
 
   @override
   String get scopeContestRead => 'Odczyt sesji konkursowych';
 
   @override
   String get scopeContestWrite => 'Utwórz / aktualizuj sesje konkursowe';
+
+  @override
+  String get scopeContestDelete => 'Usuń sesje konkursowe';
 
   @override
   String get scopeCatalogRead => 'Lista DXCC, regionów i konkursów';
@@ -1936,4 +1960,51 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get scopeConfirmationRead =>
       'Odczyt potwierdzeń LoTW / eQSL / QRZ.com';
+
+  @override
+  String get scopeTestStation => 'Stacja';
+
+  @override
+  String get scopeTestLogbook => 'Dziennik';
+
+  @override
+  String get scopeTestQso => 'QSO';
+
+  @override
+  String get scopeTestContest => 'Zawody';
+
+  @override
+  String get scopeTestConfirmation => 'Potwierdzenia';
+
+  @override
+  String get scopeTestStatistics => 'Statystyki';
+
+  @override
+  String get scopeTestLookup => 'Wyszukiwanie';
+
+  @override
+  String get apiScopeGuideBtn => 'Przewodnik po zakresach API';
+
+  @override
+  String get apiScopeGuideTitle => 'Przewodnik po zakresach tokenu API';
+
+  @override
+  String get apiScopeGuideIntro =>
+      'Podczas tworzenia nowego tokenu API w Wavelog (Ustawienia → Tokeny API) wybierz wszystkie zakresy poniżej, aby włączyć pełną funkcjonalność aplikacji.';
+
+  @override
+  String get apiTokenNoticeTitle => 'Utwórz nowy token API';
+
+  @override
+  String get apiTokenNoticeBody =>
+      'Wavelog API v2 wymaga nowego tokenu z określonymi zakresami. Przejdź do Wavelog → Ustawienia → Tokeny API i utwórz nowy token ze wszystkimi wymaganymi zakresami. Naciśnij przycisk Przewodnik po zakresach poniżej, aby zobaczyć pełną listę.';
+
+  @override
+  String get apiTokenNoticeDontShow => 'Nie pokazuj ponownie';
+
+  @override
+  String get apiTokenNoticeIgnore => 'Ignoruj';
+
+  @override
+  String get apiTokenNoticeScopeGuide => 'Przewodnik po zakresach API';
 }

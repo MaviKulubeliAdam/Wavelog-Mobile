@@ -88,7 +88,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   void initState() {
     super.initState();
     final settings = ref.read(settingsProvider);
-    _band = settings.defaultBand;
+    _band = '20m';
     _mode = settings.defaultMode;
 
     final edit = widget.editQso;
@@ -156,7 +156,11 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       }
       _updateAutoSpotStatus();
       _startStatusTimer();
-      if (edit == null) _loadLastFreq();
+      if (edit == null) {
+        _loadLastBand();
+        _loadLastFreq();
+        _loadLastSubmode(_mode);
+      }
       if (_potaRefs.isNotEmpty) _lookupPotaRefs();
     });
   }
@@ -166,7 +170,16 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _freqSaveDebounce = Timer(const Duration(milliseconds: 800), () {
       final freq = _freqCtrl.text.trim();
       if (freq.isNotEmpty) {
-        ref.read(settingsLocalDatasourceProvider).saveLastFreq(freq);
+        final ds = ref.read(settingsLocalDatasourceProvider);
+        ds.saveLastFreq(freq);
+        final parsed = double.tryParse(freq);
+        if (parsed != null) {
+          final detectedBand = getBandFromFreq(parsed);
+          if (detectedBand != null && detectedBand != _band && mounted) {
+            setState(() => _band = detectedBand);
+            ds.saveLastBand(detectedBand);
+          }
+        }
       }
     });
   }
@@ -296,14 +309,35 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     }
   }
 
+  Future<void> _loadLastBand() async {
+    final ds = ref.read(settingsLocalDatasourceProvider);
+    final last = await ds.getLastBand();
+    if (!mounted || last == null) return;
+    setState(() {
+      _band = last;
+      final freq = kBandCenterFreqMhz[last];
+      if (freq != null) _freqCtrl.text = freq.toString();
+    });
+  }
+
+  Future<void> _loadLastSubmode(String mode) async {
+    final ds = ref.read(settingsLocalDatasourceProvider);
+    final saved = await ds.getLastSubmode(mode);
+    if (!mounted || saved == null) return;
+    if (kSubmodes[_mode]?.contains(saved) ?? false) {
+      setState(() => _submode = saved);
+    }
+  }
+
   void _onModeChanged(String mode) {
     setState(() {
       _mode = mode;
-      _submode = null; // Mode changed → forget submode
+      _submode = null;
     });
     _rstSentCtrl.text = getDefaultRst(mode);
     _rstRcvdCtrl.text = getDefaultRst(mode);
     _updateAutoSpotStatus();
+    _loadLastSubmode(mode);
   }
 
   // ── Auto-spot status ──────────────────────────────────────────────────────
@@ -375,10 +409,11 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   void _onBandChanged(String band) {
     setState(() {
       _band = band;
-      _submode = null; // Band changed → forget submode
+      _submode = null;
       final freq = kBandCenterFreqMhz[band];
       if (freq != null) _freqCtrl.text = freq.toString();
     });
+    ref.read(settingsLocalDatasourceProvider).saveLastBand(band);
   }
 
   Future<void> _pickDateTime() async {
@@ -923,6 +958,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
                 _memBand = _band;
                 _memMode = _mode;
                 _memSubmode = v;
+                if (v != null) {
+                  ref.read(settingsLocalDatasourceProvider).saveLastSubmode(_mode, v);
+                }
               },
             ),
           ),
@@ -1217,6 +1255,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
                 .toList(),
             onChanged: (v) {
               setState(() => _selectedStation = v);
+              if (v != null) {
+                ref.read(settingsProvider.notifier).setActiveStation(v);
+              }
               _updateAutoSpotStatus();
             },
           );

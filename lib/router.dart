@@ -25,6 +25,7 @@ import 'presentation/screens/qso/qso_detail_screen.dart';
 import 'presentation/screens/qso/qso_list_screen.dart';
 import 'presentation/screens/server_setup/server_setup_screen.dart';
 import 'presentation/screens/settings/settings_screen.dart';
+import 'presentation/screens/settings/api_scope_guide_screen.dart';
 import 'presentation/screens/migration/migration_screen.dart';
 import 'presentation/screens/setup_guide/setup_guide_screen.dart';
 import 'presentation/screens/celebration/api_v2_celebration_screen.dart';
@@ -168,6 +169,11 @@ final appRouter = GoRouter(
       path: '/about',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const AboutScreen(),
+    ),
+    GoRoute(
+      path: '/api-scope-guide',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const ApiScopeGuideScreen(),
     ),
     GoRoute(
       path: '/map',

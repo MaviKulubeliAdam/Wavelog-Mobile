@@ -38,14 +38,13 @@ When creating the token in Wavelog under **Settings → API Tokens → New Token
 
 | Scope | Purpose |
 |---|---|
-| `qso:read` / `qso:write` | Log and browse QSOs |
-| `station:read` / `station:write` | Manage station profiles |
-| `logbook:read` / `logbook:write` | Manage logbooks |
-| `contest:read` / `contest:write` | Contest sessions |
-| `catalog:read` | DXCC list, subdivisions, contest catalogue |
-| `lookup:read` | Callsign lookup |
-| `statistics:read` | Statistics screen |
 | `confirmation:read` | LoTW / eQSL / QRZ.com confirmation status |
+| `contest:read` / `contest:write` / `contest:delete` | Contest sessions |
+| `logbook:read` / `logbook:write` / `logbook:delete` | Manage logbooks |
+| `lookup:read` | Callsign lookup |
+| `qso:read` / `qso:write` / `qso:delete` | Log and browse QSOs |
+| `station:read` / `station:write` / `station:delete` | Manage station profiles |
+| `statistic:read` | Statistics screen |
 
 ## Getting Started
 

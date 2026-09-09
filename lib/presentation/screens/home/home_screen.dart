@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/utils/api_token_notice.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/qso_provider.dart';
@@ -32,7 +33,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(qsoProvider);
+      _maybeShowApiTokenNotice();
     });
+  }
+
+  Future<void> _maybeShowApiTokenNotice() async {
+    final show = await ApiTokenNotice.shouldShow();
+    if (!show || !mounted) return;
+    final l10n = context.l10n;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        icon: const Icon(Icons.vpn_key_outlined, size: 36),
+        title: Text(l10n.apiTokenNoticeTitle),
+        content: Text(l10n.apiTokenNoticeBody, style: const TextStyle(height: 1.5)),
+        actionsAlignment: MainAxisAlignment.spaceBetween,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await ApiTokenNotice.markDismissed();
+              if (ctx.mounted) Navigator.of(ctx).pop();
+            },
+            child: Text(l10n.apiTokenNoticeDontShow,
+                style: TextStyle(color: Theme.of(ctx).colorScheme.outline)),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
+                onPressed: () => ctx.push('/api-scope-guide'),
+                child: Text(l10n.apiTokenNoticeScopeGuide),
+              ),
+              const SizedBox(width: 4),
+              FilledButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(l10n.apiTokenNoticeIgnore),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override

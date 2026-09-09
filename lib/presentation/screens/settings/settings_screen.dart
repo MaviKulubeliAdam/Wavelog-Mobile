@@ -1,8 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/constants/api_endpoints.dart';
 import '../../../core/constants/band_mode_data.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
@@ -31,6 +33,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _testing = false;
   String? _testResult;
   bool _testSuccess = false;
+  List<_ScopeCheck>? _scopeChecks;
 
   @override
   void initState() {
@@ -75,17 +78,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Future<void> _testConnection() async {
     if (!_formKey.currentState!.validate()) return;
+    final l10n = context.l10n;
     await _save(navigate: false);
 
     setState(() {
       _testing = true;
       _testResult = null;
+      _testSuccess = false;
+      _scopeChecks = null;
     });
+
+    final url = _urlCtrl.text.trim();
+    final key = _keyCtrl.text.trim();
 
     final repo = ref.read(settingsRepositoryProvider);
     final remote = WavelogRemoteDatasource(
-      dio: buildWavelogDio(_urlCtrl.text.trim(),
-          bearerToken: _keyCtrl.text.trim()),
+      dio: buildWavelogDio(url, bearerToken: key),
     );
 
     ConnectionTestResult result;
@@ -117,19 +125,56 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     } catch (_) {}
 
     if (!mounted) return;
+
+    final checks = [
+      _ScopeCheck(label: l10n.scopeTestStation),
+      _ScopeCheck(label: l10n.scopeTestLogbook),
+      _ScopeCheck(label: l10n.scopeTestQso),
+      _ScopeCheck(label: l10n.scopeTestContest),
+      _ScopeCheck(label: l10n.scopeTestConfirmation),
+      _ScopeCheck(label: l10n.scopeTestStatistics),
+      _ScopeCheck(label: l10n.scopeTestLookup),
+    ];
+
     setState(() {
       _testing = false;
       _testSuccess = true;
-      final label = result.message ?? context.l10n.connectionSuccess;
+      final label = result.message ?? l10n.connectionSuccess;
       _testResult = result.totalQsos != null
           ? '$label — ${result.totalQsos} QSO'
           : label;
+      _scopeChecks = checks;
     });
 
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (mounted) {
-      final settings = ref.read(settingsProvider);
-      context.go(settings.isLoggedIn ? '/home' : '/login');
+    final testDio = buildWavelogDio(url, bearerToken: key);
+    final endpoints = [
+      (ApiEndpoints.station, null),
+      (ApiEndpoints.logbook, null),
+      (ApiEndpoints.qso, <String, dynamic>{'limit': 1, 'page': 1}),
+      (ApiEndpoints.contest, null),
+      (ApiEndpoints.confirmation, <String, dynamic>{'limit': 1, 'page': 1}),
+      (ApiEndpoints.statistics, null),
+      (ApiEndpoints.lookup, <String, dynamic>{'callsign': 'CQ0TEST'}),
+    ];
+
+    for (int i = 0; i < endpoints.length; i++) {
+      final (path, params) = endpoints[i];
+      final ok = await _probeEndpoint(testDio, path, params);
+      if (!mounted) return;
+      setState(() => checks[i].ok = ok);
+    }
+  }
+
+  Future<bool> _probeEndpoint(Dio dio, String path,
+      [Map<String, dynamic>? params]) async {
+    try {
+      await dio.get(path, queryParameters: params);
+      return true;
+    } on DioException catch (e) {
+      final code = e.response?.statusCode;
+      return code != 401 && code != 403;
+    } catch (_) {
+      return false;
     }
   }
 
@@ -196,7 +241,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               obscureText: _keyObscure,
               validator: validateApiKey,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => context.push('/api-scope-guide'),
+                icon: const Icon(Icons.help_outline, size: 16),
+                label: Text(l10n.apiScopeGuideBtn,
+                    style: const TextStyle(fontSize: 13)),
+                style: TextButton.styleFrom(
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
 
             // Test connection
             Row(
@@ -239,6 +298,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
               ),
+            if (_scopeChecks != null)
+              _ScopeResultsGrid(checks: _scopeChecks!),
 
             const SizedBox(height: 24),
 
@@ -337,46 +398,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             // Defaults section
             _sectionHeader(l10n.defaultsSection),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    initialValue: settings.defaultBand,
-                    decoration:
-                        InputDecoration(labelText: l10n.defaultBand),
-                    items: kCommonBands
-                        .map((b) =>
-                            DropdownMenuItem(value: b, child: Text(b)))
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) {
-                        ref
-                            .read(settingsProvider.notifier)
-                            .setDefaultBand(v);
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    initialValue: settings.defaultMode,
-                    decoration:
-                        InputDecoration(labelText: l10n.defaultMode),
-                    items: kCommonModes
-                        .map((m) =>
-                            DropdownMenuItem(value: m, child: Text(m)))
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) {
-                        ref
-                            .read(settingsProvider.notifier)
-                            .setDefaultMode(v);
-                      }
-                    },
-                  ),
-                ),
-              ],
+            DropdownButtonFormField<String>(
+              initialValue: settings.defaultMode,
+              decoration: InputDecoration(labelText: l10n.defaultMode),
+              items: kCommonModes
+                  .map((m) => DropdownMenuItem(value: m, child: Text(m)))
+                  .toList(),
+              onChanged: (v) {
+                if (v != null) {
+                  ref.read(settingsProvider.notifier).setDefaultMode(v);
+                }
+              },
             ),
 
             const SizedBox(height: 24),
@@ -423,8 +455,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 DropdownMenuItem(value: null, child: Text(l10n.langSystem)),
                 DropdownMenuItem(value: 'en', child: Text(l10n.langEnglish)),
                 DropdownMenuItem(value: 'tr', child: Text(l10n.langTurkish)),
-                DropdownMenuItem(value: 'pl', child: Text(l10n.langPolish)),
                 DropdownMenuItem(value: 'de', child: Text(l10n.langGerman)),
+                DropdownMenuItem(value: 'pl', child: Text(l10n.langPolish)),
+                DropdownMenuItem(value: 'fr', child: Text(l10n.langFrench)),
+                DropdownMenuItem(value: 'it', child: Text(l10n.langItalian)),
+                DropdownMenuItem(value: 'ja', child: Text(l10n.langJapanese)),
+                DropdownMenuItem(value: 'ko', child: Text(l10n.langKorean)),
               ],
               onChanged: (v) =>
                   ref.read(settingsProvider.notifier).setLocale(v),
@@ -507,6 +543,89 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
+      ),
+    );
+  }
+}
+
+// ── Scope check model ─────────────────────────────────────────────────────────
+
+class _ScopeCheck {
+  final String label;
+  bool? ok;
+  _ScopeCheck({required this.label});
+}
+
+// ── Scope results grid ────────────────────────────────────────────────────────
+
+class _ScopeResultsGrid extends StatelessWidget {
+  final List<_ScopeCheck> checks;
+  const _ScopeResultsGrid({required this.checks});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        children: checks.map((c) => _ScopeChip(check: c)).toList(),
+      ),
+    );
+  }
+}
+
+class _ScopeChip extends StatelessWidget {
+  final _ScopeCheck check;
+  const _ScopeChip({required this.check});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final ok = check.ok;
+
+    final Color bg;
+    final Color fg;
+    final Widget icon;
+
+    if (ok == null) {
+      bg = cs.surfaceContainerHighest;
+      fg = cs.onSurfaceVariant;
+      icon = SizedBox(
+        width: 13,
+        height: 13,
+        child: CircularProgressIndicator(strokeWidth: 1.8, color: fg),
+      );
+    } else if (ok) {
+      bg = Colors.green.withAlpha(30);
+      fg = Colors.green.shade700;
+      icon = Icon(Icons.check_circle_rounded, size: 14, color: fg);
+    } else {
+      bg = cs.errorContainer;
+      fg = cs.onErrorContainer;
+      icon = Icon(Icons.cancel_rounded, size: 14, color: cs.error);
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          const SizedBox(width: 5),
+          Text(
+            check.label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: fg,
+            ),
+          ),
+        ],
       ),
     );
   }

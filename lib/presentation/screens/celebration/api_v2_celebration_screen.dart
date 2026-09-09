@@ -9,18 +9,21 @@ const _prefKey = 'wavelog_v32_patch_notice_shown';
 // Scope keys — each maps to a (scope_name, l10n_key) pair.
 // l10n descriptions are fetched in the widget below.
 const _scopeNames = [
-  'qso:read',
-  'qso:write',
-  'station:read',
-  'station:write',
-  'logbook:read',
-  'logbook:write',
+  'confirmation:read',
   'contest:read',
   'contest:write',
-  'catalog:read',
+  'contest:delete',
+  'logbook:read',
+  'logbook:write',
+  'logbook:delete',
   'lookup:read',
-  'statistics:read',
-  'confirmation:read',
+  'qso:read',
+  'qso:write',
+  'qso:delete',
+  'station:read',
+  'station:write',
+  'station:delete',
+  'statistic:read',
 ];
 
 class ApiV2CelebrationScreen extends StatefulWidget {
@@ -135,18 +138,21 @@ class _ScopesPage extends StatelessWidget {
     final l10n = context.l10n;
 
     final scopeDescs = [
-      l10n.scopeQsoRead,
-      l10n.scopeQsoWrite,
-      l10n.scopeStationRead,
-      l10n.scopeStationWrite,
-      l10n.scopeLogbookRead,
-      l10n.scopeLogbookWrite,
+      l10n.scopeConfirmationRead,
       l10n.scopeContestRead,
       l10n.scopeContestWrite,
-      l10n.scopeCatalogRead,
+      l10n.scopeContestDelete,
+      l10n.scopeLogbookRead,
+      l10n.scopeLogbookWrite,
+      l10n.scopeLogbookDelete,
       l10n.scopeLookupRead,
+      l10n.scopeQsoRead,
+      l10n.scopeQsoWrite,
+      l10n.scopeQsoDelete,
+      l10n.scopeStationRead,
+      l10n.scopeStationWrite,
+      l10n.scopeStationDelete,
       l10n.scopeStatisticsRead,
-      l10n.scopeConfirmationRead,
     ];
 
     return Padding(

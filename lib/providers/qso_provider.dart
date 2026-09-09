@@ -4,6 +4,7 @@ import '../core/errors/app_exception.dart';
 import '../data/models/qso_model.dart';
 import 'remote_datasource_provider.dart';
 import 'settings_provider.dart';
+import 'station_logbook_provider.dart';
 import 'station_provider.dart';
 import 'statistics_provider.dart';
 import 'sync_count_provider.dart';
@@ -53,9 +54,28 @@ final qsoProvider =
 final filteredQsoProvider = Provider<AsyncValue<List<QsoModel>>>((ref) {
   final raw = ref.watch(qsoProvider);
   final filter = ref.watch(qsoFilterProvider);
-  if (!filter.hasFilters) return raw;
+  final settings = ref.watch(settingsProvider);
+  final logbooksAsync = ref.watch(stationLogbookProvider);
 
-  return raw.whenData((qsos) {
+  // Aktif logbook'a göre filtrele
+  AsyncValue<List<QsoModel>> logbookFiltered = raw;
+  final activeLogbookId = settings.activeLogbookId;
+  if (activeLogbookId != null) {
+    logbooksAsync.whenData((logbooks) {
+      final lb = logbooks.where((l) => l.id == activeLogbookId).firstOrNull;
+      if (lb != null && lb.stationIds.isNotEmpty) {
+        logbookFiltered = raw.whenData(
+          (qsos) => qsos
+              .where((q) => lb.stationIds.contains(q.stationProfileId))
+              .toList(),
+        );
+      }
+    });
+  }
+
+  if (!filter.hasFilters) return logbookFiltered;
+
+  return logbookFiltered.whenData((qsos) {
     final band = filter.band?.toLowerCase();
     final mode = filter.mode?.toLowerCase();
     final callsign = filter.callsign?.toUpperCase();

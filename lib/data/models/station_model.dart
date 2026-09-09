@@ -84,9 +84,10 @@ class StationModel {
   factory StationModel.fromJson(Map<String, dynamic> json) {
     // v2 native API returns short names: id, name, callsign, active (bool)
     // api_mobile patch returns legacy DB names: station_id, station_profile_name, station_active ('1')
-    final isV2Format = json.containsKey('id') && !json.containsKey('station_id');
+    // Always prefer json['id'] so logbook station_ids match station.id correctly.
+    final isV2Format = json.containsKey('id') || !json.containsKey('station_id');
     return StationModel(
-      id: _parseInt(isV2Format ? json['id'] : json['station_id']) ?? 0,
+      id: _parseInt(json['id'] ?? json['station_id']) ?? 0,
       profileName: (isV2Format ? json['name'] : json['station_profile_name'])?.toString() ?? '',
       callsign: (isV2Format ? json['callsign'] : json['station_callsign'])?.toString() ?? '',
       gridSquare: (isV2Format ? json['gridsquare'] : json['station_gridsquare'])?.toString(),

@@ -7,6 +7,10 @@ import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_ja.dart';
+import 'app_localizations_ko.dart';
 import 'app_localizations_pl.dart';
 import 'app_localizations_tr.dart';
 
@@ -98,8 +102,12 @@ abstract class AppLocalizations {
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
     Locale('tr'),
+    Locale('de'),
     Locale('pl'),
-    Locale('de')
+    Locale('fr'),
+    Locale('it'),
+    Locale('ja'),
+    Locale('ko')
   ];
 
   /// No description provided for @appTitle.
@@ -1325,6 +1333,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deutsch'**
   String get langGerman;
+
+  /// No description provided for @langFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'Français'**
+  String get langFrench;
+
+  /// No description provided for @langItalian.
+  ///
+  /// In en, this message translates to:
+  /// **'Italiano'**
+  String get langItalian;
+
+  /// No description provided for @langJapanese.
+  ///
+  /// In en, this message translates to:
+  /// **'日本語'**
+  String get langJapanese;
+
+  /// No description provided for @langKorean.
+  ///
+  /// In en, this message translates to:
+  /// **'한국어'**
+  String get langKorean;
 
   /// No description provided for @aboutTitle.
   ///
@@ -3687,8 +3719,14 @@ abstract class AppLocalizations {
   /// No description provided for @scopeQsoWrite.
   ///
   /// In en, this message translates to:
-  /// **'Add / update / delete QSOs'**
+  /// **'Add / update QSOs'**
   String get scopeQsoWrite;
+
+  /// No description provided for @scopeQsoDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete QSOs'**
+  String get scopeQsoDelete;
 
   /// No description provided for @scopeStationRead.
   ///
@@ -3699,8 +3737,14 @@ abstract class AppLocalizations {
   /// No description provided for @scopeStationWrite.
   ///
   /// In en, this message translates to:
-  /// **'Create / update / delete stations'**
+  /// **'Create / update stations'**
   String get scopeStationWrite;
+
+  /// No description provided for @scopeStationDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete stations'**
+  String get scopeStationDelete;
 
   /// No description provided for @scopeLogbookRead.
   ///
@@ -3711,8 +3755,14 @@ abstract class AppLocalizations {
   /// No description provided for @scopeLogbookWrite.
   ///
   /// In en, this message translates to:
-  /// **'Create / update / delete logbooks'**
+  /// **'Create / update logbooks'**
   String get scopeLogbookWrite;
+
+  /// No description provided for @scopeLogbookDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete logbooks'**
+  String get scopeLogbookDelete;
 
   /// No description provided for @scopeContestRead.
   ///
@@ -3725,6 +3775,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create / update contest sessions'**
   String get scopeContestWrite;
+
+  /// No description provided for @scopeContestDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete contest sessions'**
+  String get scopeContestDelete;
 
   /// No description provided for @scopeCatalogRead.
   ///
@@ -3749,6 +3805,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read LoTW / eQSL / QRZ.com confirmations'**
   String get scopeConfirmationRead;
+
+  /// No description provided for @scopeTestStation.
+  ///
+  /// In en, this message translates to:
+  /// **'Station'**
+  String get scopeTestStation;
+
+  /// No description provided for @scopeTestLogbook.
+  ///
+  /// In en, this message translates to:
+  /// **'Logbook'**
+  String get scopeTestLogbook;
+
+  /// No description provided for @scopeTestQso.
+  ///
+  /// In en, this message translates to:
+  /// **'QSO'**
+  String get scopeTestQso;
+
+  /// No description provided for @scopeTestContest.
+  ///
+  /// In en, this message translates to:
+  /// **'Contest'**
+  String get scopeTestContest;
+
+  /// No description provided for @scopeTestConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmation'**
+  String get scopeTestConfirmation;
+
+  /// No description provided for @scopeTestStatistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get scopeTestStatistics;
+
+  /// No description provided for @scopeTestLookup.
+  ///
+  /// In en, this message translates to:
+  /// **'Lookup'**
+  String get scopeTestLookup;
+
+  /// No description provided for @apiScopeGuideBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'API Scope Guide'**
+  String get apiScopeGuideBtn;
+
+  /// No description provided for @apiScopeGuideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'API Token Scope Guide'**
+  String get apiScopeGuideTitle;
+
+  /// No description provided for @apiScopeGuideIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'When creating a new API token in Wavelog (Settings → API Tokens), select all scopes below to enable full app functionality.'**
+  String get apiScopeGuideIntro;
+
+  /// No description provided for @apiTokenNoticeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a New API Token'**
+  String get apiTokenNoticeTitle;
+
+  /// No description provided for @apiTokenNoticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The Wavelog v2 API requires a new token with specific scopes. Please go to Wavelog → Settings → API Tokens and create a new token with all required scopes. Tap the API Scope Guide button below for the full list.'**
+  String get apiTokenNoticeBody;
+
+  /// No description provided for @apiTokenNoticeDontShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get apiTokenNoticeDontShow;
+
+  /// No description provided for @apiTokenNoticeIgnore.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore'**
+  String get apiTokenNoticeIgnore;
+
+  /// No description provided for @apiTokenNoticeScopeGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'API Scope Guide'**
+  String get apiTokenNoticeScopeGuide;
 }
 
 class _AppLocalizationsDelegate
@@ -3761,8 +3907,16 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'pl', 'tr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+        'de',
+        'en',
+        'fr',
+        'it',
+        'ja',
+        'ko',
+        'pl',
+        'tr'
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -3775,6 +3929,14 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'ja':
+      return AppLocalizationsJa();
+    case 'ko':
+      return AppLocalizationsKo();
     case 'pl':
       return AppLocalizationsPl();
     case 'tr':

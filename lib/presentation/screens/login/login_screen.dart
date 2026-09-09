@@ -432,6 +432,19 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? l10n.apiKeyLabel : null,
               ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () => context.push('/api-scope-guide'),
+                  icon: const Icon(Icons.help_outline, size: 16),
+                  label: Text(l10n.apiScopeGuideBtn,
+                      style: const TextStyle(fontSize: 13)),
+                  style: TextButton.styleFrom(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                  ),
+                ),
+              ),
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Row(

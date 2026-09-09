@@ -643,6 +643,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get langGerman => 'Deutsch';
 
   @override
+  String get langFrench => 'Français';
+
+  @override
+  String get langItalian => 'Italiano';
+
+  @override
+  String get langJapanese => '日本語';
+
+  @override
+  String get langKorean => '한국어';
+
+  @override
   String get aboutTitle => 'Uygulama Hakkında';
 
   @override
@@ -1901,25 +1913,37 @@ class AppLocalizationsTr extends AppLocalizations {
   String get scopeQsoRead => 'QSO kayıtlarını oku';
 
   @override
-  String get scopeQsoWrite => 'QSO ekle / güncelle / sil';
+  String get scopeQsoWrite => 'QSO ekle / güncelle';
+
+  @override
+  String get scopeQsoDelete => 'QSO sil';
 
   @override
   String get scopeStationRead => 'İstasyon profillerini oku';
 
   @override
-  String get scopeStationWrite => 'İstasyon oluştur / güncelle / sil';
+  String get scopeStationWrite => 'İstasyon oluştur / güncelle';
+
+  @override
+  String get scopeStationDelete => 'İstasyon sil';
 
   @override
   String get scopeLogbookRead => 'Defterları oku';
 
   @override
-  String get scopeLogbookWrite => 'Defter oluştur / güncelle / sil';
+  String get scopeLogbookWrite => 'Defter oluştur / güncelle';
+
+  @override
+  String get scopeLogbookDelete => 'Defter sil';
 
   @override
   String get scopeContestRead => 'Yarışma oturumlarını oku';
 
   @override
   String get scopeContestWrite => 'Yarışma oturumu oluştur / güncelle';
+
+  @override
+  String get scopeContestDelete => 'Yarışma oturumu sil';
 
   @override
   String get scopeCatalogRead => 'DXCC, bölge ve yarışma listesi';
@@ -1932,4 +1956,51 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get scopeConfirmationRead => 'LoTW / eQSL / QRZ.com onaylarını oku';
+
+  @override
+  String get scopeTestStation => 'İstasyon';
+
+  @override
+  String get scopeTestLogbook => 'Defter';
+
+  @override
+  String get scopeTestQso => 'QSO';
+
+  @override
+  String get scopeTestContest => 'Yarışma';
+
+  @override
+  String get scopeTestConfirmation => 'Onay';
+
+  @override
+  String get scopeTestStatistics => 'İstatistik';
+
+  @override
+  String get scopeTestLookup => 'Arama';
+
+  @override
+  String get apiScopeGuideBtn => 'API Scope Rehberi';
+
+  @override
+  String get apiScopeGuideTitle => 'API Token Scope Rehberi';
+
+  @override
+  String get apiScopeGuideIntro =>
+      'Wavelog\'da yeni bir API anahtarı oluştururken (Ayarlar → API Anahtarları) tam işlevsellik için aşağıdaki tüm kapsamları seçin.';
+
+  @override
+  String get apiTokenNoticeTitle => 'Yeni API Tokeni Oluşturun';
+
+  @override
+  String get apiTokenNoticeBody =>
+      'Wavelog v2 API\'si, belirli kapsamlara sahip yeni bir token gerektiriyor. Lütfen Wavelog → Ayarlar → API Anahtarları sayfasına gidip gerekli tüm kapsamları seçerek yeni bir token oluşturun. Tam liste için aşağıdaki API Scope Rehberi butonuna dokunun.';
+
+  @override
+  String get apiTokenNoticeDontShow => 'Bir daha gösterme';
+
+  @override
+  String get apiTokenNoticeIgnore => 'Yoksay';
+
+  @override
+  String get apiTokenNoticeScopeGuide => 'API Scope Rehberi';
 }

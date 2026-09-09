@@ -20,6 +20,7 @@ class StationLogbookDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
     final logbooks = ref.watch(stationLogbookProvider);
+    final stationsAsync = ref.watch(stationProvider);
 
     final logbook = logbooks.whenData((list) {
       return list.cast<StationLogbookModel?>().firstWhere(
@@ -29,9 +30,50 @@ class StationLogbookDetailScreen extends ConsumerWidget {
     }).valueOrNull ??
         initialLogbook;
 
-    final allStations = ref.watch(stationProvider).valueOrNull ?? [];
     final linkedIds = logbook?.stationIds.toSet() ?? <int>{};
+    final allStations = stationsAsync.valueOrNull ?? [];
     final locations = allStations.where((s) => linkedIds.contains(s.id)).toList();
+
+    Widget body;
+    if (logbook == null) {
+      body = const Center(child: CircularProgressIndicator());
+    } else if (stationsAsync.isLoading && linkedIds.isNotEmpty && locations.isEmpty) {
+      body = const Center(child: CircularProgressIndicator());
+    } else if (stationsAsync.hasError && linkedIds.isNotEmpty && locations.isEmpty) {
+      body = Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.error_outline,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.error),
+              const SizedBox(height: 16),
+              Text(l10n.loadDetailsFailed,
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                onPressed: () => ref.refresh(stationProvider),
+                icon: const Icon(Icons.refresh),
+                label: Text(l10n.retry),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      body = locations.isEmpty
+          ? const _EmptyLocations()
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 88),
+              itemCount: locations.length,
+              itemBuilder: (ctx, i) => _LinkedLocationTile(
+                station: locations[i],
+                logbookId: logbookId,
+              ),
+            );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -43,18 +85,7 @@ class StationLogbookDetailScreen extends ConsumerWidget {
         icon: const Icon(Icons.add_link),
         label: Text(l10n.linkLocation),
       ),
-      body: logbook == null
-          ? const Center(child: CircularProgressIndicator())
-          : locations.isEmpty
-              ? const _EmptyLocations()
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 88),
-                  itemCount: locations.length,
-                  itemBuilder: (ctx, i) => _LinkedLocationTile(
-                    station: locations[i],
-                    logbookId: logbookId,
-                  ),
-                ),
+      body: body,
     );
   }
 

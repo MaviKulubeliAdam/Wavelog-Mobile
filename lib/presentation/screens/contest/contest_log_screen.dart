@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,6 +62,8 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
   static String _gridsquareSent = '';
 
   // ── Per-QSO controllers ───────────────────────────────────────────────────
+  final _freqCtrl         = TextEditingController();
+  Timer? _freqDebounce;
   final _callsignCtrl     = TextEditingController();
   final _rstSentCtrl      = TextEditingController(text: '59');
   final _rstRcvdCtrl      = TextEditingController(text: '59');
@@ -96,6 +100,9 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
     }
     _exchangeSentCtrl.text   = _exchangeSent;
     _gridsquareSentCtrl.text = _gridsquareSent;
+    final centerFreq = kBandCenterFreqMhz[_band];
+    if (centerFreq != null) _freqCtrl.text = centerFreq.toStringAsFixed(3);
+    _freqCtrl.addListener(_onFreqChanged);
     _callsignFocus.addListener(_onCallsignFocusChange);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_session == null && _contestId.isEmpty) {
@@ -108,6 +115,9 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
 
   @override
   void dispose() {
+    _freqDebounce?.cancel();
+    _freqCtrl.removeListener(_onFreqChanged);
+    _freqCtrl.dispose();
     _callsignFocus.removeListener(_onCallsignFocusChange);
     _callsignCtrl.dispose();
     _rstSentCtrl.dispose();
@@ -119,6 +129,21 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
     _gridsquareRcvdCtrl.dispose();
     _callsignFocus.dispose();
     super.dispose();
+  }
+
+  // ── Frequency → band auto-detection ──────────────────────────────────────
+
+  void _onFreqChanged() {
+    _freqDebounce?.cancel();
+    _freqDebounce = Timer(const Duration(milliseconds: 600), () {
+      final parsed = double.tryParse(_freqCtrl.text.trim());
+      if (parsed != null && mounted) {
+        final detected = getBandFromFreq(parsed);
+        if (detected != null && detected != _band) {
+          setState(() => _band = detected);
+        }
+      }
+    });
   }
 
   // ── Lookup ────────────────────────────────────────────────────────────────
@@ -354,9 +379,12 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
     setState(() => _isSaving = true);
 
     final now     = DateTime.now().toUtc();
-    final rstSent = _rstSentCtrl.text.trim().isEmpty ? '59' : _rstSentCtrl.text.trim();
-    final rstRcvd = _rstRcvdCtrl.text.trim().isEmpty ? '59' : _rstRcvdCtrl.text.trim();
-    final freq    = kBandCenterFreqMhz[_band];
+    final rstSent  = _rstSentCtrl.text.trim().isEmpty ? '59' : _rstSentCtrl.text.trim();
+    final rstRcvd  = _rstRcvdCtrl.text.trim().isEmpty ? '59' : _rstRcvdCtrl.text.trim();
+    final freqText = _freqCtrl.text.trim();
+    final freq     = freqText.isNotEmpty
+        ? double.tryParse(freqText)
+        : kBandCenterFreqMhz[_band];
 
     final raw = <String, String>{
       'CALL':     callsign,
@@ -491,6 +519,8 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
         _mode         = 'SSB';
         _exchangeSent = '';
         _serialSent   = 1;
+        final defaultFreq = kBandCenterFreqMhz['20m'];
+        _freqCtrl.text = defaultFreq != null ? defaultFreq.toStringAsFixed(3) : '';
         _showSerial     = true;
         _showGridsquare = false;
         _showExchange   = false;
@@ -600,6 +630,51 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                 const SizedBox(height: 6),
                 _CompactLookupCard(info: _lookupResult!),
               ],
+
+              const SizedBox(height: 8),
+
+              // ── Frequency + Mode row ───────────────────────────────────
+              Row(children: [
+                Expanded(
+                  flex: 3,
+                  child: TextField(
+                    controller: _freqCtrl,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      labelText: l10n.frequencyField,
+                      hintText: '14.225',
+                      suffixText: 'MHz',
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  flex: 2,
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: l10n.modeField,
+                      border: const OutlineInputBorder(),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _mode,
+                        isDense: true,
+                        items: kCommonModes
+                            .map((m) =>
+                                DropdownMenuItem(value: m, child: Text(m)))
+                            .toList(),
+                        onChanged: (v) {
+                          if (v != null) setState(() => _mode = v);
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
 
               const SizedBox(height: 8),
 
