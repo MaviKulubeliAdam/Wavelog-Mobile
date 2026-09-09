@@ -25,6 +25,9 @@ void main() async {
     sound: true,
   );
 
+  // Genel aktivasyon feed'ine abone ol
+  await FirebaseMessaging.instance.subscribeToTopic('new_activations');
+
   await Hive.initFlutter();
   Hive.registerAdapter(QsoModelAdapter());
   await Hive.openBox<QsoModel>('qso_cache');

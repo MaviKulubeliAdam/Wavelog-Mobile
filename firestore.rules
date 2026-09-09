@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /planned_activations/{docId} {
+      // Herkes okuyabilir
+      allow read: if true;
+
+      // Yeni aktivasyon oluşturma
+      allow create: if request.resource.data.keys().hasAll([
+                        'callsign', 'type', 'scheduledAt', 'expiresAt',
+                        'bands', 'modes', 'createdAt', 'subscriberCount', 'notified'
+                      ])
+                    && request.resource.data.callsign is string
+                    && request.resource.data.callsign.size() >= 3
+                    && request.resource.data.subscriberCount == 0
+                    && request.resource.data.notified == false;
+
+      // Güncelleme: sadece subscriberCount veya notified değiştirilebilir
+      allow update: if request.resource.data.diff(resource.data).affectedKeys()
+                        .hasOnly(['subscriberCount', 'notified']);
+
+      // Silme yasak
+      allow delete: if false;
+    }
+  }
+}
