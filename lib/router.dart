@@ -38,6 +38,8 @@ import 'presentation/screens/station/station_logbook_detail_screen.dart';
 import 'presentation/screens/statistics/statistics_screen.dart';
 import 'presentation/screens/spot/spot_screen.dart';
 import 'presentation/screens/map/map_screen.dart';
+import 'presentation/screens/community/community_screen.dart';
+import 'presentation/screens/community/plan_activation_screen.dart';
 import 'providers/settings_provider.dart';
 
 final _rootNavigatorKey  = GlobalKey<NavigatorState>();
@@ -92,7 +94,8 @@ final appRouter = GoRouter(
         ),
         GoRoute(path: '/stations', builder: (c, s) => const StationListScreen()),
         GoRoute(path: '/stats',    builder: (c, s) => const StatisticsScreen()),
-        GoRoute(path: '/spot',     builder: (c, s) => const SpotScreen()),
+        GoRoute(path: '/spot',      builder: (c, s) => const SpotScreen()),
+        GoRoute(path: '/community', builder: (c, s) => const CommunityScreen()),
       ],
     ),
 
@@ -115,6 +118,11 @@ final appRouter = GoRouter(
         final id = int.tryParse(s.pathParameters['id'] ?? '') ?? 0;
         return StationLogbookDetailScreen(logbookId: id, initialLogbook: logbook);
       },
+    ),
+    GoRoute(
+      path: '/community/plan',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const PlanActivationScreen(),
     ),
     GoRoute(
       path: '/add-qso',
@@ -535,6 +543,11 @@ class _AppDrawer extends ConsumerWidget {
                   icon: Icons.military_tech_outlined,
                   label: l10n.drawerAchievements,
                   onTap: () => go('/achievements'),
+                ),
+                _DrawerItem(
+                  icon: Icons.groups_outlined,
+                  label: 'Topluluk',
+                  onTap: () => go('/community'),
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 _DrawerItem(
