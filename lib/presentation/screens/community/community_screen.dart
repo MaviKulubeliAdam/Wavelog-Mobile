@@ -90,7 +90,9 @@ class _ActivationCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subscribed = ref
         .watch(subscribedActivationsProvider)
-        .contains(activation.id);
+        .valueOrNull
+        ?.contains(activation.id) ??
+        false;
     final cs = Theme.of(context).colorScheme;
     final timeStr = DateFormat('dd MMM HH:mm').format(
       activation.scheduledAt.toLocal(),
@@ -253,7 +255,7 @@ class _TypeBadge extends StatelessWidget {
       case ActivationType.pota:
         label = 'POTA'; color = Colors.green;
       case ActivationType.general:
-        label = 'GENEL';
+        label = context.l10n.communityTypeGeneral.toUpperCase();
         color = Theme.of(context).colorScheme.primary;
     }
     return Container(

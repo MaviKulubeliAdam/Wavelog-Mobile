@@ -18,6 +18,13 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
+  // Android 13+ bildirim izni (iOS için de gerekli)
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
   await Hive.initFlutter();
   Hive.registerAdapter(QsoModelAdapter());
   await Hive.openBox<QsoModel>('qso_cache');
