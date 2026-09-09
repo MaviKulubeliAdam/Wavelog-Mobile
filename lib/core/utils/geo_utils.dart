@@ -1,6 +1,6 @@
 import 'dart:math';
 
-/// Converts a 4- or 6-character Maidenhead grid locator to lat/lon centre.
+/// Converts a 4-, 6-, 8- or 10-character Maidenhead grid locator to lat/lon centre.
 ({double lat, double lon})? maidenheadToLatLon(String grid) {
   if (grid.length < 4) return null;
   try {
@@ -11,6 +11,20 @@ import 'dart:math';
     if (g.length >= 6) {
       lonOff = (g.codeUnitAt(4) - 65) * (2.0 / 24) + (1.0 / 24);
       latOff = (g.codeUnitAt(5) - 65) * (1.0 / 24) + (0.5 / 24);
+    }
+    if (g.length >= 8) {
+      lonOff = (g.codeUnitAt(4) - 65) * (2.0 / 24) +
+               (g.codeUnitAt(6) - 48) * (2.0 / 240) + (1.0 / 240);
+      latOff = (g.codeUnitAt(5) - 65) * (1.0 / 24) +
+               (g.codeUnitAt(7) - 48) * (1.0 / 240) + (0.5 / 240);
+    }
+    if (g.length >= 10) {
+      lonOff = (g.codeUnitAt(4) - 65) * (2.0 / 24) +
+               (g.codeUnitAt(6) - 48) * (2.0 / 240) +
+               (g.codeUnitAt(8) - 65) * (2.0 / 5760) + (1.0 / 5760);
+      latOff = (g.codeUnitAt(5) - 65) * (1.0 / 24) +
+               (g.codeUnitAt(7) - 48) * (1.0 / 240) +
+               (g.codeUnitAt(9) - 65) * (1.0 / 5760) + (0.5 / 5760);
     }
     return (lat: lat + latOff, lon: lon + lonOff);
   } catch (_) {

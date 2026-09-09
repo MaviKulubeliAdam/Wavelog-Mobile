@@ -7,8 +7,9 @@ final _callsignRegex = RegExp(
   caseSensitive: false,
 );
 
+// Maidenhead: 4 (KN41), 6 (KN41AB), 8 (KN41AB12), 10 (KN41AB12CD) karakter
 final _gridRegex = RegExp(
-  r'^[A-R]{2}[0-9]{2}([A-X]{2})?$',
+  r'^[A-R]{2}[0-9]{2}([A-X]{2}([0-9]{2}([A-X]{2})?)?)?$',
   caseSensitive: false,
 );
 
