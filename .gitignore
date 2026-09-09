@@ -49,6 +49,16 @@ app.*.map.json
 /android/app/*.jks
 /android/app/*.keystore
 
+# Firebase — contains API keys, each developer uses their own
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+
+# Firebase Functions dependencies
+/functions/node_modules/
+
+# Obfuscation debug symbols
+/build/debug-info/
+
 # Tool output
 graphify-out/
 
