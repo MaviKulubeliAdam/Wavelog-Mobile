@@ -61,16 +61,19 @@ final filteredQsoProvider = Provider<AsyncValue<List<QsoModel>>>((ref) {
   AsyncValue<List<QsoModel>> logbookFiltered = raw;
   final activeLogbookId = settings.activeLogbookId;
   if (activeLogbookId != null) {
-    logbooksAsync.whenData((logbooks) {
-      final lb = logbooks.where((l) => l.id == activeLogbookId).firstOrNull;
-      if (lb != null && lb.stationIds.isNotEmpty) {
-        logbookFiltered = raw.whenData(
+    logbookFiltered = logbooksAsync.when(
+      loading: () => const AsyncValue.loading(),
+      error: (e, st) => AsyncValue.error(e, st),
+      data: (logbooks) {
+        final lb = logbooks.where((l) => l.id == activeLogbookId).firstOrNull;
+        if (lb == null || lb.stationIds.isEmpty) return raw;
+        return raw.whenData(
           (qsos) => qsos
               .where((q) => lb.stationIds.contains(q.stationProfileId))
               .toList(),
         );
-      }
-    });
+      },
+    );
   }
 
   if (!filter.hasFilters) return logbookFiltered;

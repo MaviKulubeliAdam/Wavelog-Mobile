@@ -30,7 +30,9 @@ class CommunityDatasource {
   }
 
   Future<String> addActivation(PlannedActivationModel activation) async {
-    final ref = await _activations.add(activation.toFirestore());
+    final data = activation.toFirestore();
+    data['notified'] = false; // Cloud Function kullanır, tekrar bildirim önler
+    final ref = await _activations.add(data);
     return ref.id;
   }
 

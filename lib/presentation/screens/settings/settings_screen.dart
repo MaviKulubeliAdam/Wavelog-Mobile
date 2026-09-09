@@ -172,7 +172,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       return true;
     } on DioException catch (e) {
       final code = e.response?.statusCode;
-      return code != 401 && code != 403;
+      return code != null && code < 400;
     } catch (_) {
       return false;
     }
