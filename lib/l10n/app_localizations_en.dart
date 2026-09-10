@@ -591,6 +591,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get offlineModeHint => 'Save QSOs locally first, sync later';
 
   @override
+  String get allowInsecureSsl => 'Allow unverified SSL certificates';
+
+  @override
+  String get allowInsecureSslHint =>
+      'Trust self-signed or private CA certificates (for self-hosted servers). Not recommended on public networks.';
+
+  @override
   String get languageLabel => 'Language';
 
   @override

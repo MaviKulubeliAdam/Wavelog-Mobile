@@ -121,10 +121,11 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _dxccCountry = edit.country ?? edit.rawAdif?['COUNTRY'] ?? edit.dxcc;
       _dxccFlag = edit.rawAdif?['APP_WAVELOG_FLAG'];
     } else {
-      // Restore last submode when band+mode match the remembered combination
-      if (_memBand == _band && _memMode == _mode) {
-        _submode = _memSubmode;
-      }
+      // Start with the band-convention default; user's saved preference (loaded
+      // asynchronously below) will override this if one exists for this band+mode.
+      _submode = (_memBand == _band && _memMode == _mode)
+          ? _memSubmode
+          : defaultSubmodeFor(_band, _mode);
 
       _callsignCtrl = TextEditingController(
           text: widget.prefillCallsign?.toUpperCase() ?? '');
@@ -159,7 +160,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       if (edit == null) {
         _loadLastBand();
         _loadLastFreq();
-        _loadLastSubmode(_mode);
+        _loadLastSubmode(_band, _mode);
       }
       if (_potaRefs.isNotEmpty) _lookupPotaRefs();
     });
@@ -331,24 +332,25 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     });
   }
 
-  Future<void> _loadLastSubmode(String mode) async {
+  Future<void> _loadLastSubmode(String band, String mode) async {
     final ds = ref.read(settingsLocalDatasourceProvider);
-    final saved = await ds.getLastSubmode(mode);
-    if (!mounted || saved == null) return;
-    if (kSubmodes[_mode]?.contains(saved) ?? false) {
-      setState(() => _submode = saved);
-    }
+    final saved = await ds.getLastSubmode(band, mode);
+    if (!mounted) return;
+    final resolved = (saved != null && (kSubmodes[mode]?.contains(saved) ?? false))
+        ? saved
+        : defaultSubmodeFor(band, mode);
+    if (resolved != null) setState(() => _submode = resolved);
   }
 
   void _onModeChanged(String mode) {
     setState(() {
       _mode = mode;
-      _submode = null;
+      _submode = defaultSubmodeFor(_band, mode);
     });
     _rstSentCtrl.text = getDefaultRst(mode);
     _rstRcvdCtrl.text = getDefaultRst(mode);
     _updateAutoSpotStatus();
-    _loadLastSubmode(mode);
+    _loadLastSubmode(_band, mode);
   }
 
   // ── Auto-spot status ──────────────────────────────────────────────────────
@@ -420,11 +422,13 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
   void _onBandChanged(String band) {
     setState(() {
       _band = band;
-      _submode = null;
+      _submode = defaultSubmodeFor(band, _mode);
       final freq = kBandCenterFreqMhz[band];
       if (freq != null) _freqCtrl.text = freq.toStringAsFixed(3);
     });
     ref.read(settingsLocalDatasourceProvider).saveLastBand(band);
+    // Load user's saved preference for this band+mode (overrides auto-default).
+    _loadLastSubmode(band, _mode);
   }
 
   Future<void> _pickDateTime() async {
@@ -461,8 +465,10 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     _rstSentCtrl.text = getDefaultRst(_mode);
     _rstRcvdCtrl.text = getDefaultRst(_mode);
     setState(() {
-      // Restore submode from memory if band+mode unchanged
-      _submode = (_memBand == _band && _memMode == _mode) ? _memSubmode : null;
+      // Restore submode from memory if band+mode unchanged, else use band default.
+      _submode = (_memBand == _band && _memMode == _mode)
+          ? _memSubmode
+          : defaultSubmodeFor(_band, _mode);
       _currentCallsign = '';
       _lookupDone = false;
       _lookupSuccess = false;
@@ -970,7 +976,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
                 _memMode = _mode;
                 _memSubmode = v;
                 if (v != null) {
-                  ref.read(settingsLocalDatasourceProvider).saveLastSubmode(_mode, v);
+                  ref.read(settingsLocalDatasourceProvider).saveLastSubmode(_band, _mode, v);
                 }
               },
             ),

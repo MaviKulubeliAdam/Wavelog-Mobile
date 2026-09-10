@@ -197,6 +197,8 @@
   "darkThemeHint": "Recommandé pour une utilisation terrain",
   "offlineMode": "Mode hors ligne",
   "offlineModeHint": "Sauvegarder les QSOs localement, synchroniser plus tard",
+  "allowInsecureSsl": "Autoriser les certificats SSL non vérifiés",
+  "allowInsecureSslHint": "Faire confiance aux certificats auto-signés ou de CA privée (pour serveurs auto-hébergés). Déconseillé sur les réseaux publics.",
   "languageLabel": "Langue",
   "infoSection": "Informations",
   "aboutAppBtn": "À propos",

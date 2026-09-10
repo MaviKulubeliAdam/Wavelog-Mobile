@@ -1240,6 +1240,18 @@ abstract class AppLocalizations {
   /// **'Save QSOs locally first, sync later'**
   String get offlineModeHint;
 
+  /// No description provided for @allowInsecureSsl.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow unverified SSL certificates'**
+  String get allowInsecureSsl;
+
+  /// No description provided for @allowInsecureSslHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust self-signed or private CA certificates (for self-hosted servers). Not recommended on public networks.'**
+  String get allowInsecureSslHint;
+
   /// No description provided for @languageLabel.
   ///
   /// In en, this message translates to:

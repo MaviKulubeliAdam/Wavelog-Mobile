@@ -595,6 +595,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'QSOs zuerst lokal speichern, später synchronisieren';
 
   @override
+  String get allowInsecureSsl => 'Nicht verifizierte SSL-Zertifikate erlauben';
+
+  @override
+  String get allowInsecureSslHint =>
+      'Selbstsignierte oder private CA-Zertifikate vertrauen (für selbst gehostete Server). In öffentlichen Netzwerken nicht empfohlen.';
+
+  @override
   String get languageLabel => 'Sprache';
 
   @override

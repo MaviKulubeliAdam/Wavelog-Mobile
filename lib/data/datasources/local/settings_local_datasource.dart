@@ -24,6 +24,7 @@ class SettingsLocalDatasource {
   static const _keyPotaAutoSpot         = 'wl_pota_auto_spot';
   static const _keyLocale                = 'wl_locale';
   static const _keyUseModernNav          = 'wl_use_modern_nav';
+  static const _keyAllowInsecureSsl      = 'wl_allow_insecure_ssl';
 
   Future<SettingsModel> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -65,6 +66,7 @@ class SettingsLocalDatasource {
       potaAutoSpotEnabled:    prefs.getBool(_keyPotaAutoSpot) ?? false,
       locale:                 prefs.getString(_keyLocale),
       useModernNav:           prefs.getBool(_keyUseModernNav) ?? true,
+      allowInsecureSsl:       prefs.getBool(_keyAllowInsecureSsl) ?? false,
     );
   }
 
@@ -108,6 +110,7 @@ class SettingsLocalDatasource {
     await prefs.setBool(_keyOfflineMode, settings.offlineModeEnabled);
     await prefs.setBool(_keyPotaAutoSpot, settings.potaAutoSpotEnabled);
     await prefs.setBool(_keyUseModernNav, settings.useModernNav);
+    await prefs.setBool(_keyAllowInsecureSsl, settings.allowInsecureSsl);
     if (settings.locale != null) {
       await prefs.setString(_keyLocale, settings.locale!);
     } else {
@@ -161,14 +164,17 @@ class SettingsLocalDatasource {
     await prefs.setString('wl_last_band', band.trim());
   }
 
-  Future<String?> getLastSubmode(String mode) async {
+  Future<String?> getLastSubmode(String band, String mode) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('wl_last_submode_${mode.toLowerCase()}');
+    return prefs.getString(
+        'wl_last_submode_${mode.toLowerCase()}_${band.toLowerCase()}');
   }
 
-  Future<void> saveLastSubmode(String mode, String submode) async {
+  Future<void> saveLastSubmode(String band, String mode, String submode) async {
     if (mode.trim().isEmpty || submode.trim().isEmpty) return;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('wl_last_submode_${mode.toLowerCase()}', submode.trim());
+    await prefs.setString(
+        'wl_last_submode_${mode.toLowerCase()}_${band.toLowerCase()}',
+        submode.trim());
   }
 }

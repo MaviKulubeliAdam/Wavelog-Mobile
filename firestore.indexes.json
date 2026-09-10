@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "planned_activations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "expiresAt",   "order": "ASCENDING" },
+        { "fieldPath": "scheduledAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "planned_activations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "callsign",  "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

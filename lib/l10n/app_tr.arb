@@ -200,6 +200,8 @@
   "darkThemeHint": "Saha kullanımı için önerilen",
   "offlineMode": "Offline Mod",
   "offlineModeHint": "Tüm QSOları önce yerel kaydet, sonra senkronize et",
+  "allowInsecureSsl": "Doğrulanmamış SSL sertifikalarına izin ver",
+  "allowInsecureSslHint": "Öz imzalı veya özel CA sertifikalarına güven (kendi sunucusu için). Genel ağlarda önerilmez.",
   "languageLabel": "Dil",
   "infoSection": "Bilgi",
   "aboutAppBtn": "Uygulama Hakkında",

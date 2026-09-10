@@ -121,6 +121,12 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
     state = s;
   }
 
+  Future<void> setAllowInsecureSsl(bool value) async {
+    final s = state.copyWith(allowInsecureSsl: value);
+    await _repo.saveSettings(s);
+    state = s;
+  }
+
   Future<void> setLocale(String? locale) async {
     final s = locale == null
         ? state.copyWith(clearLocale: true)

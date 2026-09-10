@@ -594,6 +594,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Tüm QSOları önce yerel kaydet, sonra senkronize et';
 
   @override
+  String get allowInsecureSsl => 'Doğrulanmamış SSL sertifikalarına izin ver';
+
+  @override
+  String get allowInsecureSslHint =>
+      'Öz imzalı veya özel CA sertifikalarına güven (kendi sunucusu için). Genel ağlarda önerilmez.';
+
+  @override
   String get languageLabel => 'Dil';
 
   @override

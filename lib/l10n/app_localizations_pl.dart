@@ -594,6 +594,13 @@ class AppLocalizationsPl extends AppLocalizations {
       'Najpierw zapisuj QSO lokalnie, synchronizuj później';
 
   @override
+  String get allowInsecureSsl => 'Zezwól na niezweryfikowane certyfikaty SSL';
+
+  @override
+  String get allowInsecureSslHint =>
+      'Zaufaj certyfikatom z podpisem własnym lub prywatnego CA (dla serwerów self-hosted). Nie zalecane w sieciach publicznych.';
+
+  @override
   String get languageLabel => 'Język';
 
   @override

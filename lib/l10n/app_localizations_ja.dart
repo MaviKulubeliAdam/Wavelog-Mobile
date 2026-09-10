@@ -589,6 +589,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get offlineModeHint => 'QSO をローカルに保存し、後で同期';
 
   @override
+  String get allowInsecureSsl => '未検証のSSL証明書を許可';
+
+  @override
+  String get allowInsecureSslHint =>
+      '自己署名証明書またはプライベートCAを信頼します（自己ホスト型サーバー向け）。公共ネットワークでは非推奨。';
+
+  @override
   String get languageLabel => '言語';
 
   @override

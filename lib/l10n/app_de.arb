@@ -226,6 +226,8 @@
   "darkThemeHint": "Empfohlen für den Feldeinsatz",
   "offlineMode": "Offline-Modus",
   "offlineModeHint": "QSOs zuerst lokal speichern, später synchronisieren",
+  "allowInsecureSsl": "Nicht verifizierte SSL-Zertifikate erlauben",
+  "allowInsecureSslHint": "Selbstsignierte oder private CA-Zertifikate vertrauen (für selbst gehostete Server). In öffentlichen Netzwerken nicht empfohlen.",
   "languageLabel": "Sprache",
   "infoSection": "Info",
   "aboutAppBtn": "Über",

@@ -592,6 +592,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Сначала сохраняйте QSO локально, синхронизируйте позже';
 
   @override
+  String get allowInsecureSsl => 'Разрешить непроверенные SSL-сертификаты';
+
+  @override
+  String get allowInsecureSslHint =>
+      'Доверять самоподписанным или сертификатам частного ЦС (для собственных серверов). Не рекомендуется в публичных сетях.';
+
+  @override
   String get languageLabel => 'Язык';
 
   @override

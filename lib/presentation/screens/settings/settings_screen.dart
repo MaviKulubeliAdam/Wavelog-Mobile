@@ -257,6 +257,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             const SizedBox(height: 4),
 
+            // SSL options
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              secondary: Icon(
+                Icons.security,
+                color: settings.allowInsecureSsl
+                    ? Theme.of(context).colorScheme.error
+                    : null,
+              ),
+              title: Text(l10n.allowInsecureSsl),
+              subtitle: Text(l10n.allowInsecureSslHint),
+              value: settings.allowInsecureSsl,
+              onChanged: (v) =>
+                  ref.read(settingsProvider.notifier).setAllowInsecureSsl(v),
+            ),
+
             // Test connection
             Row(
               children: [

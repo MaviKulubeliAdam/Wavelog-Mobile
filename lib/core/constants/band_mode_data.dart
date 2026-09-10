@@ -69,6 +69,22 @@ String? bandFromKhz(double khz) {
 
 String? getBandFromFreq(double freqMhz) => bandFromKhz(freqMhz * 1000);
 
+// Amateur radio convention: SSB below 10 MHz → LSB, 10 MHz and above → USB.
+// FM defaults to NFM, AM to DSB. Other modes have no submode.
+String? defaultSubmodeFor(String band, String mode) {
+  switch (mode.toUpperCase()) {
+    case 'SSB':
+      const lsbBands = {'160m', '80m', '60m', '40m', '30m'};
+      return lsbBands.contains(band) ? 'LSB' : 'USB';
+    case 'AM':
+      return 'DSB';
+    case 'FM':
+      return 'NFM';
+    default:
+      return null;
+  }
+}
+
 /// Noktasız ham frekans girdisini MHz string'e dönüştürür.
 ///
 /// Strateji (öncelik sırasıyla):

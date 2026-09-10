@@ -13,6 +13,7 @@ class SettingsModel {
   final bool potaAutoSpotEnabled;
   final String? locale;
   final bool useModernNav;
+  final bool allowInsecureSsl;
 
   const SettingsModel({
     this.serverUrl = '',
@@ -29,6 +30,7 @@ class SettingsModel {
     this.potaAutoSpotEnabled = false,
     this.locale,
     this.useModernNav = true,
+    this.allowInsecureSsl = false,
   });
 
   bool get hasValidConfig => serverUrl.isNotEmpty;
@@ -60,6 +62,7 @@ class SettingsModel {
     String? locale,
     bool clearLocale = false,
     bool? useModernNav,
+    bool? allowInsecureSsl,
   }) {
     return SettingsModel(
       serverUrl: serverUrl ?? this.serverUrl,
@@ -85,6 +88,7 @@ class SettingsModel {
       potaAutoSpotEnabled: potaAutoSpotEnabled ?? this.potaAutoSpotEnabled,
       locale: clearLocale ? null : (locale ?? this.locale),
       useModernNav: useModernNav ?? this.useModernNav,
+      allowInsecureSsl: allowInsecureSsl ?? this.allowInsecureSsl,
     );
   }
 }

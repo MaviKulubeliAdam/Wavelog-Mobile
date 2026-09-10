@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Trust both the system CA store and user-installed CAs.
+  This allows self-hosted Wavelog instances with a private PKI (Root CA +
+  Intermediate CA installed in Android Settings → Security → Certificates)
+  to be reached without SSL errors.
+  Flutter's Dart runtime does NOT use the Android system trust store by default;
+  this config restores that behaviour for network calls made by the app.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

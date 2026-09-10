@@ -593,6 +593,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Salva i QSO localmente, sincronizza in seguito';
 
   @override
+  String get allowInsecureSsl => 'Consenti certificati SSL non verificati';
+
+  @override
+  String get allowInsecureSslHint =>
+      'Considera attendibili i certificati auto-firmati o di CA privata (per server self-hosted). Non consigliato su reti pubbliche.';
+
+  @override
   String get languageLabel => 'Lingua';
 
   @override

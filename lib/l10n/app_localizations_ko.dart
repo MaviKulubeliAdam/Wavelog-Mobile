@@ -589,6 +589,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get offlineModeHint => 'QSO를 로컬에 먼저 저장하고 나중에 동기화';
 
   @override
+  String get allowInsecureSsl => '미검증 SSL 인증서 허용';
+
+  @override
+  String get allowInsecureSslHint =>
+      '자체 서명 또는 사설 CA 인증서를 신뢰합니다(자체 호스팅 서버용). 공공 네트워크에서는 권장하지 않습니다.';
+
+  @override
   String get languageLabel => '언어';
 
   @override
