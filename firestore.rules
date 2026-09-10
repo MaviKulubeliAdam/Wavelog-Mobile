@@ -16,12 +16,43 @@ service cloud.firestore {
                     && request.resource.data.subscriberCount == 0
                     && request.resource.data.notified == false;
 
-      // Güncelleme: sadece subscriberCount veya notified değiştirilebilir
+      // Güncelleme:
+      //   a) Sadece subscriberCount / notified değişiyorsa (abone işlemleri)
+      //   b) Tam aktivasyon düzenlemesi — callsign değiştirilemiyor
       allow update: if request.resource.data.diff(resource.data).affectedKeys()
-                        .hasOnly(['subscriberCount', 'notified']);
+                          .hasOnly(['subscriberCount', 'notified'])
+                    || (request.resource.data.callsign == resource.data.callsign
+                        && request.resource.data.keys().hasAll([
+                             'callsign', 'type', 'scheduledAt', 'expiresAt',
+                             'bands', 'modes'
+                           ]));
 
-      // Silme yasak
-      allow delete: if false;
+      // Silme: aktivasyon sahibi kendi kaydını silebilir (client'ta sahiplik kontrol edilir)
+      allow delete: if true;
+    }
+
+    // Chat odaları — her odanın mesaj alt koleksiyonu
+    match /chat_rooms/{roomId}/messages/{messageId} {
+      // Herkes okuyabilir
+      allow read: if true;
+
+      // Mesaj gönderme: zorunlu alanlar ve boyut sınırı
+      allow create: if request.resource.data.keys().hasAll(['callsign', 'text', 'timestamp'])
+                    && request.resource.data.callsign is string
+                    && request.resource.data.callsign.size() >= 3
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 1000;
+
+      // Mesaj düzenleme: callsign ve timestamp değiştirilemiyor
+      allow update: if request.resource.data.callsign == resource.data.callsign
+                    && request.resource.data.timestamp == resource.data.timestamp
+                    && request.resource.data.text is string
+                    && request.resource.data.text.size() > 0
+                    && request.resource.data.text.size() <= 1000;
+
+      // Mesaj silme: sahiplik client'ta kontrol edilir
+      allow delete: if true;
     }
   }
 }
