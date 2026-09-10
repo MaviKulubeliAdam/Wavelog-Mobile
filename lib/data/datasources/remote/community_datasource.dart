@@ -36,6 +36,13 @@ class CommunityDatasource {
     return ref.id;
   }
 
+  Future<void> updateActivation(
+          String id, PlannedActivationModel updated) async {
+    final data = updated.toFirestore();
+    data.remove('createdAt'); // koruma: oluşturma tarihini değiştirme
+    await _activations.doc(id).update(data);
+  }
+
   Future<void> deleteActivation(String id) =>
       _activations.doc(id).delete();
 

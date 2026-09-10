@@ -1877,6 +1877,55 @@ class AppLocalizationsTr extends AppLocalizations {
   String get communityBandRequired => 'En az bir band seçin';
 
   @override
+  String get communityActivations => 'Aktivasyonlar';
+
+  @override
+  String get communityChat => 'Sohbet';
+
+  @override
+  String get communityEditActivation => 'Aktivasyonu Düzenle';
+
+  @override
+  String get communityDeleteActivation => 'Aktivasyonu Sil';
+
+  @override
+  String get communityDeleteActivationConfirm =>
+      'Bu aktivasyon silinsin mi? Bu işlem geri alınamaz.';
+
+  @override
+  String get communityUpdated => 'Aktivasyon güncellendi';
+
+  @override
+  String get chatRooms => 'Sohbet Odaları';
+
+  @override
+  String get chatGeneral => 'Genel';
+
+  @override
+  String get chatGeneralSubtitle => 'Ortak dil: İngilizce';
+
+  @override
+  String get chatMessageHint => 'Bir mesaj yazın…';
+
+  @override
+  String get chatSend => 'Gönder';
+
+  @override
+  String get chatEdit => 'Düzenle';
+
+  @override
+  String get chatDelete => 'Sil';
+
+  @override
+  String get chatDeleteConfirm => 'Bu mesaj silinsin mi?';
+
+  @override
+  String get chatEdited => 'düzenlendi';
+
+  @override
+  String get chatNoStation => 'Sohbet için aktif bir istasyon seçin';
+
+  @override
   String get gifPreparing => 'Video hazırlanıyor...';
 
   @override

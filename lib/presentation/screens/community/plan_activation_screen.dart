@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/constants/band_mode_data.dart';
+import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/planned_activation_model.dart';
 import '../../../providers/community_provider.dart';
 
 class PlanActivationScreen extends ConsumerStatefulWidget {
-  const PlanActivationScreen({super.key});
+  /// Null = new activation, non-null = edit existing
+  final PlannedActivationModel? existing;
+  const PlanActivationScreen({super.key, this.existing});
 
   @override
   ConsumerState<PlanActivationScreen> createState() =>
@@ -22,17 +25,28 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
 
   ActivationType _type = ActivationType.general;
   DateTime _scheduledAt = DateTime.now().toUtc().add(const Duration(hours: 1));
-  final Set<String> _bands = {'20m'};
-  final Set<String> _modes = {'SSB'};
+  late Set<String> _bands;
+  late Set<String> _modes;
   bool _saving = false;
+
+  bool get _isEdit => widget.existing != null;
 
   @override
   void initState() {
     super.initState();
-    // Callsign'ı settings'ten önceden doldur
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Callsign alanı kullanıcı tarafından doldurulur
-    });
+    final e = widget.existing;
+    if (e != null) {
+      _callsignCtrl.text = e.callsign;
+      _referenceCtrl.text = e.reference ?? '';
+      _commentCtrl.text = e.comment;
+      _type = e.type;
+      _scheduledAt = e.scheduledAt;
+      _bands = e.bands.toSet();
+      _modes = e.modes.toSet();
+    } else {
+      _bands = {'20m'};
+      _modes = {'SSB'};
+    }
   }
 
   @override
@@ -68,15 +82,16 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
     if (!_formKey.currentState!.validate()) return;
     if (_bands.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('En az bir band seçin')),
+        SnackBar(content: Text(context.l10n.communityBandRequired)),
       );
       return;
     }
 
     setState(() => _saving = true);
 
+    final e = widget.existing;
     final activation = PlannedActivationModel(
-      id: '',
+      id: _isEdit ? e!.id : '',
       callsign: _callsignCtrl.text.trim().toUpperCase(),
       type: _type,
       reference: _referenceCtrl.text.trim().isEmpty
@@ -86,13 +101,20 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
       bands: _bands.toList(),
       modes: _modes.toList(),
       comment: _commentCtrl.text.trim(),
-      subscriberCount: 0,
-      createdAt: DateTime.now().toUtc(),
+      subscriberCount: _isEdit ? e!.subscriberCount : 0,
+      createdAt: _isEdit ? e!.createdAt : DateTime.now().toUtc(),
     );
 
-    final error = await ref
-        .read(communityNotifierProvider.notifier)
-        .postActivation(activation);
+    String? error;
+    if (_isEdit) {
+      error = await ref
+          .read(communityNotifierProvider.notifier)
+          .updateActivation(activation);
+    } else {
+      error = await ref
+          .read(communityNotifierProvider.notifier)
+          .postActivation(activation);
+    }
 
     if (!mounted) return;
     setState(() => _saving = false);
@@ -104,7 +126,11 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Aktivasyon duyuruldu!')),
+      SnackBar(
+        content: Text(_isEdit
+            ? context.l10n.communityUpdated
+            : context.l10n.communityAnnounced),
+      ),
     );
     context.pop();
   }
@@ -115,7 +141,11 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
         '${DateFormat('dd MMM yyyy HH:mm').format(_scheduledAt.toLocal())} (yerel)';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Aktivasyon Duyur')),
+      appBar: AppBar(
+        title: Text(_isEdit
+            ? context.l10n.communityEditActivation
+            : context.l10n.communityAnnounce),
+      ),
       body: Form(
         key: _formKey,
         child: ListView(

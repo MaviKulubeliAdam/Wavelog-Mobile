@@ -1858,6 +1858,55 @@ class AppLocalizationsJa extends AppLocalizations {
   String get communityBandRequired => '少なくとも1つのバンドを選択してください';
 
   @override
+  String get communityActivations => 'アクティベーション';
+
+  @override
+  String get communityChat => 'チャット';
+
+  @override
+  String get communityEditActivation => 'アクティベーションを編集';
+
+  @override
+  String get communityDeleteActivation => 'アクティベーションを削除';
+
+  @override
+  String get communityDeleteActivationConfirm =>
+      'このアクティベーションを削除しますか？この操作は元に戻せません。';
+
+  @override
+  String get communityUpdated => 'アクティベーションを更新しました';
+
+  @override
+  String get chatRooms => 'チャットルーム';
+
+  @override
+  String get chatGeneral => '一般';
+
+  @override
+  String get chatGeneralSubtitle => '共通言語: 英語';
+
+  @override
+  String get chatMessageHint => 'メッセージを入力…';
+
+  @override
+  String get chatSend => '送信';
+
+  @override
+  String get chatEdit => '編集';
+
+  @override
+  String get chatDelete => '削除';
+
+  @override
+  String get chatDeleteConfirm => 'このメッセージを削除しますか？';
+
+  @override
+  String get chatEdited => '編集済み';
+
+  @override
+  String get chatNoStation => 'チャットするにはアクティブな局を設定してください';
+
+  @override
   String get gifPreparing => '動画を準備中...';
 
   @override

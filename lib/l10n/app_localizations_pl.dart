@@ -1880,6 +1880,55 @@ class AppLocalizationsPl extends AppLocalizations {
   String get communityBandRequired => 'Wybierz co najmniej jedno pasmo';
 
   @override
+  String get communityActivations => 'Aktywacje';
+
+  @override
+  String get communityChat => 'Czat';
+
+  @override
+  String get communityEditActivation => 'Edytuj aktywację';
+
+  @override
+  String get communityDeleteActivation => 'Usuń aktywację';
+
+  @override
+  String get communityDeleteActivationConfirm =>
+      'Usunąć tę aktywację? Tej operacji nie można cofnąć.';
+
+  @override
+  String get communityUpdated => 'Aktywacja zaktualizowana';
+
+  @override
+  String get chatRooms => 'Pokoje czatu';
+
+  @override
+  String get chatGeneral => 'Ogólny';
+
+  @override
+  String get chatGeneralSubtitle => 'Wspólny język: angielski';
+
+  @override
+  String get chatMessageHint => 'Wpisz wiadomość…';
+
+  @override
+  String get chatSend => 'Wyślij';
+
+  @override
+  String get chatEdit => 'Edytuj';
+
+  @override
+  String get chatDelete => 'Usuń';
+
+  @override
+  String get chatDeleteConfirm => 'Usunąć tę wiadomość?';
+
+  @override
+  String get chatEdited => 'edytowano';
+
+  @override
+  String get chatNoStation => 'Ustaw aktywną stację, aby pisać na czacie';
+
+  @override
   String get gifPreparing => 'Przygotowywanie wideo...';
 
   @override

@@ -962,7 +962,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
           Expanded(
             child: DropdownButtonFormField<String>(
               key: ValueKey('submode_$_mode'),
-              initialValue: _submode,
+              value: _submode,
               decoration: InputDecoration(labelText: context.l10n.submodeLabel),
               items: [
                 const DropdownMenuItem<String>(
