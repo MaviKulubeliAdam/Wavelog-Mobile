@@ -37,6 +37,6 @@ class ChatMessageModel {
     'callsign': callsign.toUpperCase(),
     'text': text,
     'timestamp': Timestamp.fromDate(timestamp),
-    'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+    if (editedAt != null) 'editedAt': Timestamp.fromDate(editedAt!),
   };
 }
