@@ -2112,4 +2112,20 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'API 스코프 가이드';
+
+  @override
+  String get communitySignInTitle => '콜사인 인증';
+
+  @override
+  String get communitySignInSubtitle => 'Google 계정을 콜사인에 연결하려면 Google로 로그인하세요.';
+
+  @override
+  String get communitySignInButton => 'Google로 로그인';
+
+  @override
+  String get communitySignInNoStation =>
+      '커뮤니티 기능을 사용하기 전에 설정에서 활성 스테이션을 선택하세요.';
+
+  @override
+  String get communityCallsignTaken => '이 콜사인은 이미 다른 Google 계정에 연결되어 있습니다.';
 }

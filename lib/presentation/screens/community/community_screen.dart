@@ -7,12 +7,24 @@ import '../../../data/models/planned_activation_model.dart';
 import '../../../providers/community_provider.dart';
 import '../../../providers/settings_provider.dart';
 import 'chat_rooms_screen.dart';
+import 'community_auth_gate.dart';
+import '../../../providers/callsign_claim_provider.dart';
 
 class CommunityScreen extends ConsumerWidget {
   const CommunityScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final claimAsync = ref.watch(callsignClaimProvider);
+    final isVerified = claimAsync.valueOrNull == ClaimState.verified;
+
+    if (!isVerified) {
+      return Scaffold(
+        appBar: AppBar(title: Text(context.l10n.communityTitle)),
+        body: const CommunityAuthGate(child: SizedBox.shrink()),
+      );
+    }
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(

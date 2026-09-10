@@ -2112,4 +2112,20 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'APIスコープガイド';
+
+  @override
+  String get communitySignInTitle => 'コールサインを認証';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Googleアカウントをコールサインに紐付けるためにGoogleでサインインしてください。';
+
+  @override
+  String get communitySignInButton => 'Googleでサインイン';
+
+  @override
+  String get communitySignInNoStation => 'コミュニティ機能を使用する前に、設定でアクティブな局を選択してください。';
+
+  @override
+  String get communityCallsignTaken => 'このコールサインはすでに別のGoogleアカウントに紐付けられています。';
 }

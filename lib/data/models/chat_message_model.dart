@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatMessageModel {
   final String id;
+  final String uid;
   final String callsign;
   final String text;
   final DateTime timestamp;
@@ -9,6 +10,7 @@ class ChatMessageModel {
 
   const ChatMessageModel({
     required this.id,
+    required this.uid,
     required this.callsign,
     required this.text,
     required this.timestamp,
@@ -21,6 +23,7 @@ class ChatMessageModel {
     final d = doc.data() as Map<String, dynamic>;
     return ChatMessageModel(
       id: doc.id,
+      uid: d['uid'] as String? ?? '',
       callsign: d['callsign'] as String? ?? '',
       text: d['text'] as String? ?? '',
       timestamp: (d['timestamp'] as Timestamp?)?.toDate().toUtc() ??
@@ -30,6 +33,7 @@ class ChatMessageModel {
   }
 
   Map<String, dynamic> toFirestore() => {
+    'uid': uid,
     'callsign': callsign.toUpperCase(),
     'text': text,
     'timestamp': Timestamp.fromDate(timestamp),

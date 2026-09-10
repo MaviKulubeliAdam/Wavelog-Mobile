@@ -2135,4 +2135,22 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'Guida agli scope API';
+
+  @override
+  String get communitySignInTitle => 'Verifica il tuo nominativo';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Accedi con Google per collegare il tuo account al tuo nominativo.';
+
+  @override
+  String get communitySignInButton => 'Accedi con Google';
+
+  @override
+  String get communitySignInNoStation =>
+      'Seleziona una stazione attiva nelle impostazioni prima di usare le funzioni community.';
+
+  @override
+  String get communityCallsignTaken =>
+      'Questo nominativo è già collegato a un altro account Google.';
 }

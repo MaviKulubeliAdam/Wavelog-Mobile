@@ -2133,4 +2133,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'Руководство по областям API';
+
+  @override
+  String get communitySignInTitle => 'Подтвердить позывной';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Войдите через Google, чтобы привязать аккаунт к своему позывному.';
+
+  @override
+  String get communitySignInButton => 'Войти через Google';
+
+  @override
+  String get communitySignInNoStation =>
+      'Выберите активную станцию в настройках, прежде чем использовать функции сообщества.';
+
+  @override
+  String get communityCallsignTaken =>
+      'Этот позывной уже привязан к другому аккаунту Google.';
 }

@@ -1452,5 +1452,15 @@
   "apiTokenNoticeIgnore": "Ignore",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "API Scope Guide",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Verify Your Callsign",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Sign in with Google to link your Google account to your callsign. This ensures only you can post as your callsign.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Sign in with Google",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Please select an active station in settings before using community features.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "This callsign is already linked to another Google account.",
+  "@communityCallsignTaken": {}
 }

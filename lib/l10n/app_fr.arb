@@ -721,5 +721,15 @@
   "apiTokenNoticeIgnore": "Ignorer",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "Guide des portées API",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Vérifier votre indicatif",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Connectez-vous avec Google pour associer votre compte à votre indicatif.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Se connecter avec Google",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Veuillez sélectionner une station active dans les paramètres.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "Cet indicatif est déjà lié à un autre compte Google.",
+  "@communityCallsignTaken": {}
 }

@@ -844,5 +844,15 @@
   "apiTokenNoticeIgnore": "Ignorieren",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "API-Scope-Leitfaden",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Rufzeichen verifizieren",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Melden Sie sich mit Google an, um Ihr Google-Konto mit Ihrem Rufzeichen zu verknüpfen.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Mit Google anmelden",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Bitte wählen Sie zuerst eine aktive Station in den Einstellungen.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "Dieses Rufzeichen ist bereits mit einem anderen Google-Konto verknüpft.",
+  "@communityCallsignTaken": {}
 }

@@ -1444,5 +1444,15 @@
   "apiTokenNoticeIgnore": "Игнорировать",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "Руководство по областям API",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Подтвердить позывной",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Войдите через Google, чтобы привязать аккаунт к своему позывному.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Войти через Google",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Выберите активную станцию в настройках, прежде чем использовать функции сообщества.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "Этот позывной уже привязан к другому аккаунту Google.",
+  "@communityCallsignTaken": {}
 }

@@ -2137,4 +2137,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'API-Scope-Leitfaden';
+
+  @override
+  String get communitySignInTitle => 'Rufzeichen verifizieren';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Melden Sie sich mit Google an, um Ihr Google-Konto mit Ihrem Rufzeichen zu verknüpfen.';
+
+  @override
+  String get communitySignInButton => 'Mit Google anmelden';
+
+  @override
+  String get communitySignInNoStation =>
+      'Bitte wählen Sie zuerst eine aktive Station in den Einstellungen.';
+
+  @override
+  String get communityCallsignTaken =>
+      'Dieses Rufzeichen ist bereits mit einem anderen Google-Konto verknüpft.';
 }
