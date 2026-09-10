@@ -649,6 +649,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get langKorean => '한국어';
 
   @override
+  String get langRussian => 'ロシア語';
+
+  @override
   String get aboutTitle => 'アバウト';
 
   @override

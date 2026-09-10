@@ -655,6 +655,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get langKorean => '한국어';
 
   @override
+  String get langRussian => 'Rosyjski';
+
+  @override
   String get aboutTitle => 'O aplikacji';
 
   @override

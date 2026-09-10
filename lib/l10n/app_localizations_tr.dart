@@ -655,6 +655,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get langKorean => '한국어';
 
   @override
+  String get langRussian => 'Rusça';
+
+  @override
   String get aboutTitle => 'Uygulama Hakkında';
 
   @override

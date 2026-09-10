@@ -461,6 +461,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 DropdownMenuItem(value: 'it', child: Text(l10n.langItalian)),
                 DropdownMenuItem(value: 'ja', child: Text(l10n.langJapanese)),
                 DropdownMenuItem(value: 'ko', child: Text(l10n.langKorean)),
+                DropdownMenuItem(value: 'ru', child: Text(l10n.langRussian)),
               ],
               onChanged: (v) =>
                   ref.read(settingsProvider.notifier).setLocale(v),

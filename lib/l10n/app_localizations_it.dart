@@ -654,6 +654,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get langKorean => '한국어';
 
   @override
+  String get langRussian => 'Russo';
+
+  @override
   String get aboutTitle => 'Informazioni';
 
   @override

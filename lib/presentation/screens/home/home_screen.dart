@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/utils/api_token_notice.dart';
 import '../../../core/utils/error_l10n.dart';
@@ -338,67 +339,66 @@ class _QsoPanel extends StatelessWidget {
 
 // ── Contest card ──────────────────────────────────────────────────────────────
 
-class _ContestCard extends ConsumerWidget {
+class _ContestCard extends ConsumerStatefulWidget {
   const _ContestCard();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ContestCard> createState() => _ContestCardState();
+}
+
+class _ContestCardState extends ConsumerState<_ContestCard> {
+  static const _prefKey = 'wl_contest_section_expanded';
+  bool _expanded = true;
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      if (mounted) setState(() => _expanded = prefs.getBool(_prefKey) ?? true);
+    });
+  }
+
+  Future<void> _toggle() async {
+    final next = !_expanded;
+    setState(() => _expanded = next);
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(_prefKey, next);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final contests = ref.watch(contestCalendarProvider);
 
     return Card(
       margin: EdgeInsets.zero,
-      child: contests.when(
-        loading: () => Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Icon(Icons.calendar_month_outlined, color: cs.primary, size: 20),
-              const SizedBox(width: 10),
-              Text(context.l10n.upcomingContestsTitle,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: cs.primary,
-                      )),
-              const Spacer(),
-              const SizedBox(
-                  width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-            ],
-          ),
-        ),
-        error: (_, __) => ListTile(
-          leading: Icon(Icons.calendar_month_outlined, color: cs.primary),
-          title: Text(context.l10n.contestCalendarTitle),
-          subtitle: Text(context.l10n.viewAll),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => GoRouter.of(context).push('/calendar'),
-        ),
-        data: (events) {
-          final active = events
-              .where((e) => e.isToday && !e.isPast)
-              .toList();
-          final upcoming = events
-              .where((e) => !e.isToday && !e.isPast)
-              .take(4)
-              .toList();
-          final all = [...active, ...upcoming];
-
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 12, 8, 4),
-                child: Row(
-                  children: [
-                    Icon(Icons.calendar_month_outlined, color: cs.primary, size: 18),
-                    const SizedBox(width: 8),
-                    Text(context.l10n.upcomingContestsTitle,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: cs.primary,
-                            )),
-                    const Spacer(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Header — always visible, tappable to collapse/expand
+          InkWell(
+            onTap: _toggle,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(14, 10, 4, 10),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_month_outlined, color: cs.primary, size: 18),
+                  const SizedBox(width: 8),
+                  Text(
+                    context.l10n.upcomingContestsTitle,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: cs.primary,
+                        ),
+                  ),
+                  const Spacer(),
+                  if (contests.isLoading)
+                    const SizedBox(
+                        width: 14,
+                        height: 14,
+                        child: CircularProgressIndicator(strokeWidth: 2)),
+                  if (_expanded)
                     TextButton(
                       style: TextButton.styleFrom(
                           visualDensity: VisualDensity.compact,
@@ -406,21 +406,51 @@ class _ContestCard extends ConsumerWidget {
                       onPressed: () => GoRouter.of(context).push('/calendar'),
                       child: Text(context.l10n.viewAll),
                     ),
-                  ],
-                ),
+                  AnimatedRotation(
+                    turns: _expanded ? 0 : 0.5,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(Icons.expand_less,
+                        size: 20,
+                        color: cs.onSurface.withValues(alpha: 0.45)),
+                  ),
+                ],
               ),
-              const Divider(height: 1),
-              if (all.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(context.l10n.noUpcomingContests),
-                )
-              else
-                ...all.map((e) => _ContestRow(event: e)),
-              const SizedBox(height: 4),
-            ],
-          );
-        },
+            ),
+          ),
+          // Body — hidden when collapsed
+          if (_expanded) ...[
+            const Divider(height: 1),
+            contests.when(
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => ListTile(
+                dense: true,
+                leading: Icon(Icons.chevron_right, color: cs.primary),
+                title: Text(context.l10n.contestCalendarTitle),
+                onTap: () => GoRouter.of(context).push('/calendar'),
+              ),
+              data: (events) {
+                final active = events.where((e) => e.isToday && !e.isPast).toList();
+                final upcoming =
+                    events.where((e) => !e.isToday && !e.isPast).take(4).toList();
+                final all = [...active, ...upcoming];
+
+                if (all.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(context.l10n.noUpcomingContests),
+                  );
+                }
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ...all.map((e) => _ContestRow(event: e)),
+                    const SizedBox(height: 4),
+                  ],
+                );
+              },
+            ),
+          ],
+        ],
       ),
     );
   }

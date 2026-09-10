@@ -12,6 +12,7 @@ import 'app_localizations_it.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 import 'app_localizations_pl.dart';
+import 'app_localizations_ru.dart';
 import 'app_localizations_tr.dart';
 
 // ignore_for_file: type=lint
@@ -107,7 +108,8 @@ abstract class AppLocalizations {
     Locale('fr'),
     Locale('it'),
     Locale('ja'),
-    Locale('ko')
+    Locale('ko'),
+    Locale('ru')
   ];
 
   /// No description provided for @appTitle.
@@ -1357,6 +1359,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'한국어'**
   String get langKorean;
+
+  /// No description provided for @langRussian.
+  ///
+  /// In en, this message translates to:
+  /// **'Русский'**
+  String get langRussian;
 
   /// No description provided for @aboutTitle.
   ///
@@ -4047,6 +4055,7 @@ class _AppLocalizationsDelegate
         'ja',
         'ko',
         'pl',
+        'ru',
         'tr'
       ].contains(locale.languageCode);
 
@@ -4071,6 +4080,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsKo();
     case 'pl':
       return AppLocalizationsPl();
+    case 'ru':
+      return AppLocalizationsRu();
     case 'tr':
       return AppLocalizationsTr();
   }
