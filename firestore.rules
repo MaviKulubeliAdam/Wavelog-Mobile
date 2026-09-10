@@ -12,6 +12,7 @@ service cloud.firestore {
       allow create: if request.auth != null
                     && request.resource.data.uid == request.auth.uid
                     && request.resource.data.keys().hasAll(['uid', 'claimedAt'])
+                    && callsign.matches('[A-Z0-9/]{3,12}')
                     && !exists(/databases/$(database)/documents/callsign_claims/$(callsign));
       allow update, delete: if false;
     }
@@ -32,10 +33,22 @@ service cloud.firestore {
                     && request.resource.data.notified == false
                     && get(/databases/$(database)/documents/callsign_claims/$(request.resource.data.callsign)).data.uid == request.auth.uid;
 
-      // a) Subscribe/notify updates (no auth required — FCM subscriptions)
+      // a) Subscribe/notify updates: subscriberCount can only change by ±1,
+      //    notified can only flip true→false (re-arm) never be set to false
+      //    from an already-false state (prevents spam re-notification).
       // b) Full edit: authenticated owner only, callsign & uid unchanged
       allow update: if request.resource.data.diff(resource.data).affectedKeys()
                           .hasOnly(['subscriberCount', 'notified'])
+                    && (
+                         (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['subscriberCount'])
+                          && (request.resource.data.subscriberCount == resource.data.subscriberCount + 1
+                              || request.resource.data.subscriberCount == resource.data.subscriberCount - 1)
+                          && request.resource.data.subscriberCount >= 0)
+                         ||
+                         (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notified'])
+                          && resource.data.notified == true
+                          && request.resource.data.notified == false)
+                       )
                     || (request.auth != null
                         && request.auth.uid == resource.data.get('uid', '')
                         && request.resource.data.uid == resource.data.uid
