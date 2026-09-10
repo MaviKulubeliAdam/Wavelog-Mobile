@@ -6,8 +6,7 @@ class ChatRoomsScreen extends StatelessWidget {
   const ChatRoomsScreen({super.key});
 
   static const _rooms = [
-    _Room('general', '🌐', null), // null = uses l10n
-    _Room('en',      '🇬🇧', 'English'),
+    _Room('general', '🌐', null), // null = uses l10n — common language: English
     _Room('tr',      '🇹🇷', 'Türkçe'),
     _Room('de',      '🇩🇪', 'Deutsch'),
     _Room('fr',      '🇫🇷', 'Français'),
