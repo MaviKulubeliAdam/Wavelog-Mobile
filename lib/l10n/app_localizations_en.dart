@@ -2129,4 +2129,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'API Scope Guide';
+
+  @override
+  String get communitySignInTitle => 'Verify Your Callsign';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Sign in with Google to link your Google account to your callsign. This ensures only you can post as your callsign.';
+
+  @override
+  String get communitySignInButton => 'Sign in with Google';
+
+  @override
+  String get communitySignInNoStation =>
+      'Please select an active station in settings before using community features.';
+
+  @override
+  String get communityCallsignTaken =>
+      'This callsign is already linked to another Google account.';
 }

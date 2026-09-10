@@ -2139,4 +2139,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'Guide des portées API';
+
+  @override
+  String get communitySignInTitle => 'Vérifier votre indicatif';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Connectez-vous avec Google pour associer votre compte à votre indicatif.';
+
+  @override
+  String get communitySignInButton => 'Se connecter avec Google';
+
+  @override
+  String get communitySignInNoStation =>
+      'Veuillez sélectionner une station active dans les paramètres.';
+
+  @override
+  String get communityCallsignTaken =>
+      'Cet indicatif est déjà lié à un autre compte Google.';
 }

@@ -745,5 +745,15 @@
   "apiTokenNoticeIgnore": "Yoksay",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "API Scope Rehberi",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Çağrı İşaretini Doğrula",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Google hesabınızı çağrı işaretinizle bağlamak için Google ile giriş yapın. Bu sayede yalnızca siz kendi çağrı işaretinizle işlem yapabilirsiniz.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Google ile Giriş Yap",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Topluluk özelliklerini kullanmadan önce ayarlardan aktif bir istasyon seçin.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "Bu çağrı işareti başka bir Google hesabına bağlı.",
+  "@communityCallsignTaken": {}
 }

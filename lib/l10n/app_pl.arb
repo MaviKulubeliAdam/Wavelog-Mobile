@@ -745,5 +745,15 @@
   "apiTokenNoticeIgnore": "Ignoruj",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "Przewodnik po zakresach API",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Zweryfikuj swój znak",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Zaloguj się przez Google, aby powiązać konto ze swoim znakiem.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Zaloguj przez Google",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Wybierz aktywną stację w ustawieniach przed użyciem funkcji społeczności.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "Ten znak jest już powiązany z innym kontem Google.",
+  "@communityCallsignTaken": {}
 }

@@ -4143,6 +4143,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'API Scope Guide'**
   String get apiTokenNoticeScopeGuide;
+
+  /// No description provided for @communitySignInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Callsign'**
+  String get communitySignInTitle;
+
+  /// No description provided for @communitySignInSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google to link your Google account to your callsign. This ensures only you can post as your callsign.'**
+  String get communitySignInSubtitle;
+
+  /// No description provided for @communitySignInButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
+  String get communitySignInButton;
+
+  /// No description provided for @communitySignInNoStation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select an active station in settings before using community features.'**
+  String get communitySignInNoStation;
+
+  /// No description provided for @communityCallsignTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'This callsign is already linked to another Google account.'**
+  String get communityCallsignTaken;
 }
 
 class _AppLocalizationsDelegate

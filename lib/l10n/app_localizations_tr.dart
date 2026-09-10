@@ -2131,4 +2131,22 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'API Scope Rehberi';
+
+  @override
+  String get communitySignInTitle => 'Çağrı İşaretini Doğrula';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Google hesabınızı çağrı işaretinizle bağlamak için Google ile giriş yapın. Bu sayede yalnızca siz kendi çağrı işaretinizle işlem yapabilirsiniz.';
+
+  @override
+  String get communitySignInButton => 'Google ile Giriş Yap';
+
+  @override
+  String get communitySignInNoStation =>
+      'Topluluk özelliklerini kullanmadan önce ayarlardan aktif bir istasyon seçin.';
+
+  @override
+  String get communityCallsignTaken =>
+      'Bu çağrı işareti başka bir Google hesabına bağlı.';
 }

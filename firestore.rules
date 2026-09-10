@@ -2,57 +2,81 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ── Callsign ownership registry ──────────────────────────────────────────
+    // Each document id = UPPERCASE callsign, value = { uid, claimedAt }
+    // Once created it can never be updated or deleted — immutable binding.
+    match /callsign_claims/{callsign} {
+      allow read: if true;
+      // Only the authenticated user can create a claim for themselves,
+      // and only if that callsign is not yet taken.
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasAll(['uid', 'claimedAt'])
+                    && !exists(/databases/$(database)/documents/callsign_claims/$(callsign));
+      allow update, delete: if false;
+    }
+
+    // ── Planned activations ───────────────────────────────────────────────────
     match /planned_activations/{docId} {
-      // Herkes okuyabilir
       allow read: if true;
 
-      // Yeni aktivasyon oluşturma
-      allow create: if request.resource.data.keys().hasAll([
-                        'callsign', 'type', 'scheduledAt', 'expiresAt',
-                        'bands', 'modes', 'createdAt', 'subscriberCount', 'notified'
-                      ])
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.keys().hasAll([
+                         'uid', 'callsign', 'type', 'scheduledAt', 'expiresAt',
+                         'bands', 'modes', 'createdAt', 'subscriberCount', 'notified'
+                       ])
                     && request.resource.data.callsign is string
                     && request.resource.data.callsign.size() >= 3
                     && request.resource.data.subscriberCount == 0
-                    && request.resource.data.notified == false;
+                    && request.resource.data.notified == false
+                    && get(/databases/$(database)/documents/callsign_claims/$(request.resource.data.callsign)).data.uid == request.auth.uid;
 
-      // Güncelleme:
-      //   a) Sadece subscriberCount / notified değişiyorsa (abone işlemleri)
-      //   b) Tam aktivasyon düzenlemesi — callsign değiştirilemiyor
+      // a) Subscribe/notify updates (no auth required — FCM subscriptions)
+      // b) Full edit: authenticated owner only, callsign & uid unchanged
       allow update: if request.resource.data.diff(resource.data).affectedKeys()
                           .hasOnly(['subscriberCount', 'notified'])
-                    || (request.resource.data.callsign == resource.data.callsign
+                    || (request.auth != null
+                        && request.auth.uid == resource.data.get('uid', '')
+                        && request.resource.data.uid == resource.data.uid
+                        && request.resource.data.callsign == resource.data.callsign
                         && request.resource.data.keys().hasAll([
                              'callsign', 'type', 'scheduledAt', 'expiresAt',
                              'bands', 'modes'
                            ]));
 
-      // Silme: aktivasyon sahibi kendi kaydını silebilir (client'ta sahiplik kontrol edilir)
-      allow delete: if true;
+      // Authenticated owner, OR legacy docs without uid field
+      allow delete: if request.auth != null
+                    && (!('uid' in resource.data) || resource.data.uid == request.auth.uid);
     }
 
-    // Chat odaları — her odanın mesaj alt koleksiyonu
+    // ── Chat rooms ────────────────────────────────────────────────────────────
     match /chat_rooms/{roomId}/messages/{messageId} {
-      // Herkes okuyabilir
       allow read: if true;
 
-      // Mesaj gönderme: zorunlu alanlar ve boyut sınırı
-      allow create: if request.resource.data.keys().hasAll(['callsign', 'text', 'timestamp'])
+      // Send: authenticated, uid matches auth, callsign verified via claim
+      allow create: if request.auth != null
+                    && request.resource.data.uid == request.auth.uid
                     && request.resource.data.callsign is string
                     && request.resource.data.callsign.size() >= 3
                     && request.resource.data.text is string
                     && request.resource.data.text.size() > 0
-                    && request.resource.data.text.size() <= 1000;
+                    && request.resource.data.text.size() <= 1000
+                    && get(/databases/$(database)/documents/callsign_claims/$(request.resource.data.callsign)).data.uid == request.auth.uid;
 
-      // Mesaj düzenleme: callsign ve timestamp değiştirilemiyor
-      allow update: if request.resource.data.callsign == resource.data.callsign
+      // Edit: only the original sender, uid/callsign/timestamp unchanged
+      allow update: if request.auth != null
+                    && request.auth.uid == resource.data.uid
+                    && request.resource.data.uid == resource.data.uid
+                    && request.resource.data.callsign == resource.data.callsign
                     && request.resource.data.timestamp == resource.data.timestamp
                     && request.resource.data.text is string
                     && request.resource.data.text.size() > 0
                     && request.resource.data.text.size() <= 1000;
 
-      // Mesaj silme: sahiplik client'ta kontrol edilir
-      allow delete: if true;
+      // Delete: only the original sender
+      allow delete: if request.auth != null
+                    && request.auth.uid == resource.data.uid;
     }
   }
 }

@@ -2135,4 +2135,22 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get apiTokenNoticeScopeGuide => 'Przewodnik po zakresach API';
+
+  @override
+  String get communitySignInTitle => 'Zweryfikuj swój znak';
+
+  @override
+  String get communitySignInSubtitle =>
+      'Zaloguj się przez Google, aby powiązać konto ze swoim znakiem.';
+
+  @override
+  String get communitySignInButton => 'Zaloguj przez Google';
+
+  @override
+  String get communitySignInNoStation =>
+      'Wybierz aktywną stację w ustawieniach przed użyciem funkcji społeczności.';
+
+  @override
+  String get communityCallsignTaken =>
+      'Ten znak jest już powiązany z innym kontem Google.';
 }

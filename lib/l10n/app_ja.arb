@@ -831,5 +831,15 @@
   "apiTokenNoticeIgnore": "無視",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "APIスコープガイド",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "コールサインを認証",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Googleアカウントをコールサインに紐付けるためにGoogleでサインインしてください。",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Googleでサインイン",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "コミュニティ機能を使用する前に、設定でアクティブな局を選択してください。",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "このコールサインはすでに別のGoogleアカウントに紐付けられています。",
+  "@communityCallsignTaken": {}
 }

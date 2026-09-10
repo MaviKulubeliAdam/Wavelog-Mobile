@@ -831,5 +831,15 @@
   "apiTokenNoticeIgnore": "무시",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "API 스코프 가이드",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "콜사인 인증",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Google 계정을 콜사인에 연결하려면 Google로 로그인하세요.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Google로 로그인",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "커뮤니티 기능을 사용하기 전에 설정에서 활성 스테이션을 선택하세요.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "이 콜사인은 이미 다른 Google 계정에 연결되어 있습니다.",
+  "@communityCallsignTaken": {}
 }

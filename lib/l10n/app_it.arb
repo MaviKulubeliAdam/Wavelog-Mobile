@@ -721,5 +721,15 @@
   "apiTokenNoticeIgnore": "Ignora",
   "@apiTokenNoticeIgnore": {},
   "apiTokenNoticeScopeGuide": "Guida agli scope API",
-  "@apiTokenNoticeScopeGuide": {}
+  "@apiTokenNoticeScopeGuide": {},
+  "communitySignInTitle": "Verifica il tuo nominativo",
+  "@communitySignInTitle": {},
+  "communitySignInSubtitle": "Accedi con Google per collegare il tuo account al tuo nominativo.",
+  "@communitySignInSubtitle": {},
+  "communitySignInButton": "Accedi con Google",
+  "@communitySignInButton": {},
+  "communitySignInNoStation": "Seleziona una stazione attiva nelle impostazioni prima di usare le funzioni community.",
+  "@communitySignInNoStation": {},
+  "communityCallsignTaken": "Questo nominativo è già collegato a un altro account Google.",
+  "@communityCallsignTaken": {}
 }
