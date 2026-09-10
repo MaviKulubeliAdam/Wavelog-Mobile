@@ -2128,4 +2128,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get communityCallsignTaken => 'このコールサインはすでに別のGoogleアカウントに紐付けられています。';
+
+  @override
+  String get communitySignOut => 'サインアウトしてアカウントを切り替える';
 }

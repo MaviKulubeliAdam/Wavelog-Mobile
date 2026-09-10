@@ -2157,4 +2157,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'Cet indicatif est déjà lié à un autre compte Google.';
+
+  @override
+  String get communitySignOut => 'Se déconnecter & changer de compte';
 }

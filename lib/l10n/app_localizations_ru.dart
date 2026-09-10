@@ -2151,4 +2151,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'Этот позывной уже привязан к другому аккаунту Google.';
+
+  @override
+  String get communitySignOut => 'Выйти и сменить аккаунт';
 }

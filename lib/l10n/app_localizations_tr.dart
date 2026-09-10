@@ -2149,4 +2149,7 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'Bu çağrı işareti başka bir Google hesabına bağlı.';
+
+  @override
+  String get communitySignOut => 'Çıkış yap & hesap değiştir';
 }

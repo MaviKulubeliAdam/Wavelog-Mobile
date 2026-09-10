@@ -841,5 +841,7 @@
   "communitySignInNoStation": "コミュニティ機能を使用する前に、設定でアクティブな局を選択してください。",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "このコールサインはすでに別のGoogleアカウントに紐付けられています。",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "サインアウトしてアカウントを切り替える",
+  "@communitySignOut": {}
 }

@@ -33,11 +33,17 @@ class CallsignClaimDatasource {
     final snap = await docRef.get();
 
     if (!snap.exists) {
-      await docRef.set({
-        'uid': uid,
-        'claimedAt': FieldValue.serverTimestamp(),
-      });
-      return ClaimResult.claimed;
+      try {
+        await docRef.set({
+          'uid': uid,
+          'claimedAt': FieldValue.serverTimestamp(),
+        });
+        return ClaimResult.claimed;
+      } on FirebaseException catch (e) {
+        // Server-side !exists() guard rejected concurrent claim
+        if (e.code == 'permission-denied') return ClaimResult.takenByOther;
+        rethrow;
+      }
     }
 
     final existingUid = snap.data()?['uid'] as String?;

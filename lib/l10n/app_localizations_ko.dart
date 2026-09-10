@@ -2128,4 +2128,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get communityCallsignTaken => '이 콜사인은 이미 다른 Google 계정에 연결되어 있습니다.';
+
+  @override
+  String get communitySignOut => '로그아웃 및 계정 전환';
 }

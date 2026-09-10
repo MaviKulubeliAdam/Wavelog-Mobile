@@ -46,12 +46,31 @@ class CommunityAuthGate extends ConsumerWidget {
 
 // ── Sign-in screen ────────────────────────────────────────────────────────────
 
-class _SignInView extends ConsumerWidget {
+class _SignInView extends ConsumerStatefulWidget {
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cs = Theme.of(context).colorScheme;
-    final authAsync = ref.watch(authNotifierProvider);
+  ConsumerState<_SignInView> createState() => _SignInViewState();
+}
 
+class _SignInViewState extends ConsumerState<_SignInView> {
+  bool _loading = false;
+  String? _error;
+
+  Future<void> _signIn() async {
+    setState(() { _loading = true; _error = null; });
+    final result = await ref
+        .read(authNotifierProvider.notifier)
+        .signInWithGoogle();
+    if (mounted) {
+      setState(() {
+        _loading = false;
+        _error = result.error;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -71,9 +90,17 @@ class _SignInView extends ConsumerWidget {
               style: TextStyle(color: cs.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
+            if (_error != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                _error!,
+                style: TextStyle(color: cs.error, fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+            ],
             const SizedBox(height: 32),
             FilledButton.icon(
-              icon: authAsync.isLoading
+              icon: _loading
                   ? const SizedBox(
                       width: 18,
                       height: 18,
@@ -81,11 +108,7 @@ class _SignInView extends ConsumerWidget {
                     )
                   : const _GoogleLogo(),
               label: Text(context.l10n.communitySignInButton),
-              onPressed: authAsync.isLoading
-                  ? null
-                  : () => ref
-                      .read(authNotifierProvider.notifier)
-                      .signInWithGoogle(),
+              onPressed: _loading ? null : _signIn,
             ),
           ],
         ),
@@ -119,7 +142,7 @@ class _TakenView extends ConsumerWidget {
             const SizedBox(height: 24),
             OutlinedButton.icon(
               icon: const Icon(Icons.logout),
-              label: Text(context.l10n.communitySignInButton),
+              label: Text(context.l10n.communitySignOut),
               onPressed: () =>
                   ref.read(authNotifierProvider.notifier).signOut(),
             ),

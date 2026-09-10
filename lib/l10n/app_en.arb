@@ -1462,5 +1462,7 @@
   "communitySignInNoStation": "Please select an active station in settings before using community features.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "This callsign is already linked to another Google account.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Sign out & switch account",
+  "@communitySignOut": {}
 }

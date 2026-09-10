@@ -1454,5 +1454,7 @@
   "communitySignInNoStation": "Выберите активную станцию в настройках, прежде чем использовать функции сообщества.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "Этот позывной уже привязан к другому аккаунту Google.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Выйти и сменить аккаунт",
+  "@communitySignOut": {}
 }

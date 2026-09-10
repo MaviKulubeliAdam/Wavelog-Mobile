@@ -4173,6 +4173,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This callsign is already linked to another Google account.'**
   String get communityCallsignTaken;
+
+  /// No description provided for @communitySignOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out & switch account'**
+  String get communitySignOut;
 }
 
 class _AppLocalizationsDelegate

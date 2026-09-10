@@ -731,5 +731,7 @@
   "communitySignInNoStation": "Veuillez sélectionner une station active dans les paramètres.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "Cet indicatif est déjà lié à un autre compte Google.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Se déconnecter & changer de compte",
+  "@communitySignOut": {}
 }
