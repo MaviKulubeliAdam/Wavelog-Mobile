@@ -2155,4 +2155,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'Dieses Rufzeichen ist bereits mit einem anderen Google-Konto verknüpft.';
+
+  @override
+  String get communitySignOut => 'Abmelden & Konto wechseln';
 }

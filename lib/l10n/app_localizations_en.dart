@@ -2147,4 +2147,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'This callsign is already linked to another Google account.';
+
+  @override
+  String get communitySignOut => 'Sign out & switch account';
 }

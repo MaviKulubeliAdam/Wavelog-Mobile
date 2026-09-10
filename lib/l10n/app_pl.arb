@@ -755,5 +755,7 @@
   "communitySignInNoStation": "Wybierz aktywną stację w ustawieniach przed użyciem funkcji społeczności.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "Ten znak jest już powiązany z innym kontem Google.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Wyloguj & zmień konto",
+  "@communitySignOut": {}
 }

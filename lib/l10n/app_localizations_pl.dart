@@ -2153,4 +2153,7 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'Ten znak jest już powiązany z innym kontem Google.';
+
+  @override
+  String get communitySignOut => 'Wyloguj & zmień konto';
 }

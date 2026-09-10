@@ -755,5 +755,7 @@
   "communitySignInNoStation": "Topluluk özelliklerini kullanmadan önce ayarlardan aktif bir istasyon seçin.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "Bu çağrı işareti başka bir Google hesabına bağlı.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Çıkış yap & hesap değiştir",
+  "@communitySignOut": {}
 }

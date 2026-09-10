@@ -731,5 +731,7 @@
   "communitySignInNoStation": "Seleziona una stazione attiva nelle impostazioni prima di usare le funzioni community.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "Questo nominativo è già collegato a un altro account Google.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Disconnetti & cambia account",
+  "@communitySignOut": {}
 }

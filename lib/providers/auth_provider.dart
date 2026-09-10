@@ -18,20 +18,26 @@ class AuthNotifier extends AsyncNotifier<User?> {
   Future<User?> build() async =>
       ref.watch(firebaseAuthProvider).currentUser;
 
-  Future<User?> signInWithGoogle() async {
-    final googleSignIn = ref.read(_googleSignInProvider);
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) return null; // user cancelled
+  Future<({User? user, String? error})> signInWithGoogle() async {
+    try {
+      final googleSignIn = ref.read(_googleSignInProvider);
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return (user: null, error: null); // cancelled
 
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final result = await ref
-        .read(firebaseAuthProvider)
-        .signInWithCredential(credential);
-    return result.user;
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final result = await ref
+          .read(firebaseAuthProvider)
+          .signInWithCredential(credential);
+      return (user: result.user, error: null);
+    } on FirebaseAuthException catch (e) {
+      return (user: null, error: e.message ?? e.code);
+    } catch (e) {
+      return (user: null, error: e.toString());
+    }
   }
 
   Future<void> signOut() async {

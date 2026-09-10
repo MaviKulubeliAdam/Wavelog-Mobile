@@ -2153,4 +2153,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get communityCallsignTaken =>
       'Questo nominativo è già collegato a un altro account Google.';
+
+  @override
+  String get communitySignOut => 'Disconnetti & cambia account';
 }

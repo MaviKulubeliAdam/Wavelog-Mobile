@@ -854,5 +854,7 @@
   "communitySignInNoStation": "Bitte wählen Sie zuerst eine aktive Station in den Einstellungen.",
   "@communitySignInNoStation": {},
   "communityCallsignTaken": "Dieses Rufzeichen ist bereits mit einem anderen Google-Konto verknüpft.",
-  "@communityCallsignTaken": {}
+  "@communityCallsignTaken": {},
+  "communitySignOut": "Abmelden & Konto wechseln",
+  "@communitySignOut": {}
 }
