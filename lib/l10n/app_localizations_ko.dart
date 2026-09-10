@@ -1858,6 +1858,55 @@ class AppLocalizationsKo extends AppLocalizations {
   String get communityBandRequired => '최소 하나의 밴드를 선택하세요';
 
   @override
+  String get communityActivations => '활성화';
+
+  @override
+  String get communityChat => '채팅';
+
+  @override
+  String get communityEditActivation => '활성화 편집';
+
+  @override
+  String get communityDeleteActivation => '활성화 삭제';
+
+  @override
+  String get communityDeleteActivationConfirm =>
+      '이 활성화를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.';
+
+  @override
+  String get communityUpdated => '활성화가 업데이트되었습니다';
+
+  @override
+  String get chatRooms => '채팅방';
+
+  @override
+  String get chatGeneral => '일반';
+
+  @override
+  String get chatGeneralSubtitle => '공용 언어: 영어';
+
+  @override
+  String get chatMessageHint => '메시지를 입력하세요…';
+
+  @override
+  String get chatSend => '보내기';
+
+  @override
+  String get chatEdit => '편집';
+
+  @override
+  String get chatDelete => '삭제';
+
+  @override
+  String get chatDeleteConfirm => '이 메시지를 삭제하시겠습니까?';
+
+  @override
+  String get chatEdited => '수정됨';
+
+  @override
+  String get chatNoStation => '채팅하려면 활성 스테이션을 설정하세요';
+
+  @override
   String get gifPreparing => '동영상 준비 중...';
 
   @override

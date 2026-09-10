@@ -5,24 +5,46 @@ import 'package:intl/intl.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/planned_activation_model.dart';
 import '../../../providers/community_provider.dart';
+import '../../../providers/settings_provider.dart';
+import 'chat_rooms_screen.dart';
 
 class CommunityScreen extends ConsumerWidget {
   const CommunityScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.communityTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add_alert_outlined),
-            tooltip: context.l10n.communityAnnounce,
-            onPressed: () => context.push('/community/plan'),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(context.l10n.communityTitle),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add_alert_outlined),
+              tooltip: context.l10n.communityAnnounce,
+              onPressed: () => context.push('/community/plan'),
+            ),
+          ],
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                icon: const Icon(Icons.radio_outlined),
+                text: context.l10n.communityActivations,
+              ),
+              Tab(
+                icon: const Icon(Icons.chat_bubble_outline),
+                text: context.l10n.communityChat,
+              ),
+            ],
           ),
-        ],
+        ),
+        body: const TabBarView(
+          children: [
+            _ActivationList(),
+            ChatRoomsScreen(),
+          ],
+        ),
       ),
-      body: const _ActivationList(),
     );
   }
 }
@@ -42,7 +64,8 @@ class _ActivationList extends ConsumerWidget {
           children: [
             const Icon(Icons.cloud_off, size: 48),
             const SizedBox(height: 12),
-            Text('Connection error', style: Theme.of(context).textTheme.titleMedium),
+            Text('Connection error',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
             Text('$e', style: Theme.of(context).textTheme.bodySmall),
           ],
@@ -67,8 +90,7 @@ class _ActivationList extends ConsumerWidget {
           );
         }
         return RefreshIndicator(
-          onRefresh: () async =>
-              ref.refresh(upcomingActivationsProvider),
+          onRefresh: () async => ref.refresh(upcomingActivationsProvider),
           child: ListView.separated(
             padding: const EdgeInsets.all(12),
             itemCount: activations.length,
@@ -89,29 +111,29 @@ class _ActivationCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subscribed = ref
-        .watch(subscribedActivationsProvider)
-        .valueOrNull
-        ?.contains(activation.id) ??
+            .watch(subscribedActivationsProvider)
+            .valueOrNull
+            ?.contains(activation.id) ??
         false;
+    final myCallsign =
+        ref.watch(settingsProvider).activeStationCallsign ?? '';
+    final isOwn = activation.callsign.toUpperCase() ==
+        myCallsign.toUpperCase();
     final cs = Theme.of(context).colorScheme;
-    final timeStr = DateFormat('dd MMM HH:mm').format(
-      activation.scheduledAt.toLocal(),
-    );
+    final timeStr =
+        DateFormat('dd MMM HH:mm').format(activation.scheduledAt.toLocal());
     final isNow = activation.scheduledAt
-        .difference(DateTime.now().toUtc())
-        .abs()
-        .inMinutes < 60;
+            .difference(DateTime.now().toUtc())
+            .abs()
+            .inMinutes <
+        60;
 
     return Card(
       clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Üst şerit — tip rengi
-          Container(
-            height: 4,
-            color: _typeColor(activation.type, cs),
-          ),
+          Container(height: 4, color: _typeColor(activation.type, cs)),
           Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -119,10 +141,8 @@ class _ActivationCard extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    // Tip rozeti
                     _TypeBadge(type: activation.type),
                     const SizedBox(width: 8),
-                    // Callsign
                     Text(
                       activation.callsign,
                       style: Theme.of(context)
@@ -138,14 +158,14 @@ class _ActivationCard extends ConsumerWidget {
                       ),
                     ],
                     const Spacer(),
-                    // Saat
                     Row(
                       children: [
                         if (isNow)
                           Container(
-                            width: 8, height: 8,
+                            width: 8,
+                            height: 8,
                             margin: const EdgeInsets.only(right: 4),
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.green,
                               shape: BoxShape.circle,
                             ),
@@ -155,11 +175,14 @@ class _ActivationCard extends ConsumerWidget {
                           style: TextStyle(
                             fontSize: 12,
                             color: isNow ? Colors.green : cs.onSurfaceVariant,
-                            fontWeight: isNow
-                                ? FontWeight.bold
-                                : FontWeight.normal,
+                            fontWeight:
+                                isNow ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
+                        if (isOwn) ...[
+                          const SizedBox(width: 4),
+                          _OwnerMenu(activation: activation),
+                        ],
                       ],
                     ),
                   ],
@@ -168,14 +191,11 @@ class _ActivationCard extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Text(
                     activation.referenceTitle!,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: cs.onSurfaceVariant,
-                    ),
+                    style:
+                        TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
                   ),
                 ],
                 const SizedBox(height: 8),
-                // Bandlar ve modlar
                 Wrap(
                   spacing: 6,
                   runSpacing: 4,
@@ -200,7 +220,8 @@ class _ActivationCard extends ConsumerWidget {
                         size: 14, color: cs.onSurfaceVariant),
                     const SizedBox(width: 4),
                     Text(
-                      context.l10n.communityFollowers(activation.subscriberCount),
+                      context.l10n
+                          .communityFollowers(activation.subscriberCount),
                       style: TextStyle(
                           fontSize: 12, color: cs.onSurfaceVariant),
                     ),
@@ -234,12 +255,91 @@ class _ActivationCard extends ConsumerWidget {
 
   Color _typeColor(ActivationType t, ColorScheme cs) {
     switch (t) {
-      case ActivationType.sota: return Colors.orange;
-      case ActivationType.pota: return Colors.green;
-      case ActivationType.general: return cs.primary;
+      case ActivationType.sota:
+        return Colors.orange;
+      case ActivationType.pota:
+        return Colors.green;
+      case ActivationType.general:
+        return cs.primary;
     }
   }
 }
+
+// ── Owner menu (edit / delete) ───────────────────────────────────────────────
+
+class _OwnerMenu extends ConsumerWidget {
+  final PlannedActivationModel activation;
+  const _OwnerMenu({required this.activation});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return PopupMenuButton<_OwnerAction>(
+      iconSize: 18,
+      padding: EdgeInsets.zero,
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: _OwnerAction.edit,
+          child: Row(children: [
+            const Icon(Icons.edit_outlined, size: 18),
+            const SizedBox(width: 8),
+            Text(context.l10n.communityEditActivation),
+          ]),
+        ),
+        PopupMenuItem(
+          value: _OwnerAction.delete,
+          child: Row(children: [
+            Icon(Icons.delete_outline,
+                size: 18,
+                color: Theme.of(context).colorScheme.error),
+            const SizedBox(width: 8),
+            Text(
+              context.l10n.communityDeleteActivation,
+              style:
+                  TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ]),
+        ),
+      ],
+      onSelected: (action) async {
+        if (action == _OwnerAction.edit) {
+          context.push('/community/edit', extra: activation);
+        } else {
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(ctx.l10n.communityDeleteActivation),
+              content:
+                  Text(ctx.l10n.communityDeleteActivationConfirm),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: Text(
+                      MaterialLocalizations.of(ctx).cancelButtonLabel),
+                ),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(ctx).colorScheme.error),
+                  onPressed: () => Navigator.pop(ctx, true),
+                  child: Text(ctx.l10n.communityDeleteActivation),
+                ),
+              ],
+            ),
+          );
+          if (confirmed == true) {
+            await ref
+                .read(communityNotifierProvider.notifier)
+                .deleteOwnActivation(activation.id);
+          }
+        }
+      },
+    );
+  }
+}
+
+enum _OwnerAction { edit, delete }
+
+// ── Shared widgets ───────────────────────────────────────────────────────────
 
 class _TypeBadge extends StatelessWidget {
   final ActivationType type;
@@ -251,9 +351,11 @@ class _TypeBadge extends StatelessWidget {
     Color color;
     switch (type) {
       case ActivationType.sota:
-        label = 'SOTA'; color = Colors.orange;
+        label = 'SOTA';
+        color = Colors.orange;
       case ActivationType.pota:
-        label = 'POTA'; color = Colors.green;
+        label = 'POTA';
+        color = Colors.green;
       case ActivationType.general:
         label = context.l10n.communityTypeGeneral.toUpperCase();
         color = Theme.of(context).colorScheme.primary;
@@ -291,10 +393,7 @@ class _Chip extends StatelessWidget {
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Text(
-        label,
-        style: TextStyle(fontSize: 11, color: color),
-      ),
+      child: Text(label, style: TextStyle(fontSize: 11, color: color)),
     );
   }
 }

@@ -1881,6 +1881,55 @@ class AppLocalizationsIt extends AppLocalizations {
   String get communityBandRequired => 'Seleziona almeno una banda';
 
   @override
+  String get communityActivations => 'Attivazioni';
+
+  @override
+  String get communityChat => 'Chat';
+
+  @override
+  String get communityEditActivation => 'Modifica attivazione';
+
+  @override
+  String get communityDeleteActivation => 'Elimina attivazione';
+
+  @override
+  String get communityDeleteActivationConfirm =>
+      'Eliminare questa attivazione? L\'operazione non può essere annullata.';
+
+  @override
+  String get communityUpdated => 'Attivazione aggiornata';
+
+  @override
+  String get chatRooms => 'Stanze chat';
+
+  @override
+  String get chatGeneral => 'Generale';
+
+  @override
+  String get chatGeneralSubtitle => 'Lingua comune: inglese';
+
+  @override
+  String get chatMessageHint => 'Scrivi un messaggio…';
+
+  @override
+  String get chatSend => 'Invia';
+
+  @override
+  String get chatEdit => 'Modifica';
+
+  @override
+  String get chatDelete => 'Elimina';
+
+  @override
+  String get chatDeleteConfirm => 'Eliminare questo messaggio?';
+
+  @override
+  String get chatEdited => 'modificato';
+
+  @override
+  String get chatNoStation => 'Imposta una stazione attiva per chattare';
+
+  @override
   String get gifPreparing => 'Preparazione video...';
 
   @override

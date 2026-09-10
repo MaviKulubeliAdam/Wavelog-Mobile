@@ -63,6 +63,17 @@ class CommunityNotifier extends AsyncNotifier<void> {
     return null;
   }
 
+  Future<String?> updateActivation(PlannedActivationModel activation) async {
+    await ref.read(communityDatasourceProvider).updateActivation(
+          activation.id,
+          activation,
+        );
+    return null;
+  }
+
+  Future<void> deleteOwnActivation(String id) =>
+      ref.read(communityDatasourceProvider).deleteActivation(id);
+
   Future<void> toggleSubscribe(String activationId) async {
     final ds = ref.read(communityDatasourceProvider);
     final notifier = ref.read(subscribedActivationsProvider.notifier);

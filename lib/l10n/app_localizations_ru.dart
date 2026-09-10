@@ -1878,6 +1878,55 @@ class AppLocalizationsRu extends AppLocalizations {
   String get communityBandRequired => 'Выберите хотя бы один диапазон';
 
   @override
+  String get communityActivations => 'Активации';
+
+  @override
+  String get communityChat => 'Чат';
+
+  @override
+  String get communityEditActivation => 'Редактировать активацию';
+
+  @override
+  String get communityDeleteActivation => 'Удалить активацию';
+
+  @override
+  String get communityDeleteActivationConfirm =>
+      'Удалить эту активацию? Это действие нельзя отменить.';
+
+  @override
+  String get communityUpdated => 'Активация обновлена';
+
+  @override
+  String get chatRooms => 'Комнаты чата';
+
+  @override
+  String get chatGeneral => 'Общий';
+
+  @override
+  String get chatGeneralSubtitle => 'Общий язык: английский';
+
+  @override
+  String get chatMessageHint => 'Введите сообщение…';
+
+  @override
+  String get chatSend => 'Отправить';
+
+  @override
+  String get chatEdit => 'Редактировать';
+
+  @override
+  String get chatDelete => 'Удалить';
+
+  @override
+  String get chatDeleteConfirm => 'Удалить это сообщение?';
+
+  @override
+  String get chatEdited => 'изменено';
+
+  @override
+  String get chatNoStation => 'Установите активную станцию для чата';
+
+  @override
   String get gifPreparing => 'Подготовка видео...';
 
   @override

@@ -3658,6 +3658,102 @@ abstract class AppLocalizations {
   /// **'Select at least one band'**
   String get communityBandRequired;
 
+  /// No description provided for @communityActivations.
+  ///
+  /// In en, this message translates to:
+  /// **'Activations'**
+  String get communityActivations;
+
+  /// No description provided for @communityChat.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get communityChat;
+
+  /// No description provided for @communityEditActivation.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Activation'**
+  String get communityEditActivation;
+
+  /// No description provided for @communityDeleteActivation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Activation'**
+  String get communityDeleteActivation;
+
+  /// No description provided for @communityDeleteActivationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this activation? This cannot be undone.'**
+  String get communityDeleteActivationConfirm;
+
+  /// No description provided for @communityUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Activation updated'**
+  String get communityUpdated;
+
+  /// No description provided for @chatRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat Rooms'**
+  String get chatRooms;
+
+  /// No description provided for @chatGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get chatGeneral;
+
+  /// No description provided for @chatGeneralSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Common language: English'**
+  String get chatGeneralSubtitle;
+
+  /// No description provided for @chatMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message…'**
+  String get chatMessageHint;
+
+  /// No description provided for @chatSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get chatSend;
+
+  /// No description provided for @chatEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get chatEdit;
+
+  /// No description provided for @chatDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get chatDelete;
+
+  /// No description provided for @chatDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this message?'**
+  String get chatDeleteConfirm;
+
+  /// No description provided for @chatEdited.
+  ///
+  /// In en, this message translates to:
+  /// **'edited'**
+  String get chatEdited;
+
+  /// No description provided for @chatNoStation.
+  ///
+  /// In en, this message translates to:
+  /// **'Set an active station to chat'**
+  String get chatNoStation;
+
   /// No description provided for @gifPreparing.
   ///
   /// In en, this message translates to:

@@ -40,6 +40,8 @@ import 'presentation/screens/spot/spot_screen.dart';
 import 'presentation/screens/map/map_screen.dart';
 import 'presentation/screens/community/community_screen.dart';
 import 'presentation/screens/community/plan_activation_screen.dart';
+import 'presentation/screens/community/chat_screen.dart';
+import 'data/models/planned_activation_model.dart';
 import 'providers/settings_provider.dart';
 
 final _rootNavigatorKey  = GlobalKey<NavigatorState>();
@@ -123,6 +125,22 @@ final appRouter = GoRouter(
       path: '/community/plan',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const PlanActivationScreen(),
+    ),
+    GoRoute(
+      path: '/community/edit',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => PlanActivationScreen(
+        existing: s.extra as PlannedActivationModel?,
+      ),
+    ),
+    GoRoute(
+      path: '/community/chat/:roomId',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) {
+        final roomId = s.pathParameters['roomId']!;
+        final roomName = (s.extra as String?) ?? roomId;
+        return ChatScreen(roomId: roomId, roomName: roomName);
+      },
     ),
     GoRoute(
       path: '/add-qso',
