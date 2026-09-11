@@ -89,10 +89,10 @@ Community translations are welcome. To view existing translations, browse the [l
 
 ## Contributing
 
-Pull requests are welcome. Please target the **`dev`** branch — do not open PRs directly against `main`.
+Pull requests are welcome. Please target the **`main-dev`** branch — do not open PRs directly against `main`.
 
 ```
-feature/your-feature  →  PR  →  dev  →  (review)  →  PR  →  main
+feature/your-feature  →  PR  →  main-dev  →  (review)  →  PR  →  main
 ```
 
 ## Building

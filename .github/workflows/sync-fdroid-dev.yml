@@ -1,9 +1,9 @@
-name: Sync dev with main
+name: Sync fdroid-dev with fdroid
 
 on:
   push:
     branches:
-      - main
+      - fdroid
 
 permissions:
   contents: write
@@ -17,10 +17,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge main into dev
+      - name: Merge fdroid into fdroid-dev
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git checkout dev
-          git merge origin/main --ff-only || git merge origin/main -m "chore: sync dev with main"
-          git push origin dev
+          git checkout fdroid-dev
+          git merge origin/fdroid --ff-only || git merge origin/fdroid -m "chore: sync fdroid-dev with fdroid"
+          git push origin fdroid-dev
