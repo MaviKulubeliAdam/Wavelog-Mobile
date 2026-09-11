@@ -38,10 +38,6 @@ import 'presentation/screens/station/station_logbook_detail_screen.dart';
 import 'presentation/screens/statistics/statistics_screen.dart';
 import 'presentation/screens/spot/spot_screen.dart';
 import 'presentation/screens/map/map_screen.dart';
-import 'presentation/screens/community/community_screen.dart';
-import 'presentation/screens/community/plan_activation_screen.dart';
-import 'presentation/screens/community/chat_screen.dart';
-import 'data/models/planned_activation_model.dart';
 import 'providers/settings_provider.dart';
 
 final _rootNavigatorKey  = GlobalKey<NavigatorState>();
@@ -97,7 +93,6 @@ final appRouter = GoRouter(
         GoRoute(path: '/stations', builder: (c, s) => const StationListScreen()),
         GoRoute(path: '/stats',    builder: (c, s) => const StatisticsScreen()),
         GoRoute(path: '/spot',      builder: (c, s) => const SpotScreen()),
-        GoRoute(path: '/community', builder: (c, s) => const CommunityScreen()),
       ],
     ),
 
@@ -119,27 +114,6 @@ final appRouter = GoRouter(
         final logbook = s.extra as StationLogbookModel?;
         final id = int.tryParse(s.pathParameters['id'] ?? '') ?? 0;
         return StationLogbookDetailScreen(logbookId: id, initialLogbook: logbook);
-      },
-    ),
-    GoRoute(
-      path: '/community/plan',
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (c, s) => const PlanActivationScreen(),
-    ),
-    GoRoute(
-      path: '/community/edit',
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (c, s) => PlanActivationScreen(
-        existing: s.extra as PlannedActivationModel?,
-      ),
-    ),
-    GoRoute(
-      path: '/community/chat/:roomId',
-      parentNavigatorKey: _rootNavigatorKey,
-      builder: (c, s) {
-        final roomId = s.pathParameters['roomId']!;
-        final roomName = (s.extra as String?) ?? roomId;
-        return ChatScreen(roomId: roomId, roomName: roomName);
       },
     ),
     GoRoute(
@@ -561,11 +535,6 @@ class _AppDrawer extends ConsumerWidget {
                   icon: Icons.military_tech_outlined,
                   label: l10n.drawerAchievements,
                   onTap: () => go('/achievements'),
-                ),
-                _DrawerItem(
-                  icon: Icons.groups_outlined,
-                  label: l10n.drawerCommunity,
-                  onTap: () => go('/community'),
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 _DrawerItem(
