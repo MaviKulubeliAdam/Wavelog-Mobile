@@ -228,18 +228,15 @@ class _GoogleLogo extends StatelessWidget {
 class _GooglePainter extends CustomPainter {
   const _GooglePainter();
 
-  static const _blue   = Color(0xFF4285F4);
-  static const _red    = Color(0xFFEA4335);
-  static const _yellow = Color(0xFFFBBC05);
-  static const _green  = Color(0xFF34A853);
-
   @override
   void paint(Canvas canvas, Size size) {
-    final r = size.width / 2;
-    final cx = r;
-    final cy = r;
-    final sw = size.width * 0.24;
-    final arcR = r - sw / 2;
+    const pi = 3.14159265;
+    final cx = size.width / 2;
+    final cy = size.height / 2;
+    final sw = size.width * 0.22;
+    final outerR = size.width / 2 - sw * 0.1;
+    final innerR = outerR - sw;
+    final midR = (outerR + innerR) / 2;
 
     Paint arc(Color c) => Paint()
       ..color = c
@@ -247,28 +244,23 @@ class _GooglePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.butt;
 
-    // Google "G" arc: starts at ~-30° (right), goes counter-clockwise ~300°
-    // Leaving a ~60° gap at the bottom-right where the horizontal bar sits.
-    const pi = 3.14159265;
-    final rect = Rect.fromCircle(center: Offset(cx, cy), radius: arcR);
+    // Arc spans 300° starting at 30° (just below 3-o'clock), leaving a 60° gap
+    // at the right side (330°→30°). Colors going clockwise:
+    //   Blue  30°→120°  (90°) — lower-right
+    //   Green 120°→180° (60°) — bottom
+    //   Yellow 180°→240° (60°) — lower-left
+    //   Red  240°→330°  (90°) — left, top, upper-right
+    final rect = Rect.fromCircle(center: Offset(cx, cy), radius: midR);
+    const startRad = pi / 6; // 30°
+    canvas.drawArc(rect, startRad,                 pi / 2,  false, arc(const Color(0xFF4285F4)));
+    canvas.drawArc(rect, startRad + pi / 2,        pi / 3,  false, arc(const Color(0xFF34A853)));
+    canvas.drawArc(rect, startRad + pi * 5 / 6,   pi / 3,  false, arc(const Color(0xFFFBBC05)));
+    canvas.drawArc(rect, startRad + pi * 7 / 6,   pi / 2,  false, arc(const Color(0xFFEA4335)));
 
-    // Red: top-left 120°
-    canvas.drawArc(rect, -pi / 2, -2 * pi / 3, false, arc(_red));
-    // Yellow: bottom-left 90°
-    canvas.drawArc(rect, -pi / 2 - 2 * pi / 3, -pi / 2, false, arc(_yellow));
-    // Green: bottom-right 60°
-    canvas.drawArc(rect, pi, -pi / 3, false, arc(_green));
-    // Blue: right side up to gap, then draw horizontal bar
-    canvas.drawArc(rect, pi * 2 / 3, -(pi * 2 / 3 - pi / 6), false, arc(_blue));
-
-    // Horizontal bar (the crossbar of the "G")
-    final barY = cy;
-    final barX1 = cx;          // center
-    final barX2 = cx + arcR + sw / 2;  // right edge
-    canvas.drawLine(
-      Offset(barX1, barY),
-      Offset(barX2, barY),
-      arc(_blue)..strokeCap = StrokeCap.square,
+    // Horizontal crossbar: fills the lower half of the 60° gap at center height
+    canvas.drawRect(
+      Rect.fromLTRB(cx, cy, cx + outerR + sw * 0.5, cy + sw * 0.9),
+      Paint()..color = const Color(0xFF4285F4),
     );
   }
 
