@@ -17,7 +17,6 @@ Android companion app for [Wavelog](https://github.com/wavelog/wavelog) — the 
 - **Logbook** — browse, search, edit and delete your QSOs
 - **Statistics** — DXCC progress, band/mode breakdowns, streak tracking
 - **Propagation** — real-time solar indices (SFI, sunspots, K/A-index, solar wind) and HF band conditions
-- **Community** — Google Sign-In with callsign ownership verification, chat rooms, planned activations and push notifications
 - **Station Profiles** — manage multiple station profiles from the app
 - **Tablet Layout** — optimised split-pane layout for larger screens (propagation, achievements and main screens)
 - **POTA / SOTA / WWFF** — MY_ reference fields auto-filled in ADIF export; P2P reference input on QSO form
@@ -62,14 +61,9 @@ The app will guide you through token creation on first launch.
 
 On Android, `.adif` and `.adi` files are registered to open with Wavelog Mobile. Tap a file in your file manager or email client, select **Wavelog Mobile — İçe Aktar**, and the app opens directly on the import screen with the file pre-loaded. Select your station profile and tap **Import**.
 
-## Community Features
+## F-Droid Build
 
-The Community section requires a Google account. Sign in with Google — your callsign (set in your Wavelog station profile) is automatically verified and claimed. Each callsign can only be linked to one Google account, preventing impersonation.
-
-Community features include:
-- Chat rooms
-- Planned activation announcements
-- Push notifications for new activations and messages
+This branch is a Firebase-free build maintained for F-Droid distribution. The Community section (chat, planned activations, Google Sign-In) depends on Firebase and Google Play Services and is not available in this build — see the `main`/`main-dev` branches for the full Play Store version.
 
 ## Localisation
 
@@ -81,7 +75,6 @@ Community translations are welcome. To view existing translations, browse the [l
 
 - [Flutter](https://flutter.dev) / Dart
 - [Riverpod](https://riverpod.dev) — state management
-- [Firebase](https://firebase.google.com) — community auth (Google Sign-In), Firestore, push notifications
 - [Hive](https://docs.hivedb.dev) — local cache
 - [go_router](https://pub.dev/packages/go_router) — navigation
 - [Dio](https://pub.dev/packages/dio) — HTTP client
@@ -89,10 +82,10 @@ Community translations are welcome. To view existing translations, browse the [l
 
 ## Contributing
 
-Pull requests are welcome. Please target the **`dev`** branch — do not open PRs directly against `main`.
+Pull requests are welcome. Please target the **`fdroid-dev`** branch — do not open PRs directly against `fdroid`.
 
 ```
-feature/your-feature  →  PR  →  dev  →  (review)  →  PR  →  main
+feature/your-feature  →  PR  →  fdroid-dev  →  (review)  →  PR  →  fdroid
 ```
 
 ## Building

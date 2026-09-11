@@ -1,0 +1,26 @@
+name: Sync fdroid-dev with fdroid
+
+on:
+  push:
+    branches:
+      - fdroid
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge fdroid into fdroid-dev
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git checkout fdroid-dev
+          git merge origin/fdroid --ff-only || git merge origin/fdroid -m "chore: sync fdroid-dev with fdroid"
+          git push origin fdroid-dev
