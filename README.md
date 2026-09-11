@@ -10,18 +10,20 @@ Android companion app for [Wavelog](https://github.com/wavelog/wavelog) — the 
 
 ## Features
 
-- **QSO Logging** — callsign lookup via QRZ/HamQTH, band, mode, RST, DXCC info, grid square and signal map
+- **QSO Logging** — callsign lookup via QRZ/HamQTH, band, mode, RST, DXCC info, grid square and signal map; submode auto-selected from frequency
 - **QSL Confirmation Status** — LoTW, eQSL and QRZ.com confirmation chips displayed in QSO detail view
 - **Contest Mode** — dedicated contest logger with serial/exchange fields and session management
 - **DX Spots** — live cluster spots with filtering by band and mode
 - **Logbook** — browse, search, edit and delete your QSOs
 - **Statistics** — DXCC progress, band/mode breakdowns, streak tracking
+- **Propagation** — real-time solar indices (SFI, sunspots, K/A-index, solar wind) and HF band conditions
+- **Community** — Google Sign-In with callsign ownership verification, chat rooms, planned activations and push notifications
 - **Station Profiles** — manage multiple station profiles from the app
-- **Tablet Layout** — optimised split-pane layout for larger screens
+- **Tablet Layout** — optimised split-pane layout for larger screens (propagation, achievements and main screens)
 - **POTA / SOTA / WWFF** — MY_ reference fields auto-filled in ADIF export; P2P reference input on QSO form
 - **ADIF Export** — export your log with MY_CALLSIGN, MY_POTA_REF and all station fields auto-populated
 - **ADIF Import** — import an ADIF file directly or open a `.adif` / `.adi` file from your file manager ("Open with")
-- **Achievements** — unlock badges as your log grows
+- **Achievements** — unlock badges as your log grows; responsive grid for phone and tablet
 - **Antenna Compass** — bearing and distance to the contacted station
 
 ## Requirements
@@ -60,24 +62,43 @@ The app will guide you through token creation on first launch.
 
 On Android, `.adif` and `.adi` files are registered to open with Wavelog Mobile. Tap a file in your file manager or email client, select **Wavelog Mobile — İçe Aktar**, and the app opens directly on the import screen with the file pre-loaded. Select your station profile and tap **Import**.
 
+## Community Features
+
+The Community section requires a Google account. Sign in with Google — your callsign (set in your Wavelog station profile) is automatically verified and claimed. Each callsign can only be linked to one Google account, preventing impersonation.
+
+Community features include:
+- Chat rooms
+- Planned activation announcements
+- Push notifications for new activations and messages
+
 ## Localisation
 
-The app is available in English, Turkish, German and Polish.
+The app is available in **9 languages**: English, Turkish, German, Polish, Russian, French, Italian, Japanese and Korean.
+
+Community translations are welcome. To view existing translations, browse the [l10n folder](lib/l10n/) on GitHub. Weblate-hosted translation is planned for a future release.
 
 ## Tech Stack
 
 - [Flutter](https://flutter.dev) / Dart
 - [Riverpod](https://riverpod.dev) — state management
+- [Firebase](https://firebase.google.com) — community auth (Google Sign-In), Firestore, push notifications
 - [Hive](https://docs.hivedb.dev) — local cache
 - [go_router](https://pub.dev/packages/go_router) — navigation
 - [Dio](https://pub.dev/packages/dio) — HTTP client
+- [flutter_svg](https://pub.dev/packages/flutter_svg) — SVG rendering
+
+## Contributing
+
+Pull requests are welcome. Please target the **`dev`** branch — do not open PRs directly against `main`.
+
+```
+feature/your-feature  →  PR  →  dev  →  (review)  →  PR  →  main
+```
 
 ## Building
 
 ```bash
 flutter pub get
-flutter build apk --release
-# or for Play Store:
 flutter build appbundle --release
 ```
 
@@ -85,7 +106,7 @@ Signing is configured via `android/key.properties` (not included in the reposito
 
 ## License
 
-This project is not open source. All rights reserved.
+MIT — see [LICENSE](LICENSE).
 
 ---
 
