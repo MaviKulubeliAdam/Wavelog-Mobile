@@ -189,8 +189,12 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       if (parsed != null) {
         final detectedBand = getBandFromFreq(parsed);
         if (detectedBand != null && detectedBand != _band) {
-          setState(() => _band = detectedBand);
+          setState(() {
+            _band = detectedBand;
+            _submode = defaultSubmodeFor(detectedBand, _mode);
+          });
           ds.saveLastBand(detectedBand);
+          _loadLastSubmode(detectedBand, _mode);
         }
       }
     });
