@@ -1,4 +1,4 @@
-name: Sync dev with main
+name: Sync main-dev with main
 
 on:
   push:
@@ -17,10 +17,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge main into dev
+      - name: Merge main into main-dev
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git checkout dev
-          git merge origin/main --ff-only || git merge origin/main -m "chore: sync dev with main"
-          git push origin dev
+          git checkout main-dev
+          git merge origin/main --ff-only || git merge origin/main -m "chore: sync main-dev with main"
+          git push origin main-dev
