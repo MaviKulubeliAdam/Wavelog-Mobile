@@ -56,12 +56,11 @@ class AchievementsScreen extends ConsumerWidget {
                     },
                     childCount: allAchievements.length,
                   ),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: MediaQuery.of(context).size.width >= 600 ? 4 : 2,
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
-                    childAspectRatio: 0.70,
+                    childAspectRatio: MediaQuery.of(context).size.width >= 600 ? 0.80 : 0.70,
                   ),
                 ),
               ),

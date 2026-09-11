@@ -16,100 +16,125 @@ class PropagationScreen extends ConsumerWidget {
     return solar.when(
       data: (data) => RefreshIndicator(
         onRefresh: () async => ref.invalidate(solarDataProvider),
-        child: ListView(
-          padding: const EdgeInsets.all(12),
-          children: [
-            // ── Update time ───────────────────────────────────────────
-            if (data.updated.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Row(
-                  children: [
+        child: LayoutBuilder(builder: (context, constraints) {
+          final isTablet = constraints.maxWidth >= 600;
+
+          final indexCards = [
+            _IndexCard(label: 'SFI', value: '${data.solarFlux}',
+                icon: Icons.wb_sunny_outlined, color: _sfiColor(data.solarFlux)),
+            _IndexCard(label: 'Sunspots', value: '${data.sunspots}',
+                icon: Icons.blur_circular_outlined,
+                color: Theme.of(context).colorScheme.primary),
+            _IndexCard(label: 'Solar Wind', value: '${data.solarWind} km/s',
+                icon: Icons.air, color: Theme.of(context).colorScheme.primary),
+            _IndexCard(label: 'K-Index', value: '${data.kIndex}',
+                icon: Icons.show_chart, color: _kIndexColor(data.kIndex)),
+            _IndexCard(label: 'A-Index', value: '${data.aIndex}',
+                icon: Icons.trending_up, color: _aIndexColor(data.aIndex)),
+            _IndexCard(
+                label: 'Signal Noise',
+                value: data.signalNoise.isNotEmpty ? data.signalNoise : '—',
+                icon: Icons.graphic_eq,
+                color: Theme.of(context).colorScheme.tertiary),
+          ];
+
+          final updateRow = data.updated.isNotEmpty
+              ? Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(children: [
                     const Icon(Icons.update, size: 14),
                     const SizedBox(width: 4),
                     Flexible(
-                      child: Text(
-                        l10n.lastUpdated(data.updated),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      child: Text(l10n.lastUpdated(data.updated),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
-                                  .withValues(alpha: 0.55),
-                            ),
-                      ),
+                                  .withValues(alpha: 0.55))),
                     ),
-                  ],
-                ),
-              ),
+                  ]),
+                )
+              : const SizedBox.shrink();
 
-            // ── Solar index grid ──────────────────────────────────────
-            GridView.count(
-              crossAxisCount: 3,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisSpacing: 6,
-              mainAxisSpacing: 6,
-              childAspectRatio: 1.2,
-              children: [
-                _IndexCard(
-                  label: 'SFI',
-                  value: '${data.solarFlux}',
-                  icon: Icons.wb_sunny_outlined,
-                  color: _sfiColor(data.solarFlux),
-                ),
-                _IndexCard(
-                  label: 'Sunspots',
-                  value: '${data.sunspots}',
-                  icon: Icons.blur_circular_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                _IndexCard(
-                  label: 'Solar Wind',
-                  value: '${data.solarWind} km/s',
-                  icon: Icons.air,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                _IndexCard(
-                  label: 'K-Index',
-                  value: '${data.kIndex}',
-                  icon: Icons.show_chart,
-                  color: _kIndexColor(data.kIndex),
-                ),
-                _IndexCard(
-                  label: 'A-Index',
-                  value: '${data.aIndex}',
-                  icon: Icons.trending_up,
-                  color: _aIndexColor(data.aIndex),
-                ),
-                _IndexCard(
-                  label: 'Signal Noise',
-                  value: data.signalNoise.isNotEmpty
-                      ? data.signalNoise
-                      : '—',
-                  icon: Icons.graphic_eq,
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // ── Band conditions ───────────────────────────────────────
-            Text(
-              l10n.bandConditions,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
+          if (isTablet) {
+            // Tablet: two-column layout
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  updateRow,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left: solar index grid (3×2)
+                      Expanded(
+                        child: GridView.count(
+                          crossAxisCount: 3,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 1.3,
+                          children: indexCards,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Right: band conditions
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(l10n.bandConditions,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(
+                                      color: Theme.of(context).colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                            const SizedBox(height: 8),
+                            _BandConditionsTable(data: data),
+                            const SizedBox(height: 12),
+                            _Legend(l10n: l10n),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-            ),
-            const SizedBox(height: 8),
-            _BandConditionsTable(data: data),
-            const SizedBox(height: 16),
+                ],
+              ),
+            );
+          }
 
-            // ── Legend ────────────────────────────────────────────────
-            _Legend(l10n: l10n),
-            const SizedBox(height: 12),
-          ],
-        ),
+          // Phone: original single-column layout
+          return ListView(
+            padding: const EdgeInsets.all(12),
+            children: [
+              updateRow,
+              GridView.count(
+                crossAxisCount: 3,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 6,
+                mainAxisSpacing: 6,
+                childAspectRatio: 1.2,
+                children: indexCards,
+              ),
+              const SizedBox(height: 16),
+              Text(l10n.bandConditions,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      )),
+              const SizedBox(height: 8),
+              _BandConditionsTable(data: data),
+              const SizedBox(height: 16),
+              _Legend(l10n: l10n),
+              const SizedBox(height: 12),
+            ],
+          );
+        }),
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, stack) => Center(
