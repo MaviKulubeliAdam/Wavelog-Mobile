@@ -331,9 +331,11 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     if (!mounted || last == null) return;
     setState(() {
       _band = last;
+      _submode = defaultSubmodeFor(last, _mode);
       final freq = kBandCenterFreqMhz[last];
       if (freq != null) _freqCtrl.text = freq.toStringAsFixed(3);
     });
+    _loadLastSubmode(last, _mode);
   }
 
   Future<void> _loadLastSubmode(String band, String mode) async {
