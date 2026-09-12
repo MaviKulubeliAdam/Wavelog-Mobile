@@ -10,14 +10,6 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-configurations {
-    all {
-        // Flutter's embedding pulls this in for Play Store deferred components,
-        // which this app doesn't use. F-Droid's scanner flags it as non-free.
-        exclude group: 'com.google.android.play', module: 'core'
-    }
-}
-
 android {
     namespace "com.wavelog_mobile"
     compileSdk 36

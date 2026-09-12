@@ -1,7 +1,18 @@
 # Flutter
--keep class io.flutter.** { *; }
 -keep class io.flutter.plugins.** { *; }
 -dontwarn io.flutter.**
+
+# Google Play Core is referenced by Flutter's embedding for deferred
+# components (dynamic feature delivery), which this app doesn't use.
+# Not a real dependency here — let R8 treat calls as dead code so the
+# classes are stripped from the F-Droid build.
+-dontwarn com.google.android.play.**
+-assumenosideeffects class io.flutter.embedding.engine.deferredcomponents.PlayStoreDeferredComponentManager {
+    *;
+}
+-assumenosideeffects class com.google.android.play.core.** {
+    *;
+}
 
 # Kotlin coroutines
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
@@ -36,9 +47,6 @@
 
 # FlutterSecureStorage
 -keep class com.it_nomads.fluttersecurestorage.** { *; }
-
-# Geolocator
--keep class com.baseflow.geolocator.** { *; }
 
 # Keep data models (ADIF/QSO serialization)
 -keep class com.wavelog_mobile.** { *; }
