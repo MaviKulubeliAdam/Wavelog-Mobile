@@ -4,8 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
-
+import '../../../core/services/native_location.dart';
 import '../../../core/utils/geo_utils.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/maidenhead.dart';
@@ -49,17 +48,16 @@ class _AntennaCompassScreenState extends ConsumerState<AntennaCompassScreen> {
   Future<void> _fetchGps() async {
     setState(() { _gpsLoading = true; _error = null; });
     try {
-      var perm = await Geolocator.checkPermission();
+      var perm = await NativeLocation.checkPermission();
       if (perm == LocationPermission.denied) {
-        perm = await Geolocator.requestPermission();
+        perm = await NativeLocation.requestPermission();
       }
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         setState(() => _gpsLoading = false);
         return;
       }
-      final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.medium);
+      final pos = await NativeLocation.getCurrentPosition();
       if (!mounted) return;
       setState(() {
         _myLat = pos.latitude;
