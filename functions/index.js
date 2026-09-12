@@ -39,6 +39,32 @@ exports.onNewActivation = functions
     });
   });
 
+// ── 1b. Sohbet odasında yeni mesaj gelince takipçilere bildirim ─────────────
+exports.onNewChatMessage = functions
+  .firestore.document("chat_rooms/{roomId}/messages/{messageId}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    if (!data) return;
+
+    const preview = (data.text ?? "").slice(0, 100);
+
+    await messaging.send({
+      topic: `chat_room_${context.params.roomId}`,
+      notification: {
+        title: `${data.callsign} yazdı`,
+        body: preview,
+      },
+      data: {
+        roomId: context.params.roomId,
+        messageId: context.params.messageId,
+        callsign: data.callsign ?? "",
+        screen: "chat",
+      },
+      android: { notification: { channelId: "chat" } },
+      apns: { payload: { aps: { sound: "default" } } },
+    });
+  });
+
 // ── 2. Yaklaşan aktivasyonlar için hatırlatma (her 15 dk) ────────────────────
 exports.notifyUpcomingActivations = functions
   .pubsub.schedule("every 15 minutes")

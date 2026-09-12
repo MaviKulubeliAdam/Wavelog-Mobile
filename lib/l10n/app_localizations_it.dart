@@ -1930,6 +1930,24 @@ class AppLocalizationsIt extends AppLocalizations {
   String get chatNoStation => 'Imposta una stazione attiva per chattare';
 
   @override
+  String get chatToday => 'Oggi';
+
+  @override
+  String get chatYesterday => 'Ieri';
+
+  @override
+  String get chatFollow => 'Segui';
+
+  @override
+  String get chatUnfollow => 'Non seguire più';
+
+  @override
+  String get chatFollowing => 'Seguito';
+
+  @override
+  String get chatAddReaction => 'Aggiungi reazione';
+
+  @override
   String get gifPreparing => 'Preparazione video...';
 
   @override

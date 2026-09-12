@@ -1306,6 +1306,12 @@
   "chatEdited": "изменено",
   "@chatEdited": {},
   "chatNoStation": "Установите активную станцию для чата",
+  "chatToday": "Сегодня",
+  "chatYesterday": "Вчера",
+  "chatFollow": "Подписаться",
+  "chatUnfollow": "Отписаться",
+  "chatFollowing": "Вы подписаны",
+  "chatAddReaction": "Добавить реакцию",
   "@chatNoStation": {},
 
   "gifPreparing": "Подготовка видео...",

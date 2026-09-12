@@ -660,6 +660,12 @@
   "chatDeleteConfirm": "Bu mesaj silinsin mi?",
   "chatEdited": "düzenlendi",
   "chatNoStation": "Sohbet için aktif bir istasyon seçin",
+  "chatToday": "Bugün",
+  "chatYesterday": "Dün",
+  "chatFollow": "Takip Et",
+  "chatUnfollow": "Takibi Bırak",
+  "chatFollowing": "Takip ediliyor",
+  "chatAddReaction": "Tepki ekle",
 
   "pendingSync": "{count} QSO senkronizasyon bekliyor",
   "syncNow": "Şimdi Senkronize Et",

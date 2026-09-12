@@ -743,6 +743,12 @@
   "chatDeleteConfirm": "이 메시지를 삭제하시겠습니까?",
   "chatEdited": "수정됨",
   "chatNoStation": "채팅하려면 활성 스테이션을 설정하세요",
+  "chatToday": "오늘",
+  "chatYesterday": "어제",
+  "chatFollow": "팔로우",
+  "chatUnfollow": "팔로우 취소",
+  "chatFollowing": "팔로우 중",
+  "chatAddReaction": "반응 추가",
 
   "gifPreparing": "동영상 준비 중...",
   "gifCapturing": "프레임 캡처 중... {percent}%",

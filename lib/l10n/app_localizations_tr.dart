@@ -1926,6 +1926,24 @@ class AppLocalizationsTr extends AppLocalizations {
   String get chatNoStation => 'Sohbet için aktif bir istasyon seçin';
 
   @override
+  String get chatToday => 'Bugün';
+
+  @override
+  String get chatYesterday => 'Dün';
+
+  @override
+  String get chatFollow => 'Takip Et';
+
+  @override
+  String get chatUnfollow => 'Takibi Bırak';
+
+  @override
+  String get chatFollowing => 'Takip ediliyor';
+
+  @override
+  String get chatAddReaction => 'Tepki ekle';
+
+  @override
   String get gifPreparing => 'Video hazırlanıyor...';
 
   @override

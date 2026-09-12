@@ -1929,6 +1929,24 @@ class AppLocalizationsPl extends AppLocalizations {
   String get chatNoStation => 'Ustaw aktywną stację, aby pisać na czacie';
 
   @override
+  String get chatToday => 'Dzisiaj';
+
+  @override
+  String get chatYesterday => 'Wczoraj';
+
+  @override
+  String get chatFollow => 'Obserwuj';
+
+  @override
+  String get chatUnfollow => 'Przestań obserwować';
+
+  @override
+  String get chatFollowing => 'Obserwowane';
+
+  @override
+  String get chatAddReaction => 'Dodaj reakcję';
+
+  @override
   String get gifPreparing => 'Przygotowywanie wideo...';
 
   @override

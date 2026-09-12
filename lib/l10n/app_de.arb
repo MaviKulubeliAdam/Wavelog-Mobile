@@ -744,6 +744,12 @@
   "chatDeleteConfirm": "Diese Nachricht löschen?",
   "chatEdited": "bearbeitet",
   "chatNoStation": "Aktive Station für den Chat festlegen",
+  "chatToday": "Heute",
+  "chatYesterday": "Gestern",
+  "chatFollow": "Folgen",
+  "chatUnfollow": "Nicht mehr folgen",
+  "chatFollowing": "Wird verfolgt",
+  "chatAddReaction": "Reaktion hinzufügen",
 
   "pendingSync": "{count} QSO(s) ausstehend",
   "syncNow": "Jetzt synchronisieren",

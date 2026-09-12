@@ -1907,6 +1907,24 @@ class AppLocalizationsKo extends AppLocalizations {
   String get chatNoStation => '채팅하려면 활성 스테이션을 설정하세요';
 
   @override
+  String get chatToday => '오늘';
+
+  @override
+  String get chatYesterday => '어제';
+
+  @override
+  String get chatFollow => '팔로우';
+
+  @override
+  String get chatUnfollow => '팔로우 취소';
+
+  @override
+  String get chatFollowing => '팔로우 중';
+
+  @override
+  String get chatAddReaction => '반응 추가';
+
+  @override
   String get gifPreparing => '동영상 준비 중...';
 
   @override
