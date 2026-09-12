@@ -1309,6 +1309,18 @@
   "@chatEdited": {},
   "chatNoStation": "Set an active station to chat",
   "@chatNoStation": {},
+  "chatToday": "Today",
+  "@chatToday": {},
+  "chatYesterday": "Yesterday",
+  "@chatYesterday": {},
+  "chatFollow": "Follow",
+  "@chatFollow": {},
+  "chatUnfollow": "Unfollow",
+  "@chatUnfollow": {},
+  "chatFollowing": "Following room",
+  "@chatFollowing": {},
+  "chatAddReaction": "Add reaction",
+  "@chatAddReaction": {},
 
   "pendingSync": "{count} QSO(s) pending sync",
   "@pendingSync": {

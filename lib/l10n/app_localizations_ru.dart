@@ -1927,6 +1927,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatNoStation => 'Установите активную станцию для чата';
 
   @override
+  String get chatToday => 'Сегодня';
+
+  @override
+  String get chatYesterday => 'Вчера';
+
+  @override
+  String get chatFollow => 'Подписаться';
+
+  @override
+  String get chatUnfollow => 'Отписаться';
+
+  @override
+  String get chatFollowing => 'Вы подписаны';
+
+  @override
+  String get chatAddReaction => 'Добавить реакцию';
+
+  @override
   String get gifPreparing => 'Подготовка видео...';
 
   @override

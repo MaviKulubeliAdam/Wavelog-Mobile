@@ -3754,6 +3754,42 @@ abstract class AppLocalizations {
   /// **'Set an active station to chat'**
   String get chatNoStation;
 
+  /// No description provided for @chatToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get chatToday;
+
+  /// No description provided for @chatYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get chatYesterday;
+
+  /// No description provided for @chatFollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get chatFollow;
+
+  /// No description provided for @chatUnfollow.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get chatUnfollow;
+
+  /// No description provided for @chatFollowing.
+  ///
+  /// In en, this message translates to:
+  /// **'Following room'**
+  String get chatFollowing;
+
+  /// No description provided for @chatAddReaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reaction'**
+  String get chatAddReaction;
+
   /// No description provided for @gifPreparing.
   ///
   /// In en, this message translates to:

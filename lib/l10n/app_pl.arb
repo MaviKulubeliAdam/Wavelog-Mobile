@@ -651,6 +651,12 @@
   "chatDeleteConfirm": "Usunąć tę wiadomość?",
   "chatEdited": "edytowano",
   "chatNoStation": "Ustaw aktywną stację, aby pisać na czacie",
+  "chatToday": "Dzisiaj",
+  "chatYesterday": "Wczoraj",
+  "chatFollow": "Obserwuj",
+  "chatUnfollow": "Przestań obserwować",
+  "chatFollowing": "Obserwowane",
+  "chatAddReaction": "Dodaj reakcję",
 
   "pendingSync": "{count} QSO oczekuje na synchronizację",
   "syncNow": "Synchronizuj Teraz",

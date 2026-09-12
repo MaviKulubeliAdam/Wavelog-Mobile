@@ -743,6 +743,12 @@
   "chatDeleteConfirm": "このメッセージを削除しますか？",
   "chatEdited": "編集済み",
   "chatNoStation": "チャットするにはアクティブな局を設定してください",
+  "chatToday": "今日",
+  "chatYesterday": "昨日",
+  "chatFollow": "フォロー",
+  "chatUnfollow": "フォロー解除",
+  "chatFollowing": "フォロー中",
+  "chatAddReaction": "リアクションを追加",
 
   "gifPreparing": "動画を準備中...",
   "gifCapturing": "フレームをキャプチャ中... {percent}%",

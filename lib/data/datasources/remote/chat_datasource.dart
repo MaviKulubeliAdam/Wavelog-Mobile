@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../models/chat_message_model.dart';
 
 class ChatDatasource {
   final FirebaseFirestore _db;
+  final FirebaseMessaging _fcm;
 
-  ChatDatasource({FirebaseFirestore? db})
-      : _db = db ?? FirebaseFirestore.instance;
+  ChatDatasource({FirebaseFirestore? db, FirebaseMessaging? fcm})
+      : _db = db ?? FirebaseFirestore.instance,
+        _fcm = fcm ?? FirebaseMessaging.instance;
 
   CollectionReference<Map<String, dynamic>> _messages(String roomId) =>
       _db.collection('chat_rooms').doc(roomId).collection('messages');
@@ -28,4 +31,24 @@ class ChatDatasource {
 
   Future<void> deleteMessage(String roomId, String messageId) =>
       _messages(roomId).doc(messageId).delete();
+
+  Future<void> toggleReaction(
+    String roomId,
+    String messageId,
+    String emoji,
+    String callsign,
+    bool adding,
+  ) =>
+      _messages(roomId).doc(messageId).update({
+        'reactions.$emoji': adding
+            ? FieldValue.arrayUnion([callsign.toUpperCase()])
+            : FieldValue.arrayRemove([callsign.toUpperCase()]),
+      });
+
+  // FCM: Bu sohbet odasına yeni mesaj bildirimi almak isteyen
+  Future<void> subscribeToRoom(String roomId) =>
+      _fcm.subscribeToTopic('chat_room_$roomId');
+
+  Future<void> unsubscribeFromRoom(String roomId) =>
+      _fcm.unsubscribeFromTopic('chat_room_$roomId');
 }

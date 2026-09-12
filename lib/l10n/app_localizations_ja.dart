@@ -1907,6 +1907,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get chatNoStation => 'チャットするにはアクティブな局を設定してください';
 
   @override
+  String get chatToday => '今日';
+
+  @override
+  String get chatYesterday => '昨日';
+
+  @override
+  String get chatFollow => 'フォロー';
+
+  @override
+  String get chatUnfollow => 'フォロー解除';
+
+  @override
+  String get chatFollowing => 'フォロー中';
+
+  @override
+  String get chatAddReaction => 'リアクションを追加';
+
+  @override
   String get gifPreparing => '動画を準備中...';
 
   @override

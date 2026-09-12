@@ -218,6 +218,7 @@ class _MessageList extends StatelessWidget {
           isOwn: isOwn,
           isGrouped: item.isGrouped,
           roomId: roomId,
+          myCallsign: myCallsign,
         );
       },
     );
@@ -248,9 +249,9 @@ class _DateSeparator extends StatelessWidget {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
-    if (date == today) return 'Bugün';
-    if (date == yesterday) return 'Dün';
-    return DateFormat('d MMMM y').format(date);
+    if (date == today) return context.l10n.chatToday;
+    if (date == yesterday) return context.l10n.chatYesterday;
+    return DateFormat('d MMMM y', context.l10n.localeName).format(date);
   }
 
   @override
@@ -286,34 +287,39 @@ class _DateSeparator extends StatelessWidget {
 
 // ── Message bubble ────────────────────────────────────────────────────────────
 
+const _kReactionEmojis = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+
 class _MessageBubble extends ConsumerWidget {
   final ChatMessageModel message;
   final bool isOwn;
   final bool isGrouped;
   final String roomId;
+  final String myCallsign;
 
   const _MessageBubble({
     required this.message,
     required this.isOwn,
     required this.isGrouped,
     required this.roomId,
+    required this.myCallsign,
   });
 
-  String _timeLabel(DateTime ts) {
+  String _timeLabel(BuildContext context, DateTime ts) {
     final local = ts.toLocal();
     final now = DateTime.now();
     final isToday = local.year == now.year &&
         local.month == now.month &&
         local.day == now.day;
+    final locale = context.l10n.localeName;
     return isToday
-        ? DateFormat('HH:mm').format(local)
-        : DateFormat('d MMM HH:mm').format(local);
+        ? DateFormat('HH:mm', locale).format(local)
+        : DateFormat('d MMM HH:mm', locale).format(local);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
-    final timeLabel = _timeLabel(message.timestamp);
+    final timeLabel = _timeLabel(context, message.timestamp);
 
     // Callsign initials for avatar
     final initials = message.callsign.isNotEmpty
@@ -387,11 +393,27 @@ class _MessageBubble extends ConsumerWidget {
       ),
     );
 
-    // Wrap with long-press for own messages
-    if (isOwn) {
-      bubbleContent = GestureDetector(
-        onLongPress: () => _showOptions(context, ref),
-        child: bubbleContent,
+    // Long-press works on every message (reactions for everyone,
+    // edit/delete only for own messages)
+    bubbleContent = GestureDetector(
+      onLongPress: () => _showOptions(context, ref),
+      child: bubbleContent,
+    );
+
+    if (message.reactions.isNotEmpty) {
+      bubbleContent = Column(
+        crossAxisAlignment:
+            isOwn ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          bubbleContent,
+          const SizedBox(height: 3),
+          _ReactionRow(
+            message: message,
+            roomId: roomId,
+            myCallsign: myCallsign,
+          ),
+        ],
       );
     }
 
@@ -501,25 +523,50 @@ class _MessageBubble extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.edit_outlined),
-              title: Text(ctx.l10n.chatEdit),
-              onTap: () {
-                Navigator.pop(ctx);
-                _showEditDialog(context, ref);
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: _kReactionEmojis
+                    .map((emoji) => InkWell(
+                          borderRadius: BorderRadius.circular(24),
+                          onTap: () {
+                            Navigator.pop(ctx);
+                            ref
+                                .read(chatNotifierProvider.notifier)
+                                .toggleReaction(roomId, message, emoji);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(emoji,
+                                style: const TextStyle(fontSize: 26)),
+                          ),
+                        ))
+                    .toList(),
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.delete_outline,
-                  color: Theme.of(ctx).colorScheme.error),
-              title: Text(ctx.l10n.chatDelete,
-                  style: TextStyle(
-                      color: Theme.of(ctx).colorScheme.error)),
-              onTap: () {
-                Navigator.pop(ctx);
-                _confirmDelete(context, ref);
-              },
-            ),
+            const Divider(height: 1),
+            if (isOwn) ...[
+              ListTile(
+                leading: const Icon(Icons.edit_outlined),
+                title: Text(ctx.l10n.chatEdit),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showEditDialog(context, ref);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.delete_outline,
+                    color: Theme.of(ctx).colorScheme.error),
+                title: Text(ctx.l10n.chatDelete,
+                    style: TextStyle(
+                        color: Theme.of(ctx).colorScheme.error)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _confirmDelete(context, ref);
+                },
+              ),
+            ],
             const SizedBox(height: 8),
           ],
         ),
@@ -585,6 +632,61 @@ class _MessageBubble extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+// ── Reaction pills ────────────────────────────────────────────────────────────
+
+class _ReactionRow extends ConsumerWidget {
+  final ChatMessageModel message;
+  final String roomId;
+  final String myCallsign;
+
+  const _ReactionRow({
+    required this.message,
+    required this.roomId,
+    required this.myCallsign,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final entries = message.reactions.entries
+        .where((e) => e.value.isNotEmpty)
+        .toList();
+    if (entries.isEmpty) return const SizedBox.shrink();
+
+    return Wrap(
+      spacing: 4,
+      runSpacing: 4,
+      children: entries.map((e) {
+        final emoji = e.key;
+        final count = e.value.length;
+        final mine = e.value
+            .map((c) => c.toUpperCase())
+            .contains(myCallsign.toUpperCase());
+        return InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: myCallsign.isEmpty
+              ? null
+              : () => ref
+                  .read(chatNotifierProvider.notifier)
+                  .toggleReaction(roomId, message, emoji),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: mine
+                  ? cs.primaryContainer
+                  : cs.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+              border: mine ? Border.all(color: cs.primary, width: 1) : null,
+            ),
+            child: Text('$emoji $count',
+                style: const TextStyle(fontSize: 12)),
+          ),
+        );
+      }).toList(),
     );
   }
 }

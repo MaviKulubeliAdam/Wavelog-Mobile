@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/utils/l10n_extension.dart';
+import '../../../providers/chat_provider.dart';
 
-class ChatRoomsScreen extends StatelessWidget {
+class ChatRoomsScreen extends ConsumerWidget {
   const ChatRoomsScreen({super.key});
 
   static const _rooms = [
@@ -18,7 +20,10 @@ class ChatRoomsScreen extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final subscribedAsync = ref.watch(subscribedChatRoomsProvider);
+    final subscribed = subscribedAsync.valueOrNull ?? const <String>{};
+
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.chatRooms)),
       body: ListView.separated(
@@ -33,6 +38,7 @@ class ChatRoomsScreen extends StatelessWidget {
           final subtitle = room.id == 'general'
               ? context.l10n.chatGeneralSubtitle
               : null;
+          final isFollowing = subscribed.contains(room.id);
           return ListTile(
             leading: Container(
               width: 44,
@@ -46,7 +52,21 @@ class ChatRoomsScreen extends StatelessWidget {
             ),
             title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
             subtitle: subtitle != null ? Text(subtitle) : null,
-            trailing: const Icon(Icons.chevron_right),
+            trailing: IconButton(
+              icon: Icon(
+                isFollowing
+                    ? Icons.notifications_active
+                    : Icons.notifications_none,
+                color: isFollowing
+                    ? Theme.of(context).colorScheme.primary
+                    : null,
+              ),
+              tooltip: isFollowing
+                  ? context.l10n.chatUnfollow
+                  : context.l10n.chatFollow,
+              onPressed: () =>
+                  ref.read(chatNotifierProvider.notifier).toggleFollow(room.id),
+            ),
             onTap: () => context.push(
               '/community/chat/${room.id}',
               extra: name,

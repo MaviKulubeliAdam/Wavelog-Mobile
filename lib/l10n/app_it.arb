@@ -639,6 +639,12 @@
   "chatDeleteConfirm": "Eliminare questo messaggio?",
   "chatEdited": "modificato",
   "chatNoStation": "Imposta una stazione attiva per chattare",
+  "chatToday": "Oggi",
+  "chatYesterday": "Ieri",
+  "chatFollow": "Segui",
+  "chatUnfollow": "Non seguire più",
+  "chatFollowing": "Seguito",
+  "chatAddReaction": "Aggiungi reazione",
 
   "gifPreparing": "Preparazione video...",
   "gifCapturing": "Acquisizione frame... {percent}%",
