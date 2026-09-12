@@ -1,0 +1,21 @@
+Android companion app for Wavelog, the self-hosted amateur radio
+(ham radio) logging software. Requires a self-hosted Wavelog server
+(v3.2.0 or later) and an API v2 token.
+
+Features:
+
+* QSO logging with callsign lookup, band/mode/RST, DXCC info, grid
+  square and signal map
+* QSL confirmation status (LoTW, eQSL, QRZ.com)
+* Contest mode with serial/exchange fields and session management
+* DX cluster spots with band/mode filtering
+* Logbook browsing, search, edit and delete
+* Statistics: DXCC progress, band/mode breakdowns, streak tracking
+* Station profile management
+* POTA / SOTA / WWFF reference fields
+* ADIF import and export
+* Achievements and antenna compass
+
+This F-Droid build does not include the Community/chat feature from
+the Play Store version, since that depends on Firebase and Google
+Play Services.
