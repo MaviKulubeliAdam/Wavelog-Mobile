@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
+import '../../../core/services/native_location.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/maidenhead.dart';
@@ -163,9 +163,9 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
   Future<void> _fillGridFromGps() async {
     setState(() => _gpsLoading = true);
     try {
-      var permission = await Geolocator.checkPermission();
+      var permission = await NativeLocation.checkPermission();
       if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
+        permission = await NativeLocation.requestPermission();
       }
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
@@ -176,9 +176,7 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
         }
         return;
       }
-      final pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      final pos = await NativeLocation.getCurrentPosition();
       final grid = latLngToGrid(pos.latitude, pos.longitude);
       if (grid != null && mounted) {
         setState(() => _gridCtrl.text = grid.toUpperCase());

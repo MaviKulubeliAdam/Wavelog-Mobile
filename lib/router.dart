@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
+import 'core/services/native_location.dart';
 import 'package:go_router/go_router.dart';
 import 'core/utils/l10n_extension.dart';
 import 'core/utils/maidenhead.dart';
@@ -604,16 +604,15 @@ class _DrawerHeaderInfoState extends State<_DrawerHeaderInfo> {
 
   Future<void> _fetchGrid() async {
     try {
-      var perm = await Geolocator.checkPermission();
+      var perm = await NativeLocation.checkPermission();
       if (perm == LocationPermission.denied) {
-        perm = await Geolocator.requestPermission();
+        perm = await NativeLocation.requestPermission();
       }
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         return;
       }
-      final pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.medium);
+      final pos = await NativeLocation.getCurrentPosition();
       final grid = latLngToGrid(pos.latitude, pos.longitude);
       if (mounted && grid != null) { setState(() => _grid = grid); }
     } catch (_) {}
