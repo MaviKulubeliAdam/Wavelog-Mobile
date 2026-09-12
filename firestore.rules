@@ -77,15 +77,21 @@ service cloud.firestore {
                     && request.resource.data.text.size() <= 1000
                     && get(/databases/$(database)/documents/callsign_claims/$(request.resource.data.callsign)).data.uid == request.auth.uid;
 
-      // Edit: only the original sender, uid/callsign/timestamp unchanged
+      // Edit: only the original sender, uid/callsign/timestamp unchanged —
+      // OR any authenticated user toggling only the reactions field
       allow update: if request.auth != null
-                    && request.auth.uid == resource.data.uid
-                    && request.resource.data.uid == resource.data.uid
-                    && request.resource.data.callsign == resource.data.callsign
-                    && request.resource.data.timestamp == resource.data.timestamp
-                    && request.resource.data.text is string
-                    && request.resource.data.text.size() > 0
-                    && request.resource.data.text.size() <= 1000;
+                    && (
+                         request.resource.data.diff(resource.data).affectedKeys()
+                           .hasOnly(['reactions'])
+                         ||
+                         (request.auth.uid == resource.data.uid
+                          && request.resource.data.uid == resource.data.uid
+                          && request.resource.data.callsign == resource.data.callsign
+                          && request.resource.data.timestamp == resource.data.timestamp
+                          && request.resource.data.text is string
+                          && request.resource.data.text.size() > 0
+                          && request.resource.data.text.size() <= 1000)
+                       );
 
       // Delete: only the original sender
       allow delete: if request.auth != null
