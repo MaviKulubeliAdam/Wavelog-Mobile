@@ -39,16 +39,23 @@ class ChatRoomsScreen extends ConsumerWidget {
               ? context.l10n.chatGeneralSubtitle
               : null;
           final isFollowing = subscribed.contains(room.id);
+          final unread =
+              isFollowing ? ref.watch(unreadCountProvider(room.id)) : 0;
           return ListTile(
-            leading: Container(
-              width: 44,
-              height: 44,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                shape: BoxShape.circle,
+            leading: Badge(
+              isLabelVisible: unread > 0,
+              label: Text('$unread'),
+              child: Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(room.flag, style: const TextStyle(fontSize: 22)),
               ),
-              child: Text(room.flag, style: const TextStyle(fontSize: 22)),
             ),
             title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
             subtitle: subtitle != null ? Text(subtitle) : null,

@@ -40,28 +40,44 @@ exports.onNewActivation = functions
   });
 
 // ── 1b. Sohbet odasında yeni mesaj gelince takipçilere bildirim ─────────────
+// Data-only mesaj gönderiyoruz (notification alanı yok) — bu sayede mesaj
+// her zaman uygulama koduna uğruyor (arka planda/kapalıyken de) ve
+// gönderenin kendi mesajı için bildirim bastırılabiliyor, dokununca de
+// doğru odaya gidilebiliyor.
+const CHAT_ROOM_NAMES = {
+  general: "General",
+  tr: "Türkçe",
+  de: "Deutsch",
+  fr: "Français",
+  it: "Italiano",
+  pl: "Polski",
+  ja: "日本語",
+  ko: "한국어",
+  ru: "Русский",
+};
+
 exports.onNewChatMessage = functions
   .firestore.document("chat_rooms/{roomId}/messages/{messageId}")
   .onCreate(async (snap, context) => {
     const data = snap.data();
     if (!data) return;
 
+    const roomId = context.params.roomId;
+    const roomName = CHAT_ROOM_NAMES[roomId] ?? roomId;
     const preview = (data.text ?? "").slice(0, 100);
 
     await messaging.send({
-      topic: `chat_room_${context.params.roomId}`,
-      notification: {
-        title: `${data.callsign} yazdı`,
-        body: preview,
-      },
+      topic: `chat_room_${roomId}`,
       data: {
-        roomId: context.params.roomId,
+        screen: "chat",
+        roomId,
+        roomName,
         messageId: context.params.messageId,
         callsign: data.callsign ?? "",
-        screen: "chat",
+        title: `${data.callsign} • ${roomName}`,
+        body: preview,
       },
-      android: { notification: { channelId: "chat" } },
-      apns: { payload: { aps: { sound: "default" } } },
+      android: { priority: "high" },
     });
   });
 

@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'app.dart';
+import 'core/services/chat_notification_service.dart';
 import 'core/services/intent_handler.dart';
 import 'data/models/qso_model.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+  await ChatNotificationService.handleData(message.data);
 }
 
 void main() async {
@@ -18,6 +20,10 @@ void main() async {
 
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen(
+    (message) => ChatNotificationService.handleData(message.data),
+  );
+  await ChatNotificationService.initialize();
 
   // Android 13+ bildirim izni (iOS için de gerekli)
   await FirebaseMessaging.instance.requestPermission(
