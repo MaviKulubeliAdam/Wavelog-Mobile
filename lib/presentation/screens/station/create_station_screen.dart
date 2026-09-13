@@ -9,6 +9,7 @@ import '../../../data/models/dxcc_entity_model.dart';
 import '../../../data/models/state_subdivision_model.dart';
 import '../../../data/models/station_model.dart';
 import '../../../providers/station_provider.dart';
+import '../../widgets/common/section_header.dart';
 
 class CreateStationScreen extends ConsumerStatefulWidget {
   final StationModel? existingStation;
@@ -279,8 +280,9 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
         ));
         context.pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(err), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(err),
+            backgroundColor: Theme.of(context).colorScheme.error));
       }
     } else {
       final station = _buildModel(id: 0);
@@ -298,7 +300,7 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(l10n.stationCreateFailed),
-          backgroundColor: Colors.red,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ));
       }
     }
@@ -701,16 +703,7 @@ class _CreateStationScreenState extends ConsumerState<CreateStationScreen> {
     );
   }
 
-  Widget _section(String title) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      );
+  Widget _section(String title) => SectionHeader(label: title);
 
   Widget _subSection(String title) => Padding(
         padding: const EdgeInsets.only(bottom: 4),

@@ -124,7 +124,7 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
                   width: 36, height: 4,
                   margin: const EdgeInsets.only(top: 12, bottom: 8),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade400,
+                    color: Theme.of(ctx).colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -272,7 +272,7 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${context.l10n.error}: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -463,11 +463,12 @@ class _ContestCreateScreenState extends ConsumerState<ContestCreateScreen> {
             child: FilledButton(
               onPressed: _isSaving ? null : _submit,
               child: _isSaving
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white),
+                          strokeWidth: 2,
+                          color: Theme.of(context).colorScheme.onPrimary),
                     )
                   : Text(
                       _isEditing ? l10n.saveChanges : l10n.createSession,

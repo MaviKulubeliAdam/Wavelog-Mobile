@@ -2,9 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
-/// Electric highlight used by loaders / focus / the splash glow.
-/// Additive to the existing seed (#0EA5E9) — does not change other UI.
-const Color kAccentElectric = Color(0xFF22D3EE);
+import '../../../core/theme/app_theme.dart' show kAccentElectric;
 
 /// Animated Wavelog splash built on the real brand logo.
 ///
@@ -148,7 +146,7 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                     CustomPaint(painter: _SinePainter(_sine.value, accent)),
               ),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 16),
             // ── Morse-style status ───────────────────────────────────────
             AnimatedBuilder(
               animation: _blink,
@@ -165,7 +163,7 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                         color: accent.withValues(alpha: on ? 1.0 : 0.16),
                       ),
                     ),
-                    const SizedBox(width: 9),
+                    const SizedBox(width: 8),
                     Text(
                       widget.statusText,
                       style: TextStyle(
@@ -181,7 +179,7 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                 );
               },
             ),
-            const SizedBox(height: 44),
+            const SizedBox(height: 48),
           ],
         ),
       ),

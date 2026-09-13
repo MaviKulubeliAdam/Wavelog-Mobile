@@ -26,7 +26,12 @@ class PropagationScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: [
-                    const Icon(Icons.update, size: 14),
+                    Icon(Icons.update,
+                        size: 14,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.55)),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
@@ -372,17 +377,17 @@ class _Legend extends StatelessWidget {
         _dot(Colors.green),
         const SizedBox(width: 4),
         Text(lText(l10n.conditionGood),
-            style: const TextStyle(fontSize: 11)),
+            style: Theme.of(context).textTheme.labelSmall),
         const SizedBox(width: 12),
         _dot(Colors.orange),
         const SizedBox(width: 4),
         Text(lText(l10n.conditionFair),
-            style: const TextStyle(fontSize: 11)),
+            style: Theme.of(context).textTheme.labelSmall),
         const SizedBox(width: 12),
         _dot(Colors.red),
         const SizedBox(width: 4),
         Text(lText(l10n.conditionPoor),
-            style: const TextStyle(fontSize: 11)),
+            style: Theme.of(context).textTheme.labelSmall),
       ],
     );
   }

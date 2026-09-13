@@ -98,7 +98,10 @@ class _ProgressHeader extends StatelessWidget {
                       .headlineSmall
                       ?.copyWith(fontWeight: FontWeight.bold)),
               Text(context.l10n.achievementsTitle,
-                  style: TextStyle(color: cs.onSurfaceVariant)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: cs.onSurfaceVariant)),
             ],
           ),
           const SizedBox(height: 8),
@@ -148,7 +151,7 @@ class _AchievementCard extends StatelessWidget {
           ? cs.primaryContainer.withValues(alpha: 0.9)
           : cs.surfaceContainerHighest.withValues(alpha: 0.5),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         onTap: isUnlocked ? () => _showShareDialog(context) : null,
         child: Padding(
           padding: const EdgeInsets.all(10),

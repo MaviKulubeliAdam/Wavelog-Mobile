@@ -6,6 +6,7 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/geo_utils.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/maidenhead.dart';
@@ -143,6 +144,9 @@ class _AntennaCompassScreenState extends ConsumerState<AntennaCompassScreen> {
                             )
                           : null,
                     ),
+                    style: const TextStyle(
+                        fontFamily: kMonoFontFamily,
+                        fontWeight: FontWeight.w600),
                     textCapitalization: TextCapitalization.characters,
                     onChanged: (_) => setState(() {}),
                     onSubmitted: (_) => _calcAzimuth(),
@@ -268,10 +272,8 @@ class _StaticBearing extends StatelessWidget {
         if (az != null) ...[
           const SizedBox(height: 16),
           Text('${az.toInt()}°',
-              style: Theme.of(context)
-                  .textTheme
-                  .displayMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  fontFamily: kMonoFontFamily, fontWeight: FontWeight.bold)),
         ],
       ],
     );
@@ -305,7 +307,10 @@ class _InfoTile extends StatelessWidget {
             style: TextStyle(fontSize: 10, color: cs.onSurfaceVariant)),
         Text(value,
             style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: color)),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                fontFamily: kMonoFontFamily,
+                color: color)),
       ],
     );
   }
@@ -332,14 +337,17 @@ class _CompassPainter extends CustomPainter {
     final r = size.width / 2 * 0.9;
 
     // ── Background ───────────────────────────────────────────────────────
+    // Slate-900/700 — matches the app's dark neutral scale instead of a
+    // one-off purple-navy tone, so the instrument face reads as part of
+    // the same palette regardless of light/dark app theme.
     canvas.drawCircle(
       center, size.width / 2,
-      Paint()..color = const Color(0xFF0D0D1A),
+      Paint()..color = const Color(0xFF0F172A),
     );
     canvas.drawCircle(
       center, size.width / 2,
       Paint()
-        ..color = const Color(0xFF1E1E3A)
+        ..color = const Color(0xFF334155)
         ..style = PaintingStyle.stroke
         ..strokeWidth = size.width * 0.04,
     );
@@ -361,8 +369,8 @@ class _CompassPainter extends CustomPainter {
         Offset(dx * r, dy * r),
         Paint()
           ..color = isMajor
-              ? const Color(0xFF8888BB)
-              : const Color(0xFF444466)
+              ? const Color(0xFF64748B)
+              : const Color(0xFF2D3F55)
           ..strokeWidth = isMajor ? 2 : 1,
       );
     }
@@ -384,7 +392,8 @@ class _CompassPainter extends CustomPainter {
                           ? 'W'
                           : '$i',
           style: TextStyle(
-            color: i == 0 ? const Color(0xFFFF4444) : const Color(0xFFBBBBDD),
+            fontFamily: kMonoFontFamily,
+            color: i == 0 ? const Color(0xFFFB7185) : const Color(0xFFCBD5E1),
             fontSize: i % 90 == 0 ? r * 0.16 : r * 0.09,
             fontWeight: i % 90 == 0 ? FontWeight.bold : FontWeight.normal,
           ),
@@ -401,7 +410,7 @@ class _CompassPainter extends CustomPainter {
     if (targetAzimuth != null) {
       final az = shortPath ? targetAzimuth! : (targetAzimuth! + 180) % 360;
       final arrowAngle = (az - heading) * pi / 180;
-      final arrowColor = locked ? Colors.greenAccent : const Color(0xFFFF8C00);
+      final arrowColor = locked ? Colors.greenAccent : kOnAir;
 
       canvas.save();
       canvas.translate(center.dx, center.dy);
@@ -453,7 +462,7 @@ class _CompassPainter extends CustomPainter {
     // ── Center dot ────────────────────────────────────────────────────────
     canvas.drawCircle(center, 7, Paint()..color = Colors.white);
     canvas.drawCircle(
-        center, 4, Paint()..color = const Color(0xFF0D0D1A));
+        center, 4, Paint()..color = const Color(0xFF0F172A));
   }
 
   @override

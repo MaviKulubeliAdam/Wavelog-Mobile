@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/contest_model.dart';
 import '../../../providers/remote_datasource_provider.dart';
+import '../../widgets/common/empty_state.dart';
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 
@@ -48,30 +50,10 @@ class ContestSessionListScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text(localizeError(context, e))),
         data: (list) {
           if (list.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.emoji_events_outlined,
-                        size: 64,
-                        color: Theme.of(context).colorScheme.outline),
-                    const SizedBox(height: 16),
-                    Text(l10n.noContestSessions,
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.noContestSessionsHint,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
+            return EmptyState(
+              icon: Icons.emoji_events_outlined,
+              title: l10n.noContestSessions,
+              subtitle: l10n.noContestSessionsHint,
             );
           }
           return RefreshIndicator(
@@ -182,12 +164,12 @@ class _SessionCard extends ConsumerWidget {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: active
-                        ? Colors.green.withValues(alpha: 0.15)
+                        ? kOnAir.withValues(alpha: 0.15)
                         : cs.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(4),
                     border: Border.all(
                       color: active
-                          ? Colors.green.withValues(alpha: 0.5)
+                          ? kOnAir.withValues(alpha: 0.5)
                           : cs.outline.withValues(alpha: 0.4),
                     ),
                   ),
@@ -196,7 +178,7 @@ class _SessionCard extends ConsumerWidget {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: active ? Colors.green : cs.onSurfaceVariant,
+                      color: active ? kOnAir : cs.onSurfaceVariant,
                     ),
                   ),
                 ),

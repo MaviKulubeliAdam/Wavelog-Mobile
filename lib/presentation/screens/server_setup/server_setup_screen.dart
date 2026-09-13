@@ -97,6 +97,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
       body: SafeArea(
@@ -112,7 +113,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                   Icon(
                     Icons.cell_tower,
                     size: 64,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: cs.primary,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -128,7 +129,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                     l10n.serverSetupSubtitle,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: cs.secondary,
                         ),
                   ),
                   const SizedBox(height: 40),
@@ -146,7 +147,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                     onFieldSubmitted: (_) => _saveAndContinue(),
                     validator: validateServerUrl,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   OutlinedButton.icon(
                     onPressed: _testing ? null : _testConnection,
                     icon: _testing
@@ -168,7 +169,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                           _testSuccess
                               ? Icons.check_circle_outline
                               : Icons.error_outline,
-                          color: _testSuccess ? Colors.green : Colors.red,
+                          color: _testSuccess ? Colors.green : cs.error,
                           size: 16,
                         ),
                         const SizedBox(width: 8),
@@ -176,8 +177,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                           child: Text(
                             _testResult!,
                             style: TextStyle(
-                              color:
-                                  _testSuccess ? Colors.green : Colors.red,
+                              color: _testSuccess ? Colors.green : cs.error,
                               fontSize: 13,
                             ),
                           ),
@@ -190,9 +190,6 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                     onPressed: _saveAndContinue,
                     icon: const Icon(Icons.arrow_forward),
                     label: Text(l10n.continueBtn),
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
                   ),
                 ],
               ),

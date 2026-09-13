@@ -39,14 +39,14 @@ class SetupGuideScreen extends ConsumerWidget {
       appBar: AppBar(title: Text(l10n.setupGuideTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           children: [
             Icon(
               Icons.cell_tower,
               size: 56,
               color: cs.primary,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             Text(
               l10n.setupGuideIntro,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -57,7 +57,7 @@ class SetupGuideScreen extends ConsumerWidget {
 
             // Patch requirement warning banner
             Container(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: cs.errorContainer.withValues(alpha: 0.4),
                 borderRadius: BorderRadius.circular(12),
@@ -67,7 +67,7 @@ class SetupGuideScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(Icons.warning_amber_rounded, color: cs.error, size: 20),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       l10n.setupGuidePatchWarning,
@@ -79,7 +79,7 @@ class SetupGuideScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
             // Patch install step (step 0)
             _GuideStep(
@@ -113,9 +113,6 @@ class SetupGuideScreen extends ConsumerWidget {
               onPressed: () => _continue(context, ref),
               icon: const Icon(Icons.arrow_forward),
               label: Text(l10n.setupGuideContinueBtn),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-              ),
             ),
           ],
         ),
@@ -141,7 +138,7 @@ class _GuideStep extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

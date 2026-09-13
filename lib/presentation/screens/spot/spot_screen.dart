@@ -17,6 +17,7 @@ import '../../../providers/settings_provider.dart';
 import '../../../providers/sota_spot_provider.dart';
 import '../../../providers/wwff_spot_provider.dart';
 import '../../../router.dart';
+import '../../widgets/common/empty_state.dart';
 
 // Currently selected activity type
 final _selectedActivityProvider =
@@ -198,7 +199,10 @@ class _ActivitySelector extends StatelessWidget {
                     Text(type.icon,
                         style: TextStyle(
                             fontSize: 18,
-                            color: isAvailable ? null : Colors.grey)),
+                            color: isAvailable
+                                ? null
+                                : theme.colorScheme.onSurface
+                                    .withValues(alpha: 0.35))),
                     const SizedBox(width: 6),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -464,20 +468,9 @@ class _SpotListSection extends StatelessWidget {
     return spots.when(
       data: (list) {
         if (list.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.wifi_tethering_off,
-                    size: 48,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withValues(alpha: 0.3)),
-                const SizedBox(height: 12),
-                Text(l10n.spotNoResults),
-              ],
-            ),
+          return EmptyState(
+            icon: Icons.wifi_tethering_off,
+            title: l10n.spotNoResults,
           );
         }
         return RefreshIndicator(
@@ -495,36 +488,14 @@ class _SpotListSection extends StatelessWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.cloud_off, size: 48),
-              const SizedBox(height: 12),
-              Text(l10n.spotLoadError,
-                  style: Theme.of(context).textTheme.titleSmall),
-              if (showErrorDetails) ...[
-                const SizedBox(height: 6),
-                Text(
-                  localizeError(context, e),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.6)),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-              const SizedBox(height: 12),
-              FilledButton.icon(
-                onPressed: onRefresh,
-                icon: const Icon(Icons.refresh),
-                label: Text(l10n.retry),
-              ),
-            ],
-          ),
+      error: (e, _) => EmptyState(
+        icon: Icons.cloud_off,
+        title: l10n.spotLoadError,
+        subtitle: showErrorDetails ? localizeError(context, e) : null,
+        action: FilledButton.icon(
+          onPressed: onRefresh,
+          icon: const Icon(Icons.refresh),
+          label: Text(l10n.retry),
         ),
       ),
     );

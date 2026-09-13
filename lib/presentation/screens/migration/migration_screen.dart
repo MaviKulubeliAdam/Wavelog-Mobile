@@ -106,7 +106,7 @@ class _MigrationScreenState extends ConsumerState<MigrationScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -125,13 +125,13 @@ class _MigrationScreenState extends ConsumerState<MigrationScreen> {
                   style: tt.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 Text(
                   l10n.migrationBody,
                   style: tt.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 28),
+                const SizedBox(height: 24),
 
                 _StepCard(
                   number: '1',
@@ -176,7 +176,7 @@ class _MigrationScreenState extends ConsumerState<MigrationScreen> {
                   onSubmitted: (_) => _validateAndSave(),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
 
                 FilledButton.icon(
                   onPressed: _validating ? null : _validateAndSave,
@@ -191,18 +191,18 @@ class _MigrationScreenState extends ConsumerState<MigrationScreen> {
                       ? l10n.migrationValidating
                       : l10n.migrationValidateBtn),
                   style: FilledButton.styleFrom(
-                    minimumSize: const Size.fromHeight(52),
+                    minimumSize: const Size.fromHeight(48),
                   ),
                 ),
 
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
 
                 OutlinedButton.icon(
                   onPressed: _openPatch,
                   icon: const Icon(Icons.help_outline_rounded, size: 18),
                   label: Text(l10n.migrationHelpBtn),
                   style: OutlinedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(44),
+                    minimumSize: const Size.fromHeight(48),
                   ),
                 ),
               ],
@@ -233,7 +233,7 @@ class _StepCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: cs.surfaceContainerLow,
@@ -252,7 +252,7 @@ class _StepCard extends StatelessWidget {
             ),
             child: Icon(icon, size: 20, color: cs.onPrimaryContainer),
           ),
-          const SizedBox(width: 14),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

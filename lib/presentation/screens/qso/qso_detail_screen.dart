@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/adif_generator.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/callsign_lookup_model.dart';
@@ -88,7 +89,8 @@ class _QsoDetailView extends ConsumerWidget {
             ),
             TextButton(
               onPressed: () => Navigator.pop(ctx, true),
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error),
               child: Text(l10n.delete),
             ),
           ],
@@ -102,7 +104,8 @@ class _QsoDetailView extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(qso.callsign,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(
+                fontWeight: FontWeight.bold, fontFamily: kMonoFontFamily)),
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
@@ -138,14 +141,18 @@ class _QsoDetailView extends ConsumerWidget {
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.orange.shade900,
-                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Row(children: [
-                const Icon(Icons.cloud_off, color: Colors.white, size: 18),
+                Icon(Icons.cloud_off,
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                    size: 18),
                 const SizedBox(width: 8),
                 Text(l10n.localNotSynced,
-                    style: const TextStyle(color: Colors.white, fontSize: 13)),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onErrorContainer,
+                        fontSize: 13)),
               ]),
             ),
 
@@ -163,8 +170,8 @@ class _QsoDetailView extends ConsumerWidget {
             icon: Icons.signal_cellular_alt,
             children: [
               _TwoCol(
-                left: _LabelValue(l10n.rstSent, qso.rstSent),
-                right: _LabelValue(l10n.rstReceived, qso.rstRcvd),
+                left: _LabelValue(l10n.rstSent, qso.rstSent, mono: true),
+                right: _LabelValue(l10n.rstReceived, qso.rstRcvd, mono: true),
               ),
               if (qso.txPower != null && qso.txPower!.isNotEmpty)
                 _LabelValue(l10n.txPower, '${qso.txPower} W'),
@@ -193,7 +200,7 @@ class _QsoDetailView extends ConsumerWidget {
               if (qso.qth != null && qso.qth!.isNotEmpty)
                 _LabelValue('QTH', qso.qth!),
               if (qso.gridSquare != null && qso.gridSquare!.isNotEmpty)
-                _LabelValue(l10n.gridSquare, qso.gridSquare!),
+                _LabelValue(l10n.gridSquare, qso.gridSquare!, mono: true),
               if (qso.country != null && qso.country!.isNotEmpty)
                 _LabelValue(l10n.country, qso.country!),
               if (qso.dxcc != null && qso.dxcc!.isNotEmpty)
@@ -248,7 +255,7 @@ class _QsoDetailView extends ConsumerWidget {
                 if (qso.myCallsign != null && qso.myCallsign!.isNotEmpty)
                   _LabelValue(l10n.callsign, qso.myCallsign!),
                 if (qso.myGridSquare != null && qso.myGridSquare!.isNotEmpty)
-                  _LabelValue(l10n.gridSquare, qso.myGridSquare!),
+                  _LabelValue(l10n.gridSquare, qso.myGridSquare!, mono: true),
                 if (qso.myCity != null && qso.myCity!.isNotEmpty)
                   _LabelValue(l10n.city, qso.myCity!),
                 if (qso.myCountry != null && qso.myCountry!.isNotEmpty)
@@ -677,7 +684,10 @@ class _HeroCard extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: kMonoFontFamily,
+                              ),
                         ),
                       ),
                       if (qso.name != null && qso.name!.isNotEmpty)
@@ -716,7 +726,7 @@ class _HeroCard extends StatelessWidget {
                     textColor: cs.onTertiaryContainer),
                 if (freq != null)
                   _Chip(label: freq, color: cs.surfaceContainerHighest,
-                      textColor: cs.onSurface),
+                      textColor: cs.onSurface, mono: true),
               ],
             ),
             const SizedBox(height: 12),
@@ -863,9 +873,9 @@ class _ConfirmedChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.primary;
-    final bg = Theme.of(context).colorScheme.primaryContainer;
-    final textColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final color = context.semanticColors.confirmed;
+    final bg = color.withValues(alpha: 0.15);
+    final textColor = color;
 
     final icon = switch (type) {
       'LoTW'    => Icons.cloud_done_outlined,
@@ -931,8 +941,9 @@ class _QslRow extends StatelessWidget {
           SizedBox(
             width: 100,
             child: Text(label,
-                style: const TextStyle(
-                    color: Colors.grey, fontSize: 13)),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 13)),
           ),
           Expanded(
             child: Wrap(
@@ -977,14 +988,15 @@ class _QslStatusChip extends StatelessWidget {
     final l10n = context.l10n;
     final prefix = isSent ? l10n.qslSent : l10n.qslReceived;
 
+    final cs = Theme.of(context).colorScheme;
     final (color, icon) = switch (status.toUpperCase()) {
-      'Y' => (Colors.green, Icons.check_circle),
-      'R' => (Colors.orange, Icons.hourglass_top),
-      'M' => (Colors.orange, Icons.hourglass_empty),
-      'N' => (Colors.grey, Icons.cancel_outlined),
-      'I' => (Colors.red, Icons.block),
-      ''  => (Colors.blue, Icons.hourglass_empty),
-      _ => (Colors.grey, Icons.help_outline),
+      'Y' => (context.semanticColors.confirmed, Icons.check_circle),
+      'R' => (cs.tertiary, Icons.hourglass_top),
+      'M' => (cs.tertiary, Icons.hourglass_empty),
+      'N' => (cs.outline, Icons.cancel_outlined),
+      'I' => (cs.error, Icons.block),
+      ''  => (cs.primary, Icons.hourglass_empty),
+      _ => (cs.outline, Icons.help_outline),
     };
 
     final label = switch (status.toUpperCase()) {
@@ -1177,7 +1189,8 @@ class _TwoCol extends StatelessWidget {
 class _LabelValue extends StatelessWidget {
   final String label;
   final String value;
-  const _LabelValue(this.label, this.value);
+  final bool mono;
+  const _LabelValue(this.label, this.value, {this.mono = false});
 
   @override
   Widget build(BuildContext context) {
@@ -1191,16 +1204,18 @@ class _LabelValue extends StatelessWidget {
             width: 120,
             child: Text(
               label,
-              style: const TextStyle(
-                  color: Colors.grey,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 13),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: mono ? kMonoFontFamily : null),
             ),
           ),
         ],
@@ -1213,10 +1228,12 @@ class _Chip extends StatelessWidget {
   final String label;
   final Color color;
   final Color textColor;
+  final bool mono;
   const _Chip(
       {required this.label,
       required this.color,
-      required this.textColor});
+      required this.textColor,
+      this.mono = false});
 
   @override
   Widget build(BuildContext context) {
@@ -1231,6 +1248,7 @@ class _Chip extends StatelessWidget {
         style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 12,
+            fontFamily: mono ? kMonoFontFamily : null,
             color: textColor),
       ),
     );

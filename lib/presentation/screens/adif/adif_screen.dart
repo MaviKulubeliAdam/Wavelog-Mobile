@@ -522,6 +522,7 @@ class _StatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final cs = Theme.of(context).colorScheme;
 
     if (adifState.operation == AdifOperation.success &&
         controller.index == tabIndex) {
@@ -530,19 +531,27 @@ class _StatusCard extends StatelessWidget {
       final successText = tabIndex == 0
           ? l10n.qsoImported(adifState.processedCount, adifState.totalCount)
           : l10n.qsoExported(adifState.processedCount);
+      const successColor = Colors.green;
       return Card(
-        color: Colors.green.shade900,
+        color: successColor.withAlpha(31),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: successColor.shade700.withAlpha(120)),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                const Icon(Icons.check_circle, color: Colors.white),
+                Icon(Icons.check_circle, color: successColor.shade700),
                 const SizedBox(width: 10),
-                Text(successText,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                Expanded(
+                  child: Text(successText,
+                      style: TextStyle(
+                          color: successColor.shade700,
+                          fontWeight: FontWeight.bold)),
+                ),
               ]),
 
               if (path != null) ...[
@@ -550,18 +559,18 @@ class _StatusCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.black26,
-                    borderRadius: BorderRadius.circular(6),
+                    color: cs.surface.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(children: [
-                    const Icon(Icons.folder_outlined,
-                        color: Colors.white70, size: 16),
+                    Icon(Icons.folder_outlined,
+                        color: cs.onSurfaceVariant, size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         path,
-                        style: const TextStyle(
-                            color: Colors.white70,
+                        style: TextStyle(
+                            color: cs.onSurfaceVariant,
                             fontSize: 11,
                             fontFamily: kMonoFontFamily),
                       ),
@@ -573,13 +582,13 @@ class _StatusCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _copyPath(context, path),
-                      icon: const Icon(Icons.copy, size: 15,
-                          color: Colors.white),
+                      icon: Icon(Icons.copy, size: 15,
+                          color: successColor.shade700),
                       label: Text(l10n.copyPath,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 13)),
+                          style: TextStyle(
+                              color: successColor.shade700, fontSize: 13)),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white38),
+                        side: BorderSide(color: successColor.shade700.withAlpha(140)),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
@@ -588,13 +597,13 @@ class _StatusCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _reshare(path),
-                      icon: const Icon(Icons.share, size: 15,
-                          color: Colors.white),
+                      icon: Icon(Icons.share, size: 15,
+                          color: successColor.shade700),
                       label: Text(l10n.reshare,
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 13)),
+                          style: TextStyle(
+                              color: successColor.shade700, fontSize: 13)),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white38),
+                        side: BorderSide(color: successColor.shade700.withAlpha(140)),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
@@ -609,11 +618,11 @@ class _StatusCard extends StatelessWidget {
 
     if (adifState.operation == AdifOperation.error) {
       return Card(
-        color: Colors.red.shade900,
+        color: cs.errorContainer,
         child: ListTile(
-          leading: const Icon(Icons.error, color: Colors.white),
+          leading: Icon(Icons.error, color: cs.onErrorContainer),
           title: Text(adifState.errorMessage ?? l10n.error,
-              style: const TextStyle(color: Colors.white)),
+              style: TextStyle(color: cs.onErrorContainer)),
         ),
       );
     }

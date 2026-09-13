@@ -6,6 +6,7 @@ import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/planned_activation_model.dart';
 import '../../../providers/community_provider.dart';
 import '../../../providers/settings_provider.dart';
+import '../../widgets/common/empty_state.dart';
 import 'chat_rooms_screen.dart';
 import 'community_auth_gate.dart';
 import '../../../providers/callsign_claim_provider.dart';
@@ -70,35 +71,17 @@ class _ActivationList extends ConsumerWidget {
 
     return activationsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.cloud_off, size: 48),
-            const SizedBox(height: 12),
-            Text('Connection error',
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 4),
-            Text('$e', style: Theme.of(context).textTheme.bodySmall),
-          ],
-        ),
+      error: (e, _) => EmptyState(
+        icon: Icons.cloud_off,
+        title: 'Connection error',
+        subtitle: '$e',
       ),
       data: (activations) {
         if (activations.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.radio_outlined, size: 64, color: Colors.grey),
-                const SizedBox(height: 16),
-                Text(context.l10n.communityNoActivations),
-                const SizedBox(height: 8),
-                Text(
-                  context.l10n.communityBeFirst,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
+          return EmptyState(
+            icon: Icons.radio_outlined,
+            title: context.l10n.communityNoActivations,
+            subtitle: context.l10n.communityBeFirst,
           );
         }
         return RefreshIndicator(

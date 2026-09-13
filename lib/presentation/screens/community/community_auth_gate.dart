@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/callsign_claim_provider.dart';
+import '../../widgets/common/empty_state.dart';
 
 /// Wraps community content with Google sign-in + callsign verification.
 /// Shows child only when the user is signed in and their callsign is verified.
@@ -26,7 +27,7 @@ class CommunityAuthGate extends ConsumerWidget {
             return _SignInView();
 
           case ClaimState.noCallsign:
-            return _InfoView(
+            return EmptyState(
               icon: Icons.radio_outlined,
               title: context.l10n.chatNoStation,
               subtitle: context.l10n.communitySignInNoStation,
@@ -153,38 +154,7 @@ class _TakenView extends ConsumerWidget {
   }
 }
 
-// ── Generic info screen ───────────────────────────────────────────────────────
-
-class _InfoView extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  const _InfoView(
-      {required this.icon, required this.title, required this.subtitle});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text(title,
-                style: Theme.of(context).textTheme.titleMedium,
-                textAlign: TextAlign.center),
-            const SizedBox(height: 8),
-            Text(subtitle,
-                style: const TextStyle(color: Colors.grey),
-                textAlign: TextAlign.center),
-          ],
-        ),
-      ),
-    );
-  }
-}
+// ── Error screen ───────────────────────────────────────────────────────────
 
 class _ErrorView extends StatelessWidget {
   final String message;
@@ -192,13 +162,14 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+            Icon(Icons.error_outline, size: 48, color: cs.error),
             const SizedBox(height: 12),
             Text(message,
                 textAlign: TextAlign.center,

@@ -7,6 +7,7 @@ import '../../../data/models/chat_message_model.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/chat_provider.dart';
 import '../../../providers/settings_provider.dart';
+import '../../widgets/common/empty_state.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String roomId;
@@ -120,27 +121,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               error: (e, _) => Center(child: Text('$e')),
               data: (messages) {
                 if (messages.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.chat_bubble_outline,
-                            size: 48,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant
-                                .withValues(alpha: 0.4)),
-                        const SizedBox(height: 12),
-                        Text(
-                          'İlk mesajı sen gönder!',
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
+                  return const EmptyState(
+                    icon: Icons.chat_bubble_outline,
+                    title: 'İlk mesajı sen gönder!',
                   );
                 }
                 WidgetsBinding.instance
@@ -359,7 +342,7 @@ class _MessageBubble extends ConsumerWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: cs.shadow.withValues(alpha: 0.06),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -531,15 +514,8 @@ class _MessageBubble extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 36,
-              height: 4,
-              margin: const EdgeInsets.only(top: 8, bottom: 4),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade400,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+            // Drag handle now comes from the central bottomSheetTheme
+            // (showDragHandle: true) — no need to draw one manually here.
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
@@ -730,7 +706,7 @@ class _InputBar extends StatelessWidget {
           color: cs.surface,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: cs.shadow.withValues(alpha: 0.06),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
