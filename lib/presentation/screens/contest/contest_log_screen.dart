@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/constants/band_mode_data.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/adif_generator.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/responsive.dart';
@@ -1114,7 +1115,7 @@ class _ContestInfoPanel extends ConsumerWidget {
           Text(
             callsign,
             style: theme.textTheme.titleLarge?.copyWith(
-              fontFamily: 'monospace',
+              fontFamily: kMonoFontFamily,
               fontWeight: FontWeight.bold,
               color: cs.primary,
               letterSpacing: 1.5,

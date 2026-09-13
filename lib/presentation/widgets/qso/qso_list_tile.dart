@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/callsign_flags.dart';
 import '../../../data/models/qso_model.dart';
 
@@ -26,12 +27,12 @@ class QsoListTile extends StatelessWidget {
               qso.callsign.toUpperCase(),
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                fontFamily: 'monospace',
+                fontFamily: kMonoFontFamily,
               ),
             ),
             const SizedBox(width: 8),
             if (!qso.synced)
-              const Icon(Icons.cloud_off, size: 14, color: Colors.orange),
+              const Icon(Icons.cloud_off, size: 14, color: kOnAir),
           ],
         ),
         subtitle: Text(
@@ -45,14 +46,14 @@ class QsoListTile extends StatelessWidget {
             Text(
               qso.rstSent,
               style: theme.textTheme.labelMedium?.copyWith(
-                fontFamily: 'monospace',
+                fontFamily: kMonoFontFamily,
               ),
             ),
             Text(
               qso.rstRcvd,
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.secondary,
-                fontFamily: 'monospace',
+                fontFamily: kMonoFontFamily,
               ),
             ),
           ],

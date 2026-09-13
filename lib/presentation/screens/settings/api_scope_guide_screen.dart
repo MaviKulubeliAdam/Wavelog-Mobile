@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/l10n_extension.dart';
 
 class ApiScopeGuideScreen extends StatelessWidget {
@@ -195,7 +196,7 @@ class _ScopeRow extends StatelessWidget {
                   child: Text(
                     scope,
                     style: TextStyle(
-                      fontFamily: 'monospace',
+                      fontFamily: kMonoFontFamily,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: cs.onSurfaceVariant,

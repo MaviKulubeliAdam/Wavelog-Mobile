@@ -576,7 +576,7 @@ class _StatCard extends StatelessWidget {
               value,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                fontFamily: 'monospace',
+                fontFamily: kMonoFontFamily,
               ),
             ),
             Text(label,

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../core/constants/band_mode_data.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/responsive.dart';
@@ -1531,7 +1532,7 @@ class _TabletInfoPanel extends ConsumerWidget {
           Text(
             callsign,
             style: theme.textTheme.titleLarge?.copyWith(
-              fontFamily: 'monospace',
+              fontFamily: kMonoFontFamily,
               fontWeight: FontWeight.bold,
               color: cs.primary,
               letterSpacing: 1.5,
@@ -2037,7 +2038,7 @@ class _QsoHistoryRow extends StatelessWidget {
             width: 90,
             child: Text(
               '$date\n$time UTC',
-              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+              style: const TextStyle(fontSize: 11, fontFamily: kMonoFontFamily),
             ),
           ),
           const SizedBox(width: 6),
@@ -2163,7 +2164,7 @@ class _InlineQsoRow extends StatelessWidget {
           Expanded(
             child: Text(
               '$dateStr UTC',
-              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+              style: const TextStyle(fontSize: 11, fontFamily: kMonoFontFamily),
             ),
           ),
           _HistoryBadge(qso.band, cs.primaryContainer, cs.onPrimaryContainer),
@@ -2348,7 +2349,7 @@ class _LogbookRow extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                   fontSize: 10,
-                  fontFamily: 'monospace',
+                  fontFamily: kMonoFontFamily,
                   color: cs.onSurfaceVariant),
             ),
           ),
@@ -2362,7 +2363,7 @@ class _LogbookRow extends StatelessWidget {
               style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'monospace',
+                  fontFamily: kMonoFontFamily,
                   color: cs.primary),
             ),
           ),
@@ -2386,7 +2387,7 @@ class _LogbookRow extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 10,
-                  fontFamily: 'monospace',
+                  fontFamily: kMonoFontFamily,
                   color: cs.onSurface),
             ),
           ),
@@ -2400,7 +2401,7 @@ class _LogbookRow extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 10,
-                  fontFamily: 'monospace',
+                  fontFamily: kMonoFontFamily,
                   color: cs.onSurface),
             ),
           ),

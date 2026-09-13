@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/detailed_statistics_model.dart';
@@ -857,7 +858,7 @@ class _StatCard extends StatelessWidget {
               value,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                fontFamily: 'monospace',
+                fontFamily: kMonoFontFamily,
               ),
             ),
             Text(
@@ -904,7 +905,7 @@ class _HighlightCard extends StatelessWidget {
                     value,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'monospace',
+                      fontFamily: kMonoFontFamily,
                     ),
                   ),
                   Text(

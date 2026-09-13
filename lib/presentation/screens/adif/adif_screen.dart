@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/adif_provider.dart';
 import '../../../providers/station_provider.dart';
@@ -562,7 +563,7 @@ class _StatusCard extends StatelessWidget {
                         style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 11,
-                            fontFamily: 'monospace'),
+                            fontFamily: kMonoFontFamily),
                       ),
                     ),
                   ]),

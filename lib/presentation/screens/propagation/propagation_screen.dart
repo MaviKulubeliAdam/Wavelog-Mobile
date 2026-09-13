@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/solar_data_model.dart';
@@ -190,7 +191,7 @@ class _IndexCard extends StatelessWidget {
               value,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontFamily: 'monospace',
+                    fontFamily: kMonoFontFamily,
                     color: color,
                   ),
               maxLines: 1,
@@ -295,7 +296,7 @@ class _BandConditionsTable extends StatelessWidget {
       child: Text(
         band,
         style: const TextStyle(
-            fontFamily: 'monospace',
+            fontFamily: kMonoFontFamily,
             fontSize: 12,
             fontWeight: FontWeight.w600),
       ),

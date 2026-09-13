@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/l10n_extension.dart';
 
 const _prefKey = 'wavelog_v32_patch_notice_shown';
@@ -198,7 +199,7 @@ class _ScopesPage extends StatelessWidget {
                   title: Text(
                     _scopeNames[i],
                     style: const TextStyle(
-                        fontFamily: 'monospace',
+                        fontFamily: kMonoFontFamily,
                         fontSize: 13,
                         fontWeight: FontWeight.w600),
                   ),

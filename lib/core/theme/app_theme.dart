@@ -38,9 +38,92 @@ OutlineInputBorder _border(Color c, {double w = 1.0}) => OutlineInputBorder(
       borderSide: BorderSide(color: c, width: w),
     );
 
+// ── Typography ────────────────────────────────────────────────────────────────
+// Manrope for headings, Inter for body/UI (set as ThemeData.fontFamily below),
+// JetBrains Mono for callsigns/RST/grid squares — chosen over a generic
+// monospace for disambiguated glyphs (0 vs O, 1 vs l vs I) which matters for
+// values that mix letters and digits. All three are vendored under
+// assets/fonts/ (no runtime Google Fonts fetch — this app is used offline in
+// the field and ships a network-averse F-Droid build).
+const String kHeadingFontFamily = 'Manrope';
+const String kBodyFontFamily = 'Inter';
+const String kMonoFontFamily = 'JetBrains Mono';
+
+const TextStyle monoLabelLarge = TextStyle(
+  fontFamily: kMonoFontFamily,
+  fontWeight: FontWeight.w600,
+  fontSize: 15,
+  letterSpacing: 0.1,
+);
+const TextStyle monoLabelMedium = TextStyle(
+  fontFamily: kMonoFontFamily,
+  fontWeight: FontWeight.w500,
+  fontSize: 13,
+);
+const TextStyle monoLabelSmall = TextStyle(
+  fontFamily: kMonoFontFamily,
+  fontWeight: FontWeight.w500,
+  fontSize: 11,
+);
+
+// ── Semantic status colors (QSO confirmation state) ──────────────────────────
+// Additive alongside the seed/accent palette above, not a replacement.
+// Brighter values for dark surfaces, deeper values for light surfaces so
+// contrast holds in both modes.
+@immutable
+class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
+  final Color confirmed; // LoTW/eQSL confirmed QSO
+  final Color duplicate; // possible duplicate contact
+  final Color needed; // new DXCC / "needed" entity
+
+  const AppSemanticColors({
+    required this.confirmed,
+    required this.duplicate,
+    required this.needed,
+  });
+
+  static const dark = AppSemanticColors(
+    confirmed: Color(0xFF10B981),
+    duplicate: Color(0xFFF59E0B),
+    needed: Color(0xFF8B5CF6),
+  );
+  static const light = AppSemanticColors(
+    confirmed: Color(0xFF059669),
+    duplicate: Color(0xFFD97706),
+    needed: Color(0xFF7C3AED),
+  );
+
+  @override
+  AppSemanticColors copyWith(
+          {Color? confirmed, Color? duplicate, Color? needed}) =>
+      AppSemanticColors(
+        confirmed: confirmed ?? this.confirmed,
+        duplicate: duplicate ?? this.duplicate,
+        needed: needed ?? this.needed,
+      );
+
+  @override
+  AppSemanticColors lerp(ThemeExtension<AppSemanticColors>? other, double t) {
+    if (other is! AppSemanticColors) return this;
+    return AppSemanticColors(
+      confirmed: Color.lerp(confirmed, other.confirmed, t)!,
+      duplicate: Color.lerp(duplicate, other.duplicate, t)!,
+      needed: Color.lerp(needed, other.needed, t)!,
+    );
+  }
+}
+
+/// `Theme.of(context).semanticColors` — confirmed/duplicate/needed QSO colors.
+extension AppSemanticColorsX on BuildContext {
+  AppSemanticColors get semanticColors =>
+      Theme.of(this).extension<AppSemanticColors>()!;
+}
+
 // ── Dark Theme ────────────────────────────────────────────────────────────────
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
+  fontFamily: kBodyFontFamily,
+  extensions: const [AppSemanticColors.dark],
   colorScheme: ColorScheme.fromSeed(
     seedColor: _seed,
     brightness: Brightness.dark,
@@ -66,6 +149,7 @@ final ThemeData darkTheme = ThemeData(
     surfaceTintColor: Colors.transparent,
     foregroundColor: Colors.white,
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 19,
       fontWeight: FontWeight.w700,
       color: Colors.white,
@@ -194,6 +278,25 @@ final ThemeData darkTheme = ThemeData(
     }),
   ),
 
+  // ── Bottom App Bar (Modern shell) ────────────────────────────────────────────
+  bottomAppBarTheme: const BottomAppBarThemeData(
+    color: _darkSurface,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    height: 70,
+    shape: CircularNotchedRectangle(),
+  ),
+
+  // ── Drawer (Modern shell) ─────────────────────────────────────────────────────
+  drawerTheme: const DrawerThemeData(
+    backgroundColor: _darkSurface,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+    ),
+  ),
+
   // ── Chips ──────────────────────────────────────────────────────────────────
   chipTheme: ChipThemeData(
     showCheckmark: false,
@@ -225,6 +328,7 @@ final ThemeData darkTheme = ThemeData(
       side: const BorderSide(color: _darkBorderMid),
     ),
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 17,
       fontWeight: FontWeight.w700,
       color: Colors.white,
@@ -299,14 +403,22 @@ final ThemeData darkTheme = ThemeData(
 
   // ── Text Theme ─────────────────────────────────────────────────────────────
   textTheme: const TextTheme(
-    headlineLarge:
-        TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1.0),
-    headlineMedium:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.5),
-    headlineSmall:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.3),
-    titleLarge:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.2),
+    headlineLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0),
+    headlineMedium: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5),
+    headlineSmall: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3),
+    titleLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2),
     titleMedium:
         TextStyle(fontWeight: FontWeight.w600, letterSpacing: -0.1),
     titleSmall: TextStyle(fontWeight: FontWeight.w600),
@@ -321,6 +433,8 @@ final ThemeData darkTheme = ThemeData(
 // ── Light Theme ───────────────────────────────────────────────────────────────
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
+  fontFamily: kBodyFontFamily,
+  extensions: const [AppSemanticColors.light],
   colorScheme: ColorScheme.fromSeed(
     seedColor: _seed,
     brightness: Brightness.light,
@@ -346,6 +460,7 @@ final ThemeData lightTheme = ThemeData(
     surfaceTintColor: Colors.transparent,
     foregroundColor: const Color(0xFF0F172A),
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 19,
       fontWeight: FontWeight.w700,
       color: Color(0xFF0F172A),
@@ -474,6 +589,25 @@ final ThemeData lightTheme = ThemeData(
     }),
   ),
 
+  // ── Bottom App Bar (Modern shell) ────────────────────────────────────────────
+  bottomAppBarTheme: const BottomAppBarThemeData(
+    color: _lightSurface,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    height: 70,
+    shape: CircularNotchedRectangle(),
+  ),
+
+  // ── Drawer (Modern shell) ─────────────────────────────────────────────────────
+  drawerTheme: const DrawerThemeData(
+    backgroundColor: _lightSurface,
+    surfaceTintColor: Colors.transparent,
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.horizontal(right: Radius.circular(20)),
+    ),
+  ),
+
   // ── Chips ──────────────────────────────────────────────────────────────────
   chipTheme: ChipThemeData(
     showCheckmark: false,
@@ -504,6 +638,7 @@ final ThemeData lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(_dialogRadius),
     ),
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 17,
       fontWeight: FontWeight.w700,
       color: Color(0xFF0F172A),
@@ -573,14 +708,22 @@ final ThemeData lightTheme = ThemeData(
 
   // ── Text Theme ─────────────────────────────────────────────────────────────
   textTheme: const TextTheme(
-    headlineLarge:
-        TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1.0),
-    headlineMedium:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.5),
-    headlineSmall:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.3),
-    titleLarge:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.2),
+    headlineLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0),
+    headlineMedium: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5),
+    headlineSmall: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3),
+    titleLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2),
     titleMedium:
         TextStyle(fontWeight: FontWeight.w600, letterSpacing: -0.1),
     titleSmall: TextStyle(fontWeight: FontWeight.w600),

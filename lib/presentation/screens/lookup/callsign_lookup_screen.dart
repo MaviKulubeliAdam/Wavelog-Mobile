@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/lookup_provider.dart';
@@ -117,7 +118,7 @@ class _CallsignLookupScreenState
                                 leading: const Icon(Icons.history),
                                 title: Text(hist[i],
                                     style: const TextStyle(
-                                        fontFamily: 'monospace')),
+                                        fontFamily: kMonoFontFamily)),
                                 onTap: () {
                                   _ctrl.text = hist[i];
                                   _search();

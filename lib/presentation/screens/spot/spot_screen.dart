@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/enums/activity_type.dart';
+import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/datasources/remote/pota_datasource.dart';
@@ -383,7 +384,7 @@ class _SpotTile extends StatelessWidget {
           Text(
             spot.freqDisplay,
             style: theme.textTheme.bodySmall?.copyWith(
-              fontFamily: 'monospace',
+              fontFamily: kMonoFontFamily,
               fontWeight: FontWeight.w600,
             ),
           ),
