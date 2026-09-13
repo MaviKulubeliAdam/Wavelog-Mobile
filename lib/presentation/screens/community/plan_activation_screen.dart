@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../core/constants/band_mode_data.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/planned_activation_model.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../providers/community_provider.dart';
 
 class PlanActivationScreen extends ConsumerStatefulWidget {
@@ -90,8 +91,10 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
     setState(() => _saving = true);
 
     final e = widget.existing;
+    final myUid = ref.read(firebaseAuthProvider).currentUser?.uid ?? '';
     final activation = PlannedActivationModel(
       id: _isEdit ? e!.id : '',
+      uid: _isEdit ? e!.uid : myUid,
       callsign: _callsignCtrl.text.trim().toUpperCase(),
       type: _type,
       reference: _referenceCtrl.text.trim().isEmpty

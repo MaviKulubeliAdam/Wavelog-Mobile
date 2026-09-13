@@ -4,6 +4,7 @@ enum ActivationType { sota, pota, general }
 
 class PlannedActivationModel {
   final String id;
+  final String uid;
   final String callsign;
   final ActivationType type;
   final String? reference;      // TA/AN-001 veya TA-0001
@@ -17,6 +18,7 @@ class PlannedActivationModel {
 
   const PlannedActivationModel({
     required this.id,
+    required this.uid,
     required this.callsign,
     required this.type,
     this.reference,
@@ -46,6 +48,7 @@ class PlannedActivationModel {
     final d = doc.data() as Map<String, dynamic>;
     return PlannedActivationModel(
       id: doc.id,
+      uid: d['uid'] as String? ?? '',
       callsign: d['callsign'] as String? ?? '',
       type: _parseType(d['type'] as String?),
       reference: d['reference'] as String?,
@@ -62,6 +65,7 @@ class PlannedActivationModel {
   }
 
   Map<String, dynamic> toFirestore() => {
+    'uid': uid,
     'callsign': callsign.toUpperCase(),
     'type': type.name,
     'reference': reference,

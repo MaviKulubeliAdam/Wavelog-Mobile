@@ -63,7 +63,11 @@ exports.onNewChatMessage = functions
     if (!data) return;
 
     const roomId = context.params.roomId;
-    const roomName = CHAT_ROOM_NAMES[roomId] ?? roomId;
+    // Object.hasOwn ile bak — bracket erişimi 'constructor' gibi doc id'ler
+    // için prototip zincirinden fonksiyon döndürebilir (yalın obje literal
+    // olsa da). Bilinmeyen bir odaya mesaj atılmışsa hiç bildirim gönderme.
+    if (!Object.hasOwn(CHAT_ROOM_NAMES, roomId)) return;
+    const roomName = CHAT_ROOM_NAMES[roomId];
     const preview = (data.text ?? "").slice(0, 100);
 
     await messaging.send({
