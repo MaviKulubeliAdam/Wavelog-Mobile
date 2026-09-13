@@ -232,8 +232,15 @@ bool containsProfanity(String text) {
         RegExp('(?<![a-z])${RegExp.escape(word)}(?![a-z])'))) {
       return true;
     }
-    // Full-condensed match — catches "f u c k", "f.u.c.k", mixed evasions
-    if (condensed.contains(word.replaceAll(' ', ''))) return true;
+    // Full-condensed match — catches zero-separator evasion like
+    // "killyourself". Only applied to longer entries (>=6 chars): short
+    // words ("mal", "bok", "sik", "cum", "pic"...) are exactly the ones
+    // that turn up as an innocent substring of unrelated words ("normal",
+    // "picture", "document") once every separator is stripped — the
+    // Scunthorpe problem. Those are still caught above when they appear
+    // as an actual standalone word.
+    final compact = word.replaceAll(' ', '');
+    if (compact.length >= 6 && condensed.contains(compact)) return true;
   }
   return false;
 }
