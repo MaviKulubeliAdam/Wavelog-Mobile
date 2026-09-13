@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/constants/band_mode_data.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/adif_generator.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/responsive.dart';
@@ -13,12 +14,30 @@ import '../../../data/models/callsign_lookup_model.dart';
 import '../../../data/models/contest_model.dart';
 import '../../../data/models/qso_model.dart';
 import '../../../providers/connectivity_provider.dart';
+import '../../../providers/lookup_provider.dart';
 import '../../../providers/qso_provider.dart';
 import '../../../providers/remote_datasource_provider.dart';
 import '../../../providers/settings_provider.dart';
-import 'contest_exchange_fields.dart';
-import 'contest_lookup_cards.dart';
-import 'contest_session_widgets.dart';
+
+// ── Logged QSO entry (in-memory recent list) ──────────────────────────────────
+
+class _LoggedQso {
+  final String callsign;
+  final DateTime time;
+  final int serialSent;
+  final String serialRcvd;
+  final String gridRcvd;
+  final String exchangeRcvd;
+
+  const _LoggedQso({
+    required this.callsign,
+    required this.time,
+    required this.serialSent,
+    required this.serialRcvd,
+    required this.gridRcvd,
+    required this.exchangeRcvd,
+  });
+}
 
 // ── Screen ────────────────────────────────────────────────────────────────────
 
@@ -56,7 +75,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
   final _callsignFocus    = FocusNode();
 
   bool _isSaving = false;
-  final List<LoggedQso> _recentQsos = [];
+  final List<_LoggedQso> _recentQsos = [];
 
   // ── Lookup state ──────────────────────────────────────────────────────────
   bool _lookupLoading = false;
@@ -217,7 +236,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                     width: 36, height: 4,
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                        color: Theme.of(ctx).colorScheme.outlineVariant,
+                        color: Colors.grey.shade400,
                         borderRadius: BorderRadius.circular(2)),
                   ),
                 ),
@@ -450,7 +469,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
       setState(() {
         _recentQsos.insert(
           0,
-          LoggedQso(
+          _LoggedQso(
             callsign:     callsign,
             time:         now,
             serialSent:   savedSerial,
@@ -483,7 +502,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${context.l10n.error}: $e'),
-            backgroundColor: Theme.of(context).colorScheme.error,
+            backgroundColor: Colors.red,
           ),
         );
       }
@@ -560,7 +579,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
 
     final formColumn = Column(
       children: [
-        ContestSessionBar(
+        _SessionBar(
           contestId: displayContest,
           band: _band,
           mode: _mode,
@@ -579,7 +598,6 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                 textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
                 style: tt.headlineMedium?.copyWith(
-                  fontFamily: kMonoFontFamily,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
                 ),
@@ -628,7 +646,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
               // ── Compact lookup result (phone only) ─────────────────────
               if (!isTablet && _lookupResult != null) ...[
                 const SizedBox(height: 6),
-                CompactLookupCard(info: _lookupResult!),
+                _CompactLookupCard(info: _lookupResult!),
               ],
 
               const SizedBox(height: 8),
@@ -641,7 +659,6 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                     controller: _freqCtrl,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     textInputAction: TextInputAction.next,
-                    style: const TextStyle(fontFamily: kMonoFontFamily),
                     decoration: InputDecoration(
                       labelText: l10n.frequencyField,
                       hintText: '14.225',
@@ -686,7 +703,6 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                     controller: _rstSentCtrl,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(fontFamily: kMonoFontFamily),
                     decoration: InputDecoration(
                       labelText: l10n.rstSentField,
                       border: const OutlineInputBorder(),
@@ -699,7 +715,6 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                     controller: _rstRcvdCtrl,
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(fontFamily: kMonoFontFamily),
                     decoration: InputDecoration(
                       labelText: l10n.rstRcvdField,
                       border: const OutlineInputBorder(),
@@ -707,21 +722,109 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                   ),
                 ),
               ]),
+              // ── Serial row ─────────────────────────────────────────────
+              if (_showSerial) ...[
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: l10n.serialSentLabel,
+                        border: const OutlineInputBorder(),
+                      ),
+                      child: Text(
+                        _serialSent.toString().padLeft(3, '0'),
+                        style: tt.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: cs.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _serialRcvdCtrl,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      textInputAction: _showExchange
+                          ? TextInputAction.next
+                          : TextInputAction.done,
+                      decoration: InputDecoration(
+                        labelText: l10n.serialRcvdLabel,
+                        border: const OutlineInputBorder(),
+                      ),
+                      onSubmitted: _showExchange ? null : (_) => _logQso(),
+                    ),
+                  ),
+                ]),
+              ],
 
-              ContestExchangeFields(
-                showSerial: _showSerial,
-                showGridsquare: _showGridsquare,
-                showExchange: _showExchange,
-                serialSent: _serialSent,
-                serialRcvdCtrl: _serialRcvdCtrl,
-                gridsquareSentCtrl: _gridsquareSentCtrl,
-                gridsquareRcvdCtrl: _gridsquareRcvdCtrl,
-                exchangeSentCtrl: _exchangeSentCtrl,
-                exchangeRcvdCtrl: _exchangeRcvdCtrl,
-                onGridSentChanged: (v) => _gridsquareSent = v.trim(),
-                onExchangeSentChanged: (v) => _exchangeSent = v.trim(),
-                onSubmitLog: _logQso,
-              ),
+              // ── Gridsquare row ────────────────────────────────────────
+              if (_showGridsquare) ...[
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _gridsquareSentCtrl,
+                      textCapitalization: TextCapitalization.characters,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        labelText: context.l10n.gridSentLabel,
+                        border: const OutlineInputBorder(),
+                      ),
+                      onChanged: (v) => _gridsquareSent = v.trim(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _gridsquareRcvdCtrl,
+                      textCapitalization: TextCapitalization.characters,
+                      textInputAction: _showExchange
+                          ? TextInputAction.next
+                          : TextInputAction.done,
+                      decoration: InputDecoration(
+                        labelText: context.l10n.gridRcvdLabel,
+                        border: const OutlineInputBorder(),
+                      ),
+                      onSubmitted: _showExchange ? null : (_) => _logQso(),
+                    ),
+                  ),
+                ]),
+              ],
+
+              // ── Exchange row ───────────────────────────────────────────
+              if (_showExchange) ...[
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _exchangeSentCtrl,
+                      textCapitalization: TextCapitalization.characters,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        labelText: l10n.exchangeSentLabel,
+                        border: const OutlineInputBorder(),
+                      ),
+                      onChanged: (v) => _exchangeSent = v.trim(),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _exchangeRcvdCtrl,
+                      textCapitalization: TextCapitalization.characters,
+                      textInputAction: TextInputAction.done,
+                      decoration: InputDecoration(
+                        labelText: l10n.exchangeRcvdLabel,
+                        border: const OutlineInputBorder(),
+                      ),
+                      onSubmitted: (_) => _logQso(),
+                    ),
+                  ),
+                ]),
+              ],
 
               const SizedBox(height: 12),
 
@@ -732,11 +835,11 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                 child: FilledButton.icon(
                   onPressed: _isSaving ? null : _logQso,
                   icon: _isSaving
-                      ? SizedBox(
+                      ? const SizedBox(
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: cs.onPrimary),
+                              strokeWidth: 2, color: Colors.white),
                         )
                       : const Icon(Icons.check),
                   label: Text(l10n.logQso,
@@ -769,7 +872,7 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               itemCount: _recentQsos.length,
-              itemBuilder: (ctx, i) => RecentQsoTile(
+              itemBuilder: (ctx, i) => _RecentQsoTile(
                   qso: _recentQsos[i],
                   showGrid: _showGridsquare,
                   showExch: _showExchange),
@@ -819,11 +922,489 @@ class _ContestLogScreenState extends ConsumerState<ContestLogScreen> {
                 const VerticalDivider(width: 1, thickness: 1),
                 Expanded(
                   flex: 4,
-                  child: ContestInfoPanel(callsign: _currentCallsign),
+                  child: _ContestInfoPanel(callsign: _currentCallsign),
                 ),
               ],
             )
           : formColumn,
+    );
+  }
+}
+
+// ── Session info bar ──────────────────────────────────────────────────────────
+
+class _SessionBar extends StatelessWidget {
+  final String contestId;
+  final String band;
+  final String mode;
+  final int serialSent;
+  final VoidCallback? onTap;
+
+  const _SessionBar({
+    required this.contestId,
+    required this.band,
+    required this.mode,
+    required this.serialSent,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final tt = Theme.of(context).textTheme;
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        color: cs.surfaceContainerHighest,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(children: [
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              children: [
+                if (contestId.isNotEmpty) _Chip(label: contestId, color: cs.primary),
+                _Chip(label: band,  color: cs.secondary),
+                _Chip(label: mode,  color: cs.tertiary),
+              ],
+            ),
+          ),
+          Text(
+            '# ${serialSent.toString().padLeft(3, '0')}',
+            style: tt.titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold, color: cs.primary),
+          ),
+          if (onTap != null) ...[
+            const SizedBox(width: 4),
+            Icon(Icons.edit, size: 14, color: cs.onSurfaceVariant),
+          ],
+        ]),
+      ),
+    );
+  }
+}
+
+class _Chip extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _Chip({required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: color.withValues(alpha: 0.4)),
+        ),
+        child: Text(label,
+            style: TextStyle(
+                fontSize: 12, fontWeight: FontWeight.w600, color: color)),
+      );
+}
+
+// ── Compact lookup card (phone) ───────────────────────────────────────────────
+
+class _CompactLookupCard extends StatelessWidget {
+  final CallsignLookupModel info;
+  const _CompactLookupCard({required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final hasName = info.name != null && info.name!.isNotEmpty;
+    final hasLocation = info.country != null || info.qth != null;
+    if (!hasName && !hasLocation) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: cs.outline.withValues(alpha: 0.3)),
+      ),
+      child: Row(children: [
+        if (info.flag != null && info.flag!.isNotEmpty) ...[
+          Text(info.flag!, style: const TextStyle(fontSize: 18)),
+          const SizedBox(width: 8),
+        ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (hasName)
+                Text(info.name!,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                    overflow: TextOverflow.ellipsis),
+              if (hasLocation)
+                Text(
+                  [info.qth, info.country]
+                      .whereType<String>()
+                      .join(', '),
+                  style: TextStyle(
+                      fontSize: 12, color: cs.onSurfaceVariant),
+                  overflow: TextOverflow.ellipsis,
+                ),
+            ],
+          ),
+        ),
+        if (info.workedBefore) ...[
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.green.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.green.withValues(alpha: 0.4)),
+            ),
+            child: const Text('B4',
+                style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ]),
+    );
+  }
+}
+
+// ── Tablet info panel ─────────────────────────────────────────────────────────
+
+class _ContestInfoPanel extends ConsumerWidget {
+  final String callsign;
+  const _ContestInfoPanel({required this.callsign});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs    = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
+    if (callsign.length < 3) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.person_search_outlined,
+                  size: 72, color: cs.outlineVariant),
+              const SizedBox(height: 16),
+              Text(
+                context.l10n.counterStation,
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final lookupAsync = ref.watch(callsignInfoProvider(callsign));
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(12, 16, 16, 16),
+      children: [
+        Row(children: [
+          Icon(Icons.radio, size: 16, color: cs.primary),
+          const SizedBox(width: 6),
+          Text(
+            callsign,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.bold,
+              color: cs.primary,
+              letterSpacing: 1.5,
+            ),
+          ),
+        ]),
+        const SizedBox(height: 12),
+        lookupAsync.when(
+          loading: () => const LinearProgressIndicator(minHeight: 2),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (info) => _FullLookupCard(info: info),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Full lookup card (tablet) ─────────────────────────────────────────────────
+
+class _FullLookupCard extends StatelessWidget {
+  final CallsignLookupModel info;
+  const _FullLookupCard({required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs    = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
+    final hasPhoto = info.imageUrl != null && info.imageUrl!.isNotEmpty;
+    final hasBasicInfo = info.name != null || info.country != null;
+    final hasChips = info.dxcc != null ||
+        info.gridSquare != null ||
+        info.cqZone != null ||
+        info.ituZone != null ||
+        info.continent != null;
+    final hasQsl = info.lotwMember || info.eqslMember || info.buqslMember;
+
+    if (!hasBasicInfo && !hasPhoto && !hasChips && !hasQsl) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Photo + name/country ───────────────────────────────────
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (hasPhoto) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: info.imageUrl!,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => _photoPlaceholder(cs),
+                      errorWidget: (_, __, ___) => _photoPlaceholder(cs),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (info.name != null)
+                        Text(
+                          info.name!,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600),
+                        ),
+                      if (info.qth != null || info.country != null) ...[
+                        const SizedBox(height: 2),
+                        Row(children: [
+                          if (info.flag != null && info.flag!.isNotEmpty) ...[
+                            Text(info.flag!,
+                                style: const TextStyle(fontSize: 14)),
+                            const SizedBox(width: 4),
+                          ],
+                          Expanded(
+                            child: Text(
+                              [info.qth, info.country]
+                                  .whereType<String>()
+                                  .join(', '),
+                              style: TextStyle(
+                                  fontSize: 12, color: cs.onSurfaceVariant),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ]),
+                      ],
+                      if (info.workedBefore) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: Colors.green.withValues(alpha: 0.4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.check_circle_outline,
+                                  size: 12, color: Colors.green),
+                              const SizedBox(width: 4),
+                              Text(context.l10n.workedBefore,
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // ── Info chips ─────────────────────────────────────────────
+            if (hasChips) ...[
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  if (info.dxcc != null)
+                    _InfoChip('DXCC', info.dxcc!, cs),
+                  if (info.gridSquare != null)
+                    _InfoChip('Grid', info.gridSquare!, cs),
+                  if (info.cqZone != null)
+                    _InfoChip('CQ', info.cqZone!, cs),
+                  if (info.ituZone != null)
+                    _InfoChip('ITU', info.ituZone!, cs),
+                  if (info.continent != null)
+                    _InfoChip(context.l10n.continent, info.continent!, cs),
+                ],
+              ),
+            ],
+
+            // ── QSL badges ─────────────────────────────────────────────
+            if (hasQsl) ...[
+              const SizedBox(height: 10),
+              const Divider(height: 1),
+              const SizedBox(height: 8),
+              Row(children: [
+                Icon(Icons.mail_outline, size: 13, color: cs.secondary),
+                const SizedBox(width: 4),
+                Text('QSL',
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: cs.secondary,
+                        fontWeight: FontWeight.w500)),
+                const SizedBox(width: 8),
+                if (info.lotwMember) const _QslBadge('LoTW', Colors.blue),
+                if (info.lotwMember) const SizedBox(width: 4),
+                if (info.eqslMember) const _QslBadge('eQSL', Colors.orange),
+                if (info.eqslMember) const SizedBox(width: 4),
+                if (info.buqslMember)
+                  _QslBadge(context.l10n.bureau, Colors.purple),
+              ]),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _photoPlaceholder(ColorScheme cs) => Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(Icons.person, size: 32, color: cs.onSurfaceVariant),
+      );
+}
+
+class _InfoChip extends StatelessWidget {
+  final String label;
+  final String value;
+  final ColorScheme cs;
+  const _InfoChip(this.label, this.value, this.cs);
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: RichText(
+          text: TextSpan(children: [
+            TextSpan(
+                text: '$label ',
+                style: TextStyle(
+                    fontSize: 10,
+                    color: cs.onSurfaceVariant,
+                    fontWeight: FontWeight.w400)),
+            TextSpan(
+                text: value,
+                style: TextStyle(
+                    fontSize: 11,
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.bold)),
+          ]),
+        ),
+      );
+}
+
+class _QslBadge extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _QslBadge(this.label, this.color);
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: color.withValues(alpha: 0.5)),
+        ),
+        child: Text(label,
+            style: TextStyle(
+                fontSize: 10, color: color, fontWeight: FontWeight.w700)),
+      );
+}
+
+// ── Recent QSO tile ───────────────────────────────────────────────────────────
+
+class _RecentQsoTile extends StatelessWidget {
+  final _LoggedQso qso;
+  final bool showGrid;
+  final bool showExch;
+  const _RecentQsoTile({required this.qso, required this.showGrid, required this.showExch});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs      = Theme.of(context).colorScheme;
+    final tt      = Theme.of(context).textTheme;
+    final timeFmt = DateFormat('HHmm');
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(children: [
+        SizedBox(
+          width: 38,
+          child: Text(timeFmt.format(qso.time.toLocal()),
+              style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+        ),
+        Expanded(
+          flex: 3,
+          child: Text(qso.callsign,
+              style: tt.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+        ),
+        SizedBox(
+          width: 36,
+          child: Text(qso.serialSent.toString().padLeft(3, '0'),
+              style: tt.bodySmall?.copyWith(color: cs.primary)),
+        ),
+        SizedBox(
+          width: 36,
+          child: Text(qso.serialRcvd,
+              style: tt.bodySmall?.copyWith(color: cs.secondary)),
+        ),
+        if (showGrid)
+          Expanded(
+            flex: 2,
+            child: Text(qso.gridRcvd,
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+          ),
+        if (showExch)
+          Expanded(
+            flex: 2,
+            child: Text(qso.exchangeRcvd,
+                style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+          ),
+      ]),
     );
   }
 }

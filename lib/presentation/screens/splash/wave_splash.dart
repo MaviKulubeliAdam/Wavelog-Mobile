@@ -2,7 +2,9 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/app_theme.dart' show kAccentElectric;
+/// Electric highlight used by loaders / focus / the splash glow.
+/// Additive to the existing seed (#0EA5E9) — does not change other UI.
+const Color kAccentElectric = Color(0xFF22D3EE);
 
 /// Animated Wavelog splash built on the real brand logo.
 ///
@@ -59,13 +61,13 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
         ? const RadialGradient(
             center: Alignment(0, -0.22),
             radius: 0.95,
-            colors: [Color(0xFF3D2817), Color(0xFF1C1917), Color(0xFF120F0D)],
+            colors: [Color(0xFF16294A), Color(0xFF0F172A), Color(0xFF0B1120)],
             stops: [0.0, 0.58, 1.0],
           )
         : const RadialGradient(
             center: Alignment(0, -0.22),
             radius: 0.95,
-            colors: [Color(0xFFFDE8D7), Color(0xFFF5F5F4), Color(0xFFEFEBE7)],
+            colors: [Color(0xFFE2F1FB), Color(0xFFF1F5F9), Color(0xFFE8EEF5)],
             stops: [0.0, 0.60, 1.0],
           );
 
@@ -132,7 +134,7 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                 fontSize: 12,
                 letterSpacing: 7,
                 fontWeight: FontWeight.w500,
-                color: isDark ? const Color(0xFFFB923C) : const Color(0xFFC2410C),
+                color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7),
               ),
             ),
             const Spacer(),
@@ -146,7 +148,7 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                     CustomPaint(painter: _SinePainter(_sine.value, accent)),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             // ── Morse-style status ───────────────────────────────────────
             AnimatedBuilder(
               animation: _blink,
@@ -163,7 +165,7 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                         color: accent.withValues(alpha: on ? 1.0 : 0.16),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 9),
                     Text(
                       widget.statusText,
                       style: TextStyle(
@@ -171,15 +173,15 @@ class _WaveSplashState extends State<WaveSplash> with TickerProviderStateMixin {
                         letterSpacing: 3,
                         fontWeight: FontWeight.w600,
                         color: isDark
-                            ? const Color(0xFF78716C)
-                            : const Color(0xFFA8A29E),
+                            ? const Color(0xFF64748B)
+                            : const Color(0xFF94A3B8),
                       ),
                     ),
                   ],
                 );
               },
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 44),
           ],
         ),
       ),

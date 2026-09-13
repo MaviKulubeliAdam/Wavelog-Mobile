@@ -184,6 +184,7 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
               decoration: const InputDecoration(
                 labelText: 'Çağrı işareti',
                 hintText: 'TA4RX',
+                border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.radio_outlined),
               ),
               textCapitalization: TextCapitalization.characters,
@@ -200,6 +201,7 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
                   labelText: _type == ActivationType.sota
                       ? 'SOTA Referans (TA/AN-001)'
                       : 'POTA Referans (TA-0001)',
+                  border: const OutlineInputBorder(),
                   prefixIcon: Icon(
                     _type == ActivationType.sota
                         ? Icons.terrain
@@ -281,6 +283,7 @@ class _PlanActivationScreenState extends ConsumerState<PlanActivationScreen> {
               decoration: const InputDecoration(
                 labelText: 'Not (opsiyonel)',
                 hintText: 'Aktivasyon hakkında kısa bilgi...',
+                border: OutlineInputBorder(),
               ),
               maxLines: 3,
               maxLength: 200,

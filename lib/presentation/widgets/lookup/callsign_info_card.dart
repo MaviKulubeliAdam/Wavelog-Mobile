@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/callsign_lookup_model.dart';
 import '../../../providers/lookup_provider.dart';
@@ -100,7 +99,7 @@ class CallsignInfoCard extends ConsumerWidget {
                       child: Text(
                         result.callsign,
                         style: theme.textTheme.headlineSmall?.copyWith(
-                          fontFamily: kMonoFontFamily,
+                          fontFamily: 'monospace',
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -218,8 +217,7 @@ class CallsignInfoCard extends ConsumerWidget {
           runSpacing: 4,
           children: [
             if (result.qslConfirmed)
-              _qslChip(context.l10n.dxccLegendConfirmed,
-                  context.semanticColors.confirmed),
+              _qslChip(context.l10n.dxccLegendConfirmed, Colors.green),
             if (result.lotwMember)
               _qslChip('LoTW', Colors.blue),
             if (result.eqslMember)
@@ -303,16 +301,12 @@ class CallsignInfoCard extends ConsumerWidget {
                   Icon(
                     row.$2 ? Icons.check_circle : Icons.radio_button_unchecked,
                     size: 16,
-                    color: row.$2
-                        ? context.semanticColors.confirmed
-                        : cs.outlineVariant,
+                    color: row.$2 ? Colors.green : cs.outlineVariant,
                   ),
                   Icon(
                     row.$3 ? Icons.check_circle : Icons.radio_button_unchecked,
                     size: 16,
-                    color: row.$3
-                        ? context.semanticColors.confirmed
-                        : cs.outlineVariant,
+                    color: row.$3 ? Colors.green : cs.outlineVariant,
                   ),
                 ]),
           ],
@@ -320,12 +314,11 @@ class CallsignInfoCard extends ConsumerWidget {
         if (hasQrz) ...[
           const SizedBox(height: 4),
           Row(children: [
-            Icon(Icons.cloud_done,
-                size: 14, color: context.semanticColors.confirmed),
+            const Icon(Icons.cloud_done, size: 14, color: Colors.green),
             const SizedBox(width: 4),
             Text('QRZ uploaded',
                 style: theme.textTheme.bodySmall
-                    ?.copyWith(color: context.semanticColors.confirmed)),
+                    ?.copyWith(color: Colors.green)),
           ]),
         ],
       ],

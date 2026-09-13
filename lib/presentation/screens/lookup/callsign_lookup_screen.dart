@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/lookup_provider.dart';
-import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/error_view.dart';
 import '../../widgets/lookup/callsign_info_card.dart';
 import '../../../router.dart';
@@ -98,9 +96,9 @@ class _CallsignLookupScreenState
                   return history.when(
                     data: (hist) {
                       if (hist.isEmpty) {
-                        return EmptyState(
+                        return EmptyView(
+                          message: l10n.lookupHint,
                           icon: Icons.manage_search,
-                          title: l10n.lookupHint,
                         );
                       }
                       return Column(
@@ -119,7 +117,7 @@ class _CallsignLookupScreenState
                                 leading: const Icon(Icons.history),
                                 title: Text(hist[i],
                                     style: const TextStyle(
-                                        fontFamily: kMonoFontFamily)),
+                                        fontFamily: 'monospace')),
                                 onTap: () {
                                   _ctrl.text = hist[i];
                                   _search();

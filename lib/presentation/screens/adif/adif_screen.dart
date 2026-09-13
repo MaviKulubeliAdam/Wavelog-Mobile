@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/adif_provider.dart';
 import '../../../providers/station_provider.dart';
@@ -522,7 +521,6 @@ class _StatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final cs = Theme.of(context).colorScheme;
 
     if (adifState.operation == AdifOperation.success &&
         controller.index == tabIndex) {
@@ -531,27 +529,19 @@ class _StatusCard extends StatelessWidget {
       final successText = tabIndex == 0
           ? l10n.qsoImported(adifState.processedCount, adifState.totalCount)
           : l10n.qsoExported(adifState.processedCount);
-      const successColor = Colors.green;
       return Card(
-        color: successColor.withAlpha(31),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: successColor.shade700.withAlpha(120)),
-        ),
+        color: Colors.green.shade900,
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                Icon(Icons.check_circle, color: successColor.shade700),
+                const Icon(Icons.check_circle, color: Colors.white),
                 const SizedBox(width: 10),
-                Expanded(
-                  child: Text(successText,
-                      style: TextStyle(
-                          color: successColor.shade700,
-                          fontWeight: FontWeight.bold)),
-                ),
+                Text(successText,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
               ]),
 
               if (path != null) ...[
@@ -559,20 +549,20 @@ class _StatusCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: cs.surface.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.black26,
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(children: [
-                    Icon(Icons.folder_outlined,
-                        color: cs.onSurfaceVariant, size: 16),
+                    const Icon(Icons.folder_outlined,
+                        color: Colors.white70, size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         path,
-                        style: TextStyle(
-                            color: cs.onSurfaceVariant,
+                        style: const TextStyle(
+                            color: Colors.white70,
                             fontSize: 11,
-                            fontFamily: kMonoFontFamily),
+                            fontFamily: 'monospace'),
                       ),
                     ),
                   ]),
@@ -582,13 +572,13 @@ class _StatusCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _copyPath(context, path),
-                      icon: Icon(Icons.copy, size: 15,
-                          color: successColor.shade700),
+                      icon: const Icon(Icons.copy, size: 15,
+                          color: Colors.white),
                       label: Text(l10n.copyPath,
-                          style: TextStyle(
-                              color: successColor.shade700, fontSize: 13)),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 13)),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: successColor.shade700.withAlpha(140)),
+                        side: const BorderSide(color: Colors.white38),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
@@ -597,13 +587,13 @@ class _StatusCard extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () => _reshare(path),
-                      icon: Icon(Icons.share, size: 15,
-                          color: successColor.shade700),
+                      icon: const Icon(Icons.share, size: 15,
+                          color: Colors.white),
                       label: Text(l10n.reshare,
-                          style: TextStyle(
-                              color: successColor.shade700, fontSize: 13)),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 13)),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: successColor.shade700.withAlpha(140)),
+                        side: const BorderSide(color: Colors.white38),
                         padding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                     ),
@@ -618,11 +608,11 @@ class _StatusCard extends StatelessWidget {
 
     if (adifState.operation == AdifOperation.error) {
       return Card(
-        color: cs.errorContainer,
+        color: Colors.red.shade900,
         child: ListTile(
-          leading: Icon(Icons.error, color: cs.onErrorContainer),
+          leading: const Icon(Icons.error, color: Colors.white),
           title: Text(adifState.errorMessage ?? l10n.error,
-              style: TextStyle(color: cs.onErrorContainer)),
+              style: const TextStyle(color: Colors.white)),
         ),
       );
     }

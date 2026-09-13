@@ -9,7 +9,6 @@ import '../../../providers/remote_datasource_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/station_logbook_provider.dart';
 import '../../../providers/station_provider.dart';
-import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/error_view.dart';
 
 class StationListScreen extends ConsumerStatefulWidget {
@@ -133,10 +132,28 @@ class _LogbooksTab extends ConsumerWidget {
     return logbooks.when(
       data: (list) {
         if (list.isEmpty) {
-          return EmptyState(
-            icon: Icons.book_outlined,
-            title: l10n.newLogbook,
-            subtitle: l10n.noStationsHint,
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.book_outlined,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  const SizedBox(height: 16),
+                  Text(l10n.newLogbook,
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.noStationsHint,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
           );
         }
         return ListView.builder(
@@ -318,10 +335,28 @@ class _LocationsTab extends ConsumerWidget {
     return stations.when(
       data: (list) {
         if (list.isEmpty) {
-          return EmptyState(
-            icon: Icons.cell_tower_outlined,
-            title: l10n.noStations,
-            subtitle: l10n.noStationsHint,
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.cell_tower_outlined,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  const SizedBox(height: 16),
+                  Text(l10n.noStations,
+                      style: Theme.of(context).textTheme.titleMedium),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.noStationsHint,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  ),
+                ],
+              ),
+            ),
           );
         }
         return ListView.builder(
@@ -490,8 +525,7 @@ class _LocationTile extends ConsumerWidget {
                     backgroundColor: Theme.of(ctx).colorScheme.error),
                 onPressed: () => Navigator.of(ctx).pop(true),
                 child: Text(l10n.deleteStation,
-                    style: TextStyle(
-                        color: Theme.of(ctx).colorScheme.onError)),
+                    style: const TextStyle(color: Colors.white)),
               ),
             ],
           ),

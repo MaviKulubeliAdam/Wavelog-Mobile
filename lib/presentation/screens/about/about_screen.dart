@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/utils/l10n_extension.dart';
-import '../../widgets/common/section_header.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -38,7 +37,7 @@ class _AboutScreenState extends State<AboutScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.aboutTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         children: [
           Center(
             child: Column(
@@ -71,9 +70,9 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
 
-          SectionHeader(label: l10n.mobileDeveloperSection),
+          _SectionTitle(l10n.mobileDeveloperSection),
           _DevCard(
             avatar: 'TA4RX',
             name: 'Erkin',
@@ -88,9 +87,9 @@ class _AboutScreenState extends State<AboutScreen> {
             ],
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          SectionHeader(label: l10n.wavelogProjectSection),
+          _SectionTitle(l10n.wavelogProjectSection),
           _WavelogCard(
             description: l10n.wavelogDescription,
             coreDevelopersLabel: l10n.coreDevelopers,
@@ -99,9 +98,9 @@ class _AboutScreenState extends State<AboutScreen> {
             onOpenGithub: () => _open('https://github.com/wavelog/wavelog'),
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
 
-          SectionHeader(label: l10n.licenseSection),
+          _SectionTitle(l10n.licenseSection),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -135,6 +134,22 @@ class _AboutScreenState extends State<AboutScreen> {
       ),
     );
   }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String text;
+  const _SectionTitle(this.text);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Text(text,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                )),
+      );
 }
 
 class _DevCard extends StatelessWidget {

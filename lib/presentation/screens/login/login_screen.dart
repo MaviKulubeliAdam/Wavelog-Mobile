@@ -184,7 +184,7 @@ class _ProfileCard extends ConsumerWidget {
         : '?';
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -249,8 +249,7 @@ class _ProfileCard extends ConsumerWidget {
                         TextButton(
                           onPressed: () => Navigator.pop(dialogCtx, true),
                           child: Text(l10n.delete,
-                              style: TextStyle(
-                                  color: Theme.of(dialogCtx).colorScheme.error)),
+                              style: const TextStyle(color: Colors.red)),
                         ),
                       ],
                     ),
@@ -262,11 +261,10 @@ class _ProfileCard extends ConsumerWidget {
                 PopupMenuItem(
                   value: _ProfileAction.delete,
                   child: ListTile(
-                    leading: Icon(Icons.delete_outline,
-                        color: Theme.of(context).colorScheme.error),
+                    leading:
+                        const Icon(Icons.delete_outline, color: Colors.red),
                     title: Text(l10n.delete,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.error)),
+                        style: const TextStyle(color: Colors.red)),
                     contentPadding: EdgeInsets.zero,
                     visualDensity: VisualDensity.compact,
                   ),
@@ -404,7 +402,7 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? l10n.displayName : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _callsignCtrl,
                 decoration: InputDecoration(
@@ -416,7 +414,7 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? l10n.callsign : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: _apiKeyCtrl,
                 decoration: InputDecoration(
@@ -448,18 +446,15 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
                 ),
               ),
               if (_error != null) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 Row(
                   children: [
-                    Icon(Icons.error_outline,
-                        color: Theme.of(context).colorScheme.error, size: 16),
+                    const Icon(Icons.error_outline, color: Colors.red, size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         _error!,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                            fontSize: 13),
+                        style: const TextStyle(color: Colors.red, fontSize: 13),
                       ),
                     ),
                   ],
@@ -469,13 +464,11 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
               FilledButton.icon(
                 onPressed: _loading ? null : _addAndLogin,
                 icon: _loading
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
+                            strokeWidth: 2, color: Colors.white),
                       )
                     : const Icon(Icons.login),
                 label: Text(_loading ? l10n.validating : l10n.signInBtn),

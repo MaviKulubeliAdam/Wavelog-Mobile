@@ -12,7 +12,6 @@ import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/qso_model.dart';
 import '../../../providers/qso_provider.dart';
-import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/error_view.dart';
 import '../../widgets/qso/qso_list_tile.dart';
 import '../../../router.dart';
@@ -264,9 +263,9 @@ class _QsoListScreenState extends ConsumerState<QsoListScreen> {
               child: qsos.when(
                 data: (list) {
                   if (list.isEmpty) {
-                    return EmptyState(
+                    return EmptyView(
+                      message: l10n.noQsos,
                       icon: Icons.radio_outlined,
-                      title: l10n.noQsos,
                     );
                   }
                   return RefreshIndicator(

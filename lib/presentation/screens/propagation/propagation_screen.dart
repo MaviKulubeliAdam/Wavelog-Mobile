@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/solar_data_model.dart';
@@ -26,12 +25,7 @@ class PropagationScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Row(
                   children: [
-                    Icon(Icons.update,
-                        size: 14,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.55)),
+                    const Icon(Icons.update, size: 14),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
@@ -196,7 +190,7 @@ class _IndexCard extends StatelessWidget {
               value,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontFamily: kMonoFontFamily,
+                    fontFamily: 'monospace',
                     color: color,
                   ),
               maxLines: 1,
@@ -301,7 +295,7 @@ class _BandConditionsTable extends StatelessWidget {
       child: Text(
         band,
         style: const TextStyle(
-            fontFamily: kMonoFontFamily,
+            fontFamily: 'monospace',
             fontSize: 12,
             fontWeight: FontWeight.w600),
       ),
@@ -377,17 +371,17 @@ class _Legend extends StatelessWidget {
         _dot(Colors.green),
         const SizedBox(width: 4),
         Text(lText(l10n.conditionGood),
-            style: Theme.of(context).textTheme.labelSmall),
+            style: const TextStyle(fontSize: 11)),
         const SizedBox(width: 12),
         _dot(Colors.orange),
         const SizedBox(width: 4),
         Text(lText(l10n.conditionFair),
-            style: Theme.of(context).textTheme.labelSmall),
+            style: const TextStyle(fontSize: 11)),
         const SizedBox(width: 12),
         _dot(Colors.red),
         const SizedBox(width: 4),
         Text(lText(l10n.conditionPoor),
-            style: Theme.of(context).textTheme.labelSmall),
+            style: const TextStyle(fontSize: 11)),
       ],
     );
   }

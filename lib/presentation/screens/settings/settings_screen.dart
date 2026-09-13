@@ -17,7 +17,6 @@ import '../../../providers/remote_datasource_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/station_provider.dart';
 import '../../../providers/statistics_provider.dart';
-import '../../widgets/common/section_header.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -198,7 +197,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             // Connection section
-            SectionHeader(label: l10n.connectionSection),
+            _sectionHeader(l10n.connectionSection),
             TextFormField(
               controller: _urlCtrl,
               decoration: InputDecoration(
@@ -300,9 +299,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   children: [
                     Icon(
                       _testSuccess ? Icons.check_circle : Icons.error,
-                      color: _testSuccess
-                          ? Colors.green
-                          : Theme.of(context).colorScheme.error,
+                      color: _testSuccess ? Colors.green : Colors.red,
                       size: 16,
                     ),
                     const SizedBox(width: 8),
@@ -310,9 +307,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       child: Text(
                         _testResult!,
                         style: TextStyle(
-                          color: _testSuccess
-                              ? Colors.green
-                              : Theme.of(context).colorScheme.error,
+                          color: _testSuccess ? Colors.green : Colors.red,
                         ),
                       ),
                     ),
@@ -326,7 +321,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
             // Logged-in account
             if (settings.isLoggedIn) ...[
-              SectionHeader(label: l10n.sessionSection),
+              _sectionHeader(l10n.sessionSection),
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.account_circle),
@@ -336,8 +331,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 trailing: TextButton.icon(
                   icon: const Icon(Icons.logout, size: 16),
                   label: Text(l10n.logoutBtn),
-                  style: TextButton.styleFrom(
-                      foregroundColor: Theme.of(context).colorScheme.error),
+                  style: TextButton.styleFrom(foregroundColor: Colors.red),
                   onPressed: () async {
                     final confirm = await showDialog<bool>(
                       context: context,
@@ -373,7 +367,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ],
 
             // Active station
-            SectionHeader(label: l10n.activeStationSection),
+            _sectionHeader(l10n.activeStationSection),
             stations.when(
               data: (list) {
                 if (list.isEmpty) {
@@ -419,7 +413,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 24),
 
             // Defaults section
-            SectionHeader(label: l10n.defaultsSection),
+            _sectionHeader(l10n.defaultsSection),
             DropdownButtonFormField<String>(
               initialValue: settings.defaultMode,
               decoration: InputDecoration(labelText: l10n.defaultMode),
@@ -436,29 +430,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 24),
 
             // App settings
-            SectionHeader(label: l10n.appSection),
-            SwitchListTile(
-              secondary: Icon(settings.darkTheme
-                  ? Icons.dark_mode_outlined
-                  : Icons.light_mode_outlined),
-              title: Text(l10n.themeLabel),
-              subtitle: Text(settings.darkTheme
-                  ? l10n.darkThemeActive
-                  : l10n.lightThemeActive),
-              value: settings.darkTheme,
+            _sectionHeader(l10n.appSection),
+            _ThemeCard(
+              isDark: settings.darkTheme,
               onChanged: (v) =>
                   ref.read(settingsProvider.notifier).setDarkTheme(v),
             ),
-            SwitchListTile(
-              secondary: const Icon(Icons.navigation_outlined),
-              title: Text(l10n.navStyleLabel),
-              subtitle: Text(settings.useModernNav
-                  ? l10n.navStyleModern
-                  : l10n.navStyleClassic),
-              value: settings.useModernNav,
+            const SizedBox(height: 4),
+            _NavStyleCard(
+              useModern: settings.useModernNav,
               onChanged: (v) =>
                   ref.read(settingsProvider.notifier).setNavStyle(modern: v),
             ),
+            const SizedBox(height: 4),
             SwitchListTile(
               title: Text(l10n.offlineMode),
               subtitle: Text(l10n.offlineModeHint),
@@ -502,11 +486,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 24),
 
             // Danger zone
-            SectionHeader(label: l10n.dataSection),
+            _sectionHeader(l10n.dataSection),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error),
+              leading: const Icon(Icons.delete_outline, color: Colors.red),
               title: Text(l10n.clearCacheBtn),
               subtitle: Text(l10n.clearCacheHint),
               onTap: () async {
@@ -522,9 +505,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       TextButton(
                           onPressed: () => Navigator.pop(ctx, true),
                           child: Text(l10n.clearCacheAction,
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.error))),
+                              style: const TextStyle(color: Colors.red))),
                     ],
                   ),
                 );
@@ -541,7 +522,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             const SizedBox(height: 24),
 
             // About
-            SectionHeader(label: l10n.infoSection),
+            _sectionHeader(l10n.infoSection),
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.info_outline),
@@ -566,6 +547,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }
@@ -654,3 +648,149 @@ class _ScopeChip extends StatelessWidget {
   }
 }
 
+// ── Nav style card ────────────────────────────────────────────────────────────
+
+class _NavStyleCard extends StatelessWidget {
+  final bool useModern;
+  final ValueChanged<bool> onChanged;
+
+  const _NavStyleCard({required this.useModern, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(Icons.navigation_outlined, size: 20, color: cs.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.navStyleLabel,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    useModern
+                        ? context.l10n.navStyleModern
+                        : context.l10n.navStyleClassic,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            SegmentedButton<bool>(
+              segments: const [
+                ButtonSegment(
+                  value: true,
+                  icon: Icon(Icons.view_quilt_outlined, size: 18),
+                ),
+                ButtonSegment(
+                  value: false,
+                  icon: Icon(Icons.table_rows_outlined, size: 18),
+                ),
+              ],
+              selected: {useModern},
+              showSelectedIcon: false,
+              onSelectionChanged: (s) => onChanged(s.first),
+              style: const ButtonStyle(
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Theme toggle card ─────────────────────────────────────────────────────────
+
+class _ThemeCard extends StatelessWidget {
+  final bool isDark;
+  final ValueChanged<bool> onChanged;
+
+  const _ThemeCard({required this.isDark, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            // Icon + label
+            Icon(
+              isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              size: 20,
+              color: cs.primary,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.themeLabel,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isDark ? context.l10n.darkThemeActive : context.l10n.lightThemeActive,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            // Segmented button
+            SegmentedButton<bool>(
+              segments: [
+                ButtonSegment(
+                  value: false,
+                  icon: const Icon(Icons.light_mode, size: 18),
+                  label: Text(context.l10n.lightThemeLabel),
+                ),
+                ButtonSegment(
+                  value: true,
+                  icon: const Icon(Icons.dark_mode, size: 18),
+                  label: Text(context.l10n.darkThemeLabel),
+                ),
+              ],
+              selected: {isDark},
+              showSelectedIcon: false,
+              onSelectionChanged: (s) => onChanged(s.first),
+              style: ButtonStyle(
+                visualDensity: VisualDensity.compact,
+                textStyle: WidgetStateProperty.all(
+                  const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

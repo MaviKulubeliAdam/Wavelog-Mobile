@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/contest_event_model.dart';
 import '../../../providers/contest_calendar_provider.dart';
-import '../../widgets/common/empty_state.dart';
 
 class ContestCalendarScreen extends ConsumerWidget {
   const ContestCalendarScreen({super.key});
@@ -57,10 +55,7 @@ class _CalendarBody extends ConsumerWidget {
     final past = events.where((e) => e.isPast).toList();
 
     if (events.isEmpty) {
-      return EmptyState(
-        icon: Icons.event_busy_outlined,
-        title: l10n.contestCalendarNoContests,
-      );
+      return Center(child: Text(l10n.contestCalendarNoContests));
     }
 
     return RefreshIndicator(
@@ -69,11 +64,11 @@ class _CalendarBody extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
           if (today.isNotEmpty) ...[
-            _SectionHeader(label: l10n.contestCalendarToday, color: Theme.of(context).colorScheme.error),
+            _SectionHeader(label: l10n.contestCalendarToday, color: Colors.red.shade400),
             ...today.map((e) => _EventTile(event: e, highlight: true)),
           ],
           if (week.isNotEmpty) ...[
-            _SectionHeader(label: l10n.contestCalendarThisWeek, color: kOnAir),
+            _SectionHeader(label: l10n.contestCalendarThisWeek, color: Colors.orange.shade400),
             ...week.map((e) => _EventTile(event: e)),
           ],
           if (upcoming.isNotEmpty) ...[

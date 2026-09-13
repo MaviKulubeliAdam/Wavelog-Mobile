@@ -10,10 +10,8 @@ import '../../../providers/qso_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/statistics_provider.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../widgets/common/empty_state.dart';
 import '../../widgets/common/error_view.dart';
 import '../../widgets/common/offline_banner.dart';
-import '../../widgets/common/stat_card.dart';
 import '../../widgets/qso/qso_list_tile.dart';
 import '../../widgets/qso/qso_skeleton_list.dart';
 import '../../../router.dart';
@@ -216,10 +214,10 @@ class _HomeBody extends ConsumerWidget {
               color: kAccentElectric,
               backgroundColor: Theme.of(context).colorScheme.surface,
               onRefresh: onRefresh,
-              child: const SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.all(12),
-                child: _ContestCard(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(12),
+                child: const _ContestCard(),
               ),
             ),
           ),
@@ -306,7 +304,7 @@ class _QsoPanel extends StatelessWidget {
         recentQsos.when(
           data: (qsos) {
             if (qsos.isEmpty) {
-              return EmptyState(icon: Icons.radio_outlined, title: l10n.noRecentQsos);
+              return EmptyView(message: l10n.noRecentQsos, icon: Icons.radio_outlined);
             }
             return Column(
               children: qsos
@@ -547,15 +545,47 @@ class _StatsRow extends StatelessWidget {
     final todayCount = localTodayQsos;
     return Row(
       children: [
-        StatCard(value: todayCount.toString(), label: l10n.statsToday, icon: Icons.today),
-        StatCard(value: stats.monthQsos.toString(), label: l10n.statsMonth, icon: Icons.calendar_month),
-        StatCard(value: stats.yearQsos.toString(), label: l10n.statsYear, icon: Icons.calendar_today),
-        StatCard(value: stats.totalQsos.toString(), label: l10n.statsTotal, icon: Icons.storage),
-      ]
-          .map((w) => Expanded(
-                child: Padding(padding: const EdgeInsets.all(4), child: w),
-              ))
-          .toList(),
+        _StatCard(l10n.statsToday, todayCount.toString(), Icons.today),
+        _StatCard(l10n.statsMonth, stats.monthQsos.toString(), Icons.calendar_month),
+        _StatCard(l10n.statsYear, stats.yearQsos.toString(), Icons.calendar_today),
+        _StatCard(l10n.statsTotal, stats.totalQsos.toString(), Icons.storage),
+      ].map((w) => Expanded(child: w)).toList(),
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+
+  const _StatCard(this.label, this.value, this.icon);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: const EdgeInsets.all(4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        child: Column(
+          children: [
+            Icon(icon, size: 20, color: theme.colorScheme.primary),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'monospace',
+              ),
+            ),
+            Text(label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.secondary,
+                )),
+          ],
+        ),
+      ),
     );
   }
 }

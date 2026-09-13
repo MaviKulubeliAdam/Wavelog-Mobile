@@ -5,7 +5,6 @@ import '../../../data/models/station_logbook_model.dart';
 import '../../../data/models/station_model.dart';
 import '../../../providers/station_logbook_provider.dart';
 import '../../../providers/station_provider.dart';
-import '../../widgets/common/empty_state.dart';
 
 class StationLogbookDetailScreen extends ConsumerWidget {
   final int logbookId;
@@ -212,10 +211,29 @@ class _EmptyLocations extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return EmptyState(
-      icon: Icons.link_off,
-      title: l10n.linkedLocations,
-      subtitle: l10n.linkLocation,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.link_off,
+                size: 64,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              l10n.linkedLocations,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.linkLocation,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

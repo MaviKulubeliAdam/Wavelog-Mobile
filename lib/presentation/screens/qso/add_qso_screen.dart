@@ -1,29 +1,29 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../core/constants/band_mode_data.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/validators.dart';
+import '../../../data/models/callsign_lookup_model.dart';
 import '../../../data/models/qso_model.dart';
 import '../../../data/models/station_model.dart';
 import '../../../data/datasources/remote/pota_datasource.dart';
 import '../../../providers/auto_spot_provider.dart';
 import '../../../services/auto_spot_service.dart';
 import '../../../providers/connectivity_provider.dart';
+import '../../../providers/lookup_provider.dart';
 import '../../../providers/qso_provider.dart';
 import '../../../providers/remote_datasource_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../providers/station_provider.dart';
-import 'widgets/logbook_summary_card.dart';
-import 'widgets/previous_qsos_card.dart';
-import 'widgets/qso_mode_toggle.dart';
-import 'widgets/qso_tablet_info_panel.dart';
 
 class AddQsoScreen extends ConsumerStatefulWidget {
   final String? prefillCallsign;
@@ -723,7 +723,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
@@ -778,7 +778,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
               const VerticalDivider(width: 1, thickness: 1),
               Expanded(
                 flex: 4,
-                child: QsoTabletInfoPanel(callsign: _currentCallsign),
+                child: _TabletInfoPanel(callsign: _currentCallsign),
               ),
             ],
           )
@@ -810,7 +810,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
     final cs = Theme.of(context).colorScheme;
 
     return [
-      QsoModeToggle(
+      _ModeToggle(
         isLive: _isLive,
         liveLabel: l10n.liveQso,
         historicalLabel: l10n.historicalQso,
@@ -828,7 +828,6 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       TextFormField(
         controller: _callsignCtrl,
         focusNode: _callsignFocus,
-        style: const TextStyle(fontFamily: kMonoFontFamily),
         decoration: InputDecoration(
           labelText: l10n.callsignField,
           prefixIcon: const Icon(Icons.radio),
@@ -845,7 +844,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
                       _lookupSuccess
                           ? Icons.check_circle_outline
                           : Icons.help_outline,
-                      color: _lookupSuccess ? Colors.green : cs.onSurfaceVariant,
+                      color: _lookupSuccess ? Colors.green : Colors.grey,
                       size: 20,
                     )
                   : IconButton(
@@ -917,15 +916,15 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
 
       // ── Logbook özeti: bugün sayacı + son 5 QSO ────────────────────
       if (!Responsive.useTabletLayout(context))
-        const LogbookSummaryCard(),
+        const _LogbookSummaryCard(),
 
       // ── Previous QSOs inline (phone only — tablet uses right panel) ──
       if (!Responsive.useTabletLayout(context) && _currentCallsign.length >= 3)
-        InlinePreviousQsosCard(callsign: _currentCallsign),
+        _InlinePreviousQsos(callsign: _currentCallsign),
 
       // ── Date / Time ─────────────────────────────────────────────────
       _isLive
-          ? QsoLiveClockTile(label: l10n.liveDateTimeLabel)
+          ? _LiveClockTile(label: l10n.liveDateTimeLabel)
           : ListTile(
               contentPadding: EdgeInsets.zero,
               leading: const Icon(Icons.schedule),
@@ -935,7 +934,7 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
               trailing: const Icon(Icons.edit_outlined),
               onTap: _pickDateTime,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(4),
                 side: BorderSide(color: cs.outlineVariant),
               ),
             ),
@@ -995,7 +994,6 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       // ── Frequency ───────────────────────────────────────────────────
       TextFormField(
         controller: _freqCtrl,
-        style: const TextStyle(fontFamily: kMonoFontFamily),
         decoration: InputDecoration(
           labelText: l10n.frequencyField,
           prefixIcon: const Icon(Icons.waves),
@@ -1010,7 +1008,6 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
         Expanded(
           child: TextFormField(
             controller: _rstSentCtrl,
-            style: const TextStyle(fontFamily: kMonoFontFamily),
             decoration: InputDecoration(labelText: l10n.rstSentField),
             keyboardType: TextInputType.number,
             validator: (v) => validateRst(v, _mode),
@@ -1020,7 +1017,6 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
         Expanded(
           child: TextFormField(
             controller: _rstRcvdCtrl,
-            style: const TextStyle(fontFamily: kMonoFontFamily),
             decoration: InputDecoration(labelText: l10n.rstRcvdField),
             keyboardType: TextInputType.number,
             validator: (v) => validateRst(v, _mode),
@@ -1056,7 +1052,6 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
             width: 110,
             child: TextFormField(
               controller: _gridCtrl,
-              style: const TextStyle(fontFamily: kMonoFontFamily),
               decoration: InputDecoration(
                 labelText: l10n.gridField,
                 hintText: 'KN41',
@@ -1311,5 +1306,1119 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       ),
       const SizedBox(height: 16),
     ];
+  }
+}
+
+// ── Mode toggle ───────────────────────────────────────────────────────────────
+
+class _ModeToggle extends StatelessWidget {
+  final bool isLive;
+  final String liveLabel;
+  final String historicalLabel;
+  final ValueChanged<bool> onChanged;
+
+  const _ModeToggle({
+    required this.isLive,
+    required this.liveLabel,
+    required this.historicalLabel,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Row(
+      children: [
+        Expanded(
+          child: _ToggleBtn(
+            label: liveLabel,
+            icon: Icons.radio_button_checked,
+            active: isLive,
+            activeColor: Colors.green,
+            onTap: () => onChanged(true),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: _ToggleBtn(
+            label: historicalLabel,
+            icon: Icons.history,
+            active: !isLive,
+            activeColor: cs.primary,
+            onTap: () => onChanged(false),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ToggleBtn extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool active;
+  final Color activeColor;
+  final VoidCallback onTap;
+
+  const _ToggleBtn({
+    required this.label,
+    required this.icon,
+    required this.active,
+    required this.activeColor,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: active
+              ? activeColor.withValues(alpha: 0.15)
+              : cs.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: active
+                ? activeColor.withValues(alpha: 0.7)
+                : Colors.transparent,
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon,
+                size: 16, color: active ? activeColor : cs.onSurfaceVariant),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                color: active ? activeColor : cs.onSurfaceVariant,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Live UTC clock tile ───────────────────────────────────────────────────────
+// Kendi timer'ıyla tik atar — saati form state'inde tutmak tüm formu
+// saniyede bir yeniden çiziyordu.
+
+class _LiveClockTile extends StatefulWidget {
+  final String label;
+
+  const _LiveClockTile({required this.label});
+
+  @override
+  State<_LiveClockTile> createState() => _LiveClockTileState();
+}
+
+class _LiveClockTileState extends State<_LiveClockTile> {
+  Timer? _timer;
+  DateTime _now = DateTime.now().toUtc();
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() => _now = DateTime.now().toUtc());
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.green.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.4)),
+      ),
+      child: Row(children: [
+        const Icon(Icons.circle, color: Colors.green, size: 10),
+        const SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.label,
+                style: TextStyle(fontSize: 11, color: cs.secondary)),
+            Text(
+              DateFormat('dd.MM.yyyy   HH:mm:ss').format(_now),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  fontFeatures: [FontFeature.tabularFigures()]),
+            ),
+          ],
+        ),
+      ]),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// TABLET INFO PANEL
+// ═══════════════════════════════════════════════════════════════════════════════
+
+class _TabletInfoPanel extends ConsumerWidget {
+  final String callsign;
+  const _TabletInfoPanel({required this.callsign});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
+    if (callsign.length < 3) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(12, 16, 16, 16),
+        children: [
+          // ── Placeholder ──────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(top: 24, bottom: 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.person_search_outlined,
+                    size: 72, color: cs.outlineVariant),
+                const SizedBox(height: 20),
+                Text(context.l10n.counterStation,
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(color: cs.onSurfaceVariant)),
+                const SizedBox(height: 8),
+                Text(
+                  context.l10n.counterStationHint,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: cs.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+
+          // ── Son QSO'lar ──────────────────────────────────────────
+          const _LogbookSummaryCard(),
+        ],
+      );
+    }
+
+    final lookupAsync = ref.watch(callsignInfoProvider(callsign));
+    final previousAsync = ref.watch(previousQsosByCallsignProvider(callsign));
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(12, 16, 16, 16),
+      children: [
+        // ── Callsign header ──────────────────────────────────────────
+        Row(children: [
+          Icon(Icons.radio, size: 16, color: cs.primary),
+          const SizedBox(width: 6),
+          Text(
+            callsign,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.bold,
+              color: cs.primary,
+              letterSpacing: 1.5,
+            ),
+          ),
+        ]),
+        const SizedBox(height: 12),
+
+        // ── QRZ info ────────────────────────────────────────────────
+        lookupAsync.when(
+          loading: () => const LinearProgressIndicator(minHeight: 2),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (info) => Column(
+            children: [
+              _QrzInfoCard(info: info),
+              const SizedBox(height: 12),
+              _QsoMapCard(info: info),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // ── Son QSO'lar ──────────────────────────────────────────────
+        const _LogbookSummaryCard(),
+
+        const SizedBox(height: 12),
+
+        // ── Previous QSOs with this callsign ────────────────────────
+        previousAsync.when(
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (qsos) =>
+              qsos.isEmpty ? const SizedBox.shrink() : _PreviousQsosCard(qsos: qsos),
+        ),
+      ],
+    );
+  }
+}
+
+// ── QSO map card (tablet) ────────────────────────────────────────────────────
+
+LatLng? _maidenheadToLatLng(String grid) {
+  try {
+    final g = grid.toUpperCase();
+    if (g.length < 4) return null;
+    double lon = (g.codeUnitAt(0) - 65) * 20.0 - 180.0
+               + (g.codeUnitAt(2) - 48) * 2.0;
+    double lat = (g.codeUnitAt(1) - 65) * 10.0 - 90.0
+               + (g.codeUnitAt(3) - 48) * 1.0;
+    if (g.length >= 6) {
+      lon += (g.codeUnitAt(4) - 65) / 12.0 + 1.0 / 24.0;
+      lat += (g.codeUnitAt(5) - 65) / 24.0 + 1.0 / 48.0;
+    } else {
+      lon += 1.0;
+      lat += 0.5;
+    }
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+    return LatLng(lat, lon);
+  } catch (_) {
+    return null;
+  }
+}
+
+
+class _QsoMapCard extends ConsumerWidget {
+  final CallsignLookupModel info;
+  const _QsoMapCard({required this.info});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cs = Theme.of(context).colorScheme;
+    final settings = ref.watch(settingsProvider);
+    final stations = ref.watch(stationProvider).valueOrNull ?? [];
+
+    StationModel? myStation;
+    try {
+      myStation = stations.firstWhere(
+          (s) => s.id == settings.activeStationProfileId);
+    } catch (_) {
+      myStation = stations.isNotEmpty ? stations.first : null;
+    }
+    final myGrid = myStation?.gridSquare;
+    final remoteGrid = info.gridSquare;
+
+    if (myGrid == null || myGrid.length < 4) return const SizedBox.shrink();
+    if (remoteGrid == null || remoteGrid.length < 4) return const SizedBox.shrink();
+
+    final myPos     = _maidenheadToLatLng(myGrid);
+    final remotePos = _maidenheadToLatLng(remoteGrid);
+    if (myPos == null || remotePos == null) return const SizedBox.shrink();
+
+    final distKm = const Distance().as(LengthUnit.Kilometer, myPos, remotePos);
+    final bounds = LatLngBounds.fromPoints([myPos, remotePos]);
+
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 240,
+            child: FlutterMap(
+              options: MapOptions(
+                initialCameraFit: CameraFit.bounds(
+                  bounds: bounds,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 24),
+                ),
+                interactionOptions: const InteractionOptions(
+                  flags: InteractiveFlag.none,
+                ),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate:
+                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.wavelog_mobile',
+                ),
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: [myPos, remotePos],
+                      color: Colors.red.withValues(alpha: 0.85),
+                      strokeWidth: 2.0,
+                    ),
+                  ],
+                ),
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: myPos,
+                      width: 22,
+                      height: 22,
+                      child: const Icon(Icons.star,
+                          color: Colors.amber, size: 22),
+                    ),
+                    Marker(
+                      point: remotePos,
+                      width: 14,
+                      height: 14,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(color: Colors.white, width: 2),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(children: [
+              Icon(Icons.straighten, size: 14, color: cs.primary),
+              const SizedBox(width: 4),
+              Text(
+                '${distKm.round()} km',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: cs.primary),
+              ),
+              const SizedBox(width: 12),
+              Icon(Icons.grid_on, size: 13, color: cs.onSurfaceVariant),
+              const SizedBox(width: 4),
+              Text(remoteGrid,
+                  style: TextStyle(
+                      fontSize: 12, color: cs.onSurfaceVariant)),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── QRZ compact info card ─────────────────────────────────────────────────────
+
+class _QrzInfoCard extends StatelessWidget {
+  final CallsignLookupModel info;
+  const _QrzInfoCard({required this.info});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+
+    final hasPhoto = info.imageUrl != null && info.imageUrl!.isNotEmpty;
+    final hasBasicInfo = info.name != null || info.country != null;
+    final hasChips = info.dxcc != null ||
+        info.gridSquare != null ||
+        info.cqZone != null ||
+        info.ituZone != null ||
+        info.continent != null;
+    final hasQsl = info.lotwMember || info.eqslMember || info.buqslMember;
+
+    if (!hasBasicInfo && !hasPhoto && !hasChips && !hasQsl) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Header row: photo + name/country ──────────────────────
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (hasPhoto) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: CachedNetworkImage(
+                      imageUrl: info.imageUrl!,
+                      width: 64,
+                      height: 64,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => _photoPlaceholder(cs),
+                      errorWidget: (_, __, ___) => _photoPlaceholder(cs),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (info.name != null)
+                        Text(
+                          info.name!,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w600),
+                        ),
+                      if (info.qth != null || info.country != null) ...[
+                        const SizedBox(height: 2),
+                        Row(children: [
+                          if (info.flag != null && info.flag!.isNotEmpty) ...[
+                            Text(info.flag!,
+                                style: const TextStyle(fontSize: 14)),
+                            const SizedBox(width: 4),
+                          ],
+                          Expanded(
+                            child: Text(
+                              [info.qth, info.country]
+                                  .whereType<String>()
+                                  .join(', '),
+                              style: TextStyle(
+                                  fontSize: 12, color: cs.onSurfaceVariant),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ]),
+                      ],
+                      if (info.workedBefore) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: Colors.green.withValues(alpha: 0.4)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.check_circle_outline,
+                                  size: 12, color: Colors.green),
+                              const SizedBox(width: 4),
+                              Text(context.l10n.workedBefore,
+                                  style: const TextStyle(
+                                      fontSize: 11,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            // ── Info chips ─────────────────────────────────────────────
+            if (hasChips) ...[
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  if (info.dxcc != null)
+                    _InfoChip('DXCC', info.dxcc!, cs),
+                  if (info.gridSquare != null)
+                    _InfoChip('Grid', info.gridSquare!, cs),
+                  if (info.cqZone != null)
+                    _InfoChip('CQ', info.cqZone!, cs),
+                  if (info.ituZone != null)
+                    _InfoChip('ITU', info.ituZone!, cs),
+                  if (info.continent != null)
+                    _InfoChip(context.l10n.continent, info.continent!, cs),
+                ],
+              ),
+            ],
+
+            // ── QSL badges ─────────────────────────────────────────────
+            if (hasQsl) ...[
+              const SizedBox(height: 10),
+              const Divider(height: 1),
+              const SizedBox(height: 8),
+              Row(children: [
+                Icon(Icons.mail_outline, size: 13, color: cs.secondary),
+                const SizedBox(width: 4),
+                Text('QSL',
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: cs.secondary,
+                        fontWeight: FontWeight.w500)),
+                const SizedBox(width: 8),
+                if (info.lotwMember) const _QslBadge('LoTW', Colors.blue),
+                if (info.lotwMember) const SizedBox(width: 4),
+                if (info.eqslMember) const _QslBadge('eQSL', Colors.orange),
+                if (info.eqslMember) const SizedBox(width: 4),
+                if (info.buqslMember) _QslBadge(context.l10n.bureau, Colors.purple),
+              ]),
+            ],
+
+            // ── Address ────────────────────────────────────────────────
+            if (info.addr1 != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                info.addr1!,
+                style: TextStyle(fontSize: 11, color: cs.onSurfaceVariant),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+
+            // ── Email ──────────────────────────────────────────────────
+            if (info.email != null) ...[
+              const SizedBox(height: 4),
+              Row(children: [
+                Icon(Icons.email_outlined, size: 12, color: cs.primary),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    info.email!,
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: cs.primary,
+                        decoration: TextDecoration.underline),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ]),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _photoPlaceholder(ColorScheme cs) => Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Icon(Icons.person, size: 32, color: cs.onSurfaceVariant),
+      );
+}
+
+class _InfoChip extends StatelessWidget {
+  final String label;
+  final String value;
+  final ColorScheme cs;
+  const _InfoChip(this.label, this.value, this.cs);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: RichText(
+        text: TextSpan(children: [
+          TextSpan(
+              text: '$label ',
+              style: TextStyle(
+                  fontSize: 10,
+                  color: cs.onSurfaceVariant,
+                  fontWeight: FontWeight.w400)),
+          TextSpan(
+              text: value,
+              style: TextStyle(
+                  fontSize: 11,
+                  color: cs.onSurface,
+                  fontWeight: FontWeight.bold)),
+        ]),
+      ),
+    );
+  }
+}
+
+class _QslBadge extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _QslBadge(this.label, this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
+      ),
+      child: Text(label,
+          style: TextStyle(
+              fontSize: 10, color: color, fontWeight: FontWeight.w700)),
+    );
+  }
+}
+
+// ── Previous QSOs card ────────────────────────────────────────────────────────
+
+class _PreviousQsosCard extends StatelessWidget {
+  final List<QsoModel> qsos;
+  const _PreviousQsosCard({required this.qsos});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final displayed = qsos.take(15).toList();
+
+    return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Icon(Icons.history, size: 15, color: cs.primary),
+              const SizedBox(width: 6),
+              Text(
+                context.l10n.previousQsosCount(qsos.length),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: cs.primary,
+                ),
+              ),
+            ]),
+            const Divider(height: 14),
+            ...displayed.map((q) => _QsoHistoryRow(qso: q, cs: cs)),
+            if (qsos.length > 15)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Text(
+                  context.l10n.morePreviousQsos(qsos.length - 15),
+                  style:
+                      TextStyle(fontSize: 11, color: cs.onSurfaceVariant),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _QsoHistoryRow extends StatelessWidget {
+  final QsoModel qso;
+  final ColorScheme cs;
+  const _QsoHistoryRow({required this.qso, required this.cs});
+
+  @override
+  Widget build(BuildContext context) {
+    final date = DateFormat('dd.MM.yyyy').format(qso.dateTimeOn.toLocal());
+    final time = DateFormat('HH:mm').format(qso.dateTimeOn.toUtc());
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(Icons.radio_button_unchecked, size: 8, color: cs.primary),
+          const SizedBox(width: 8),
+          // Date + time
+          SizedBox(
+            width: 90,
+            child: Text(
+              '$date\n$time UTC',
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+            ),
+          ),
+          const SizedBox(width: 6),
+          // Band badge
+          _HistoryBadge(
+              qso.band, cs.primaryContainer, cs.onPrimaryContainer),
+          const SizedBox(width: 4),
+          // Mode badge
+          _HistoryBadge(
+              qso.mode, cs.tertiaryContainer, cs.onTertiaryContainer),
+          const SizedBox(width: 6),
+          // RST
+          if (qso.rstSent.isNotEmpty)
+            Text(
+              qso.rstSent,
+              style: TextStyle(fontSize: 10, color: cs.onSurfaceVariant),
+            ),
+          // Sync indicator
+          const Spacer(),
+          if (!qso.synced)
+            Icon(Icons.cloud_off, size: 12, color: Colors.orange.shade300),
+        ],
+      ),
+    );
+  }
+}
+
+class _HistoryBadge extends StatelessWidget {
+  final String label;
+  final Color bg;
+  final Color fg;
+  const _HistoryBadge(this.label, this.bg, this.fg);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: fg),
+      ),
+    );
+  }
+}
+
+// ── Inline previous QSOs (phone layout only) ──────────────────────────────────
+
+class _InlinePreviousQsos extends ConsumerWidget {
+  final String callsign;
+  const _InlinePreviousQsos({required this.callsign});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(previousQsosByCallsignProvider(callsign));
+    return async.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (qsos) {
+        if (qsos.isEmpty) return const SizedBox.shrink();
+        final displayed = qsos.take(5).toList();
+        final cs = Theme.of(context).colorScheme;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: cs.surfaceContainerLow,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(children: [
+                    Icon(Icons.history, size: 14, color: cs.primary),
+                    const SizedBox(width: 6),
+                    Text(
+                      context.l10n.previousQsosWithCallsign(callsign),
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: cs.primary,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      context.l10n.totalQsos(qsos.length),
+                      style:
+                          TextStyle(fontSize: 11, color: cs.onSurfaceVariant),
+                    ),
+                  ]),
+                  const Divider(height: 10),
+                  ...displayed.map((q) => _InlineQsoRow(qso: q, cs: cs)),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _InlineQsoRow extends StatelessWidget {
+  final QsoModel qso;
+  final ColorScheme cs;
+  const _InlineQsoRow({required this.qso, required this.cs});
+
+  @override
+  Widget build(BuildContext context) {
+    final dateStr =
+        DateFormat('dd.MM.yy HH:mm').format(qso.dateTimeOn.toUtc());
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Icon(Icons.radio_button_unchecked, size: 7, color: cs.primary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '$dateStr UTC',
+              style: const TextStyle(fontSize: 11, fontFamily: 'monospace'),
+            ),
+          ),
+          _HistoryBadge(qso.band, cs.primaryContainer, cs.onPrimaryContainer),
+          const SizedBox(width: 4),
+          _HistoryBadge(
+              qso.mode, cs.tertiaryContainer, cs.onTertiaryContainer),
+          if (qso.freqMhz != null) ...[
+            const SizedBox(width: 6),
+            Text(
+              qso.freqMhz!.toStringAsFixed(3),
+              style: TextStyle(fontSize: 10, color: cs.onSurfaceVariant),
+            ),
+          ],
+          if (qso.rstSent.isNotEmpty) ...[
+            const SizedBox(width: 6),
+            Text(
+              qso.rstSent,
+              style: TextStyle(fontSize: 10, color: cs.onSurfaceVariant),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── Logbook özeti kartı (telefon düzeni) ──────────────────────────────────────
+// Bugünün yerel QSO sayısını ve son 5 QSO'yu gösterir (çağrı işaretinden bağımsız).
+
+class _LogbookSummaryCard extends ConsumerWidget {
+  const _LogbookSummaryCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final async = ref.watch(logbookSummaryProvider);
+    return async.when(
+      loading: () => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (summary) {
+        final todayCount = summary.todayCount;
+        final last5 = summary.last5;
+        if (last5.isEmpty && todayCount == 0) return const SizedBox.shrink();
+        final cs = Theme.of(context).colorScheme;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Card(
+            margin: EdgeInsets.zero,
+            color: cs.surfaceContainerLow,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Başlık satırı ──────────────────────────────────────
+                  Row(children: [
+                    Icon(Icons.list_alt, size: 14, color: cs.primary),
+                    const SizedBox(width: 6),
+                    Text(
+                      l.logbookSummaryTitle,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: cs.primary),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: cs.primaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        l.todayQsoCount(todayCount),
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: cs.onPrimaryContainer),
+                      ),
+                    ),
+                  ]),
+                  if (last5.isNotEmpty) ...[
+                    const Divider(height: 8),
+                    // ── Sütun başlıkları ──────────────────────────────────
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 3),
+                      child: Row(children: [
+                        Expanded(
+                          flex: 24,
+                          child: Text(l.colDateTime,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.onSurfaceVariant)),
+                        ),
+                        Expanded(
+                          flex: 28,
+                          child: Text('QSO',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.onSurfaceVariant)),
+                        ),
+                        Expanded(
+                          flex: 12,
+                          child: Text('Mod',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.onSurfaceVariant)),
+                        ),
+                        Expanded(
+                          flex: 12,
+                          child: Text(l.colRstSent,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.onSurfaceVariant)),
+                        ),
+                        Expanded(
+                          flex: 12,
+                          child: Text(l.colRstRcvd,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.onSurfaceVariant)),
+                        ),
+                        Expanded(
+                          flex: 12,
+                          child: Text('Band',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: cs.onSurfaceVariant)),
+                        ),
+                      ]),
+                    ),
+                    ...last5.map((q) => _LogbookRow(qso: q, cs: cs)),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LogbookRow extends StatelessWidget {
+  final QsoModel qso;
+  final ColorScheme cs;
+  const _LogbookRow({required this.qso, required this.cs});
+
+  @override
+  Widget build(BuildContext context) {
+    final dt = qso.dateTimeOn.toUtc();
+    final dateStr = DateFormat('dd/MM/yy HH:mm').format(dt);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          // Tarih/Saat
+          Expanded(
+            flex: 24,
+            child: Text(
+              dateStr,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                  color: cs.onSurfaceVariant),
+            ),
+          ),
+          // QSO (çağrı işareti)
+          Expanded(
+            flex: 28,
+            child: Text(
+              qso.callsign,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'monospace',
+                  color: cs.primary),
+            ),
+          ),
+          // Mod
+          Expanded(
+            flex: 12,
+            child: Text(
+              qso.mode,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10, color: cs.onSurface),
+            ),
+          ),
+          // RST (G) — gönderilen
+          Expanded(
+            flex: 12,
+            child: Text(
+              qso.rstSent,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                  color: cs.onSurface),
+            ),
+          ),
+          // RST (A) — alınan
+          Expanded(
+            flex: 12,
+            child: Text(
+              qso.rstRcvd,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: 'monospace',
+                  color: cs.onSurface),
+            ),
+          ),
+          // Band
+          Expanded(
+            flex: 12,
+            child: Text(
+              qso.band,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                  fontSize: 10,
+                  color: cs.onSurfaceVariant),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
