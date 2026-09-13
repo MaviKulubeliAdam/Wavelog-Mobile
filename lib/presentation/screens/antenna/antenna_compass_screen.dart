@@ -342,12 +342,12 @@ class _CompassPainter extends CustomPainter {
     // the same palette regardless of light/dark app theme.
     canvas.drawCircle(
       center, size.width / 2,
-      Paint()..color = const Color(0xFF0F172A),
+      Paint()..color = const Color(0xFF1C1917),
     );
     canvas.drawCircle(
       center, size.width / 2,
       Paint()
-        ..color = const Color(0xFF334155)
+        ..color = const Color(0xFF44403C)
         ..style = PaintingStyle.stroke
         ..strokeWidth = size.width * 0.04,
     );
@@ -369,8 +369,8 @@ class _CompassPainter extends CustomPainter {
         Offset(dx * r, dy * r),
         Paint()
           ..color = isMajor
-              ? const Color(0xFF64748B)
-              : const Color(0xFF2D3F55)
+              ? const Color(0xFF78716C)
+              : const Color(0xFF3D3632)
           ..strokeWidth = isMajor ? 2 : 1,
       );
     }
@@ -393,7 +393,7 @@ class _CompassPainter extends CustomPainter {
                           : '$i',
           style: TextStyle(
             fontFamily: kMonoFontFamily,
-            color: i == 0 ? const Color(0xFFFB7185) : const Color(0xFFCBD5E1),
+            color: i == 0 ? const Color(0xFFFB7185) : const Color(0xFFD6D3D1),
             fontSize: i % 90 == 0 ? r * 0.16 : r * 0.09,
             fontWeight: i % 90 == 0 ? FontWeight.bold : FontWeight.normal,
           ),
@@ -462,7 +462,7 @@ class _CompassPainter extends CustomPainter {
     // ── Center dot ────────────────────────────────────────────────────────
     canvas.drawCircle(center, 7, Paint()..color = Colors.white);
     canvas.drawCircle(
-        center, 4, Paint()..color = const Color(0xFF0F172A));
+        center, 4, Paint()..color = const Color(0xFF1C1917));
   }
 
   @override

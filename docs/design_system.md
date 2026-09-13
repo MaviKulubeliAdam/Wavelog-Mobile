@@ -9,24 +9,32 @@ Onaylanan görsel önizleme: [Wavelog Redesign artifact](https://claude.ai/code/
 
 ## Renk
 
+**2026-09-13 güncellemesi:** İlk redesign turunda marka rengi (Sky mavi) ve Slate
+nötrler bilinçli olarak korunmuştu — kullanıcı geri bildirimi bunun yetersiz
+kaldığını, gerçekten farklı bir tema istediğini gösterdi. Palet tamamen
+değiştirildi: **Sky mavi → Orange-600, Slate (soğuk gri) → Stone (sıcak gri)**.
+
 60/30/10 kuralı:
 
 | Rol | Kaynak | Pay |
 |---|---|---|
-| Nötr yüzey (bg/surface/border) | Tailwind Slate ölçeği | ~60% |
-| Marka / etkileşim | `_seed` — Sky-500 `#0EA5E9` | ~30% |
-| Vurgu (odak halkası, on-air, semantik) | `kAccentElectric`, `kOnAir`, `AppSemanticColors` | ~10% |
+| Nötr yüzey (bg/surface/border) | Tailwind Stone ölçeği | ~60% |
+| Marka / etkileşim | `_seed` — Orange-600 `#EA580C` | ~30% |
+| Vurgu (odak halkası, on-air, semantik) | `kAccentElectric` (Teal-600 `#0891B2`), `kOnAir` (Amber-400 `#FBBF24`), `AppSemanticColors` | ~10% |
 
 Semantik renkler (`AppSemanticColors`, `Theme.of(context).extension()` veya
-`context.semanticColors`) — QSO durumları için, marka renginin yerine geçmez:
+`context.semanticColors`) — QSO durumları için, marka renginin yerine geçmez.
+`duplicate` turuncu/amber değil pembe seçildi — artık marka rengiyle
+(`_seed`) çakışmaması için:
 
 | Anlam | Koyu tema | Açık tema |
 |---|---|---|
 | Onaylı (LoTW/eQSL) | `#10B981` | `#059669` |
-| Olası tekrar (dupe) | `#F59E0B` | `#D97706` |
+| Olası tekrar (dupe) | `#EC4899` | `#DB2777` |
 | Yeni DXCC ("needed") | `#8B5CF6` | `#7C3AED` |
 
-Sky-500 seed ve Slate nötrler **sabit** — marka çıpası olarak korunuyor, değiştirilmedi.
+Orange seed ve Stone nötrler artık marka çıpası — bir sonraki palet
+değişikliğinde de bu bölüm güncellenmeli.
 
 ## Tipografi
 

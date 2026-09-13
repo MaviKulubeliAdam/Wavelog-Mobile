@@ -17,8 +17,8 @@ class QsoSkeletonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardBg = isDark ? const Color(0xFF131D2E) : Colors.white;
-    final cardBorder = isDark ? const Color(0xFF1A2740) : const Color(0xFFE2E8F0);
+    final cardBg = isDark ? const Color(0xFF1A1613) : Colors.white;
+    final cardBorder = isDark ? const Color(0xFF2A241F) : const Color(0xFFE7E5E4);
 
     return ListView.separated(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

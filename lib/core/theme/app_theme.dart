@@ -2,29 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // ── Seed & Palette ────────────────────────────────────────────────────────────
-const Color _seed = Color(0xFF0EA5E9); // Sky-500 — techy, modern
+const Color _seed = Color(0xFFEA580C); // Orange-600 — warm, RF/energy
 
-// ── Electric accent (additive) ───────────────────────────────────────────────
-/// Cyan-400 — used for loaders, focus rings and the splash glow.
+// ── Contrast accent (additive) ───────────────────────────────────────────────
+/// Teal-600 — used for loaders, focus rings and the splash glow.
 /// Additive only: does not replace existing palette colors.
-const Color kAccentElectric = Color(0xFF22D3EE);
+const Color kAccentElectric = Color(0xFF0891B2);
 
-/// Optional warm "on-air" badge color.
-const Color kOnAir = Color(0xFFF59E0B);
+/// "On-air"/pending-sync badge — amber, deliberately a different hue from the
+/// orange brand seed so it still reads as a distinct alert, not the brand color.
+const Color kOnAir = Color(0xFFFBBF24);
 
-// Dark palette (Tailwind Slate family)
-const Color _darkBg = Color(0xFF0F172A);        // slate-900
-const Color _darkSurface = Color(0xFF1E293B);   // slate-800
-const Color _darkBorderSubtle = Color(0xFF1E2D42);
-const Color _darkBorderMid = Color(0xFF2D3F55);
-const Color _darkBorder = Color(0xFF475569);    // slate-600
+// Dark palette (Tailwind Stone family — warm neutrals to match the orange seed)
+const Color _darkBg = Color(0xFF1C1917);        // stone-900
+const Color _darkSurface = Color(0xFF292524);   // stone-800
+const Color _darkBorderSubtle = Color(0xFF262220);
+const Color _darkBorderMid = Color(0xFF3D3632);
+const Color _darkBorder = Color(0xFF57534E);    // stone-600
 
 // Light palette
-const Color _lightBg = Color(0xFFF1F5F9);       // slate-100
+const Color _lightBg = Color(0xFFF5F5F4);       // stone-100
 const Color _lightSurface = Color(0xFFFFFFFF);
-const Color _lightSurfaceAlt = Color(0xFFF8FAFC); // slate-50
-const Color _lightBorder = Color(0xFFE2E8F0);   // slate-200
-const Color _lightBorderMid = Color(0xFFCBD5E1); // slate-300
+const Color _lightSurfaceAlt = Color(0xFFFAFAF9); // stone-50
+const Color _lightBorder = Color(0xFFE7E5E4);   // stone-200
+const Color _lightBorderMid = Color(0xFFD6D3D1); // stone-300
 
 // ── Shared shape constants ────────────────────────────────────────────────────
 const double _cardRadius = 16.0;
@@ -84,12 +85,12 @@ class AppSemanticColors extends ThemeExtension<AppSemanticColors> {
 
   static const dark = AppSemanticColors(
     confirmed: Color(0xFF10B981),
-    duplicate: Color(0xFFF59E0B),
+    duplicate: Color(0xFFEC4899),
     needed: Color(0xFF8B5CF6),
   );
   static const light = AppSemanticColors(
     confirmed: Color(0xFF059669),
-    duplicate: Color(0xFFD97706),
+    duplicate: Color(0xFFDB2777),
     needed: Color(0xFF7C3AED),
   );
 
@@ -130,10 +131,10 @@ final ThemeData darkTheme = ThemeData(
   ).copyWith(
     surface: _darkSurface,
     surfaceContainerLowest: _darkBg,
-    surfaceContainerLow: const Color(0xFF182234),
+    surfaceContainerLow: const Color(0xFF211D1A),
     surfaceContainer: _darkSurface,
-    surfaceContainerHigh: const Color(0xFF263447),
-    surfaceContainerHighest: const Color(0xFF334155),
+    surfaceContainerHigh: const Color(0xFF332C28),
+    surfaceContainerHighest: const Color(0xFF44403C),
     outline: _darkBorder,
     outlineVariant: _darkBorderMid,
   ),
@@ -155,8 +156,8 @@ final ThemeData darkTheme = ThemeData(
       color: Colors.white,
       letterSpacing: -0.4,
     ),
-    iconTheme: const IconThemeData(color: Color(0xFF94A3B8), size: 22),
-    actionsIconTheme: const IconThemeData(color: Color(0xFF94A3B8), size: 22),
+    iconTheme: const IconThemeData(color: Color(0xFFA8A29E), size: 22),
+    actionsIconTheme: const IconThemeData(color: Color(0xFFA8A29E), size: 22),
     systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
       statusBarColor: Colors.transparent,
       systemNavigationBarColor: Colors.transparent,
@@ -180,7 +181,7 @@ final ThemeData darkTheme = ThemeData(
   // ── Input ──────────────────────────────────────────────────────────────────
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
-    fillColor: const Color(0xFF182234),
+    fillColor: const Color(0xFF211D1A),
     isDense: true,
     contentPadding:
         const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -189,11 +190,11 @@ final ThemeData darkTheme = ThemeData(
     focusedBorder: _border(_seed, w: 2),
     errorBorder: _border(const Color(0xFFFB7185)),
     focusedErrorBorder: _border(const Color(0xFFFB7185), w: 2),
-    disabledBorder: _border(const Color(0xFF1E293B)),
-    labelStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-    hintStyle: const TextStyle(color: Color(0xFF475569), fontSize: 14),
-    prefixIconColor: const Color(0xFF64748B),
-    suffixIconColor: const Color(0xFF64748B),
+    disabledBorder: _border(const Color(0xFF292524)),
+    labelStyle: const TextStyle(color: Color(0xFFA8A29E), fontSize: 14),
+    hintStyle: const TextStyle(color: Color(0xFF57534E), fontSize: 14),
+    prefixIconColor: const Color(0xFF78716C),
+    suffixIconColor: const Color(0xFF78716C),
     errorStyle: const TextStyle(color: Color(0xFFFB7185), fontSize: 12),
     floatingLabelStyle: const TextStyle(
       color: _seed,
@@ -259,7 +260,7 @@ final ThemeData darkTheme = ThemeData(
       if (states.contains(WidgetState.selected)) {
         return const IconThemeData(color: _seed, size: 22);
       }
-      return const IconThemeData(color: Color(0xFF64748B), size: 22);
+      return const IconThemeData(color: Color(0xFF78716C), size: 22);
     }),
     labelTextStyle: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
@@ -271,7 +272,7 @@ final ThemeData darkTheme = ThemeData(
         );
       }
       return const TextStyle(
-        color: Color(0xFF64748B),
+        color: Color(0xFF78716C),
         fontSize: 11,
         fontWeight: FontWeight.w500,
       );
@@ -335,7 +336,7 @@ final ThemeData darkTheme = ThemeData(
       letterSpacing: -0.2,
     ),
     contentTextStyle: const TextStyle(
-      color: Color(0xFFCBD5E1),
+      color: Color(0xFFD6D3D1),
       fontSize: 14,
       height: 1.5,
     ),
@@ -344,7 +345,7 @@ final ThemeData darkTheme = ThemeData(
 
   // ── SnackBar ───────────────────────────────────────────────────────────────
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: const Color(0xFF1E2D3D),
+    backgroundColor: const Color(0xFF231F1C),
     contentTextStyle: const TextStyle(
       color: Colors.white,
       fontSize: 14,
@@ -380,12 +381,12 @@ final ThemeData darkTheme = ThemeData(
     thumbColor: WidgetStateProperty.resolveWith((states) {
       return states.contains(WidgetState.selected)
           ? Colors.white
-          : const Color(0xFF64748B);
+          : const Color(0xFF78716C);
     }),
     trackColor: WidgetStateProperty.resolveWith((states) {
       return states.contains(WidgetState.selected)
           ? _seed
-          : const Color(0xFF334155);
+          : const Color(0xFF44403C);
     }),
     trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
   ),
@@ -443,7 +444,7 @@ final ThemeData lightTheme = ThemeData(
     surfaceContainerLowest: _lightBg,
     surfaceContainerLow: _lightSurfaceAlt,
     surfaceContainer: _lightSurface,
-    surfaceContainerHigh: const Color(0xFFEEF2F7),
+    surfaceContainerHigh: const Color(0xFFF0EDEA),
     surfaceContainerHighest: _lightBorder,
     outline: _lightBorderMid,
     outlineVariant: _lightBorder,
@@ -458,17 +459,17 @@ final ThemeData lightTheme = ThemeData(
     shadowColor: Colors.black.withValues(alpha: 0.08),
     backgroundColor: _lightBg,
     surfaceTintColor: Colors.transparent,
-    foregroundColor: const Color(0xFF0F172A),
+    foregroundColor: const Color(0xFF1C1917),
     titleTextStyle: const TextStyle(
       fontFamily: kHeadingFontFamily,
       fontSize: 19,
       fontWeight: FontWeight.w700,
-      color: Color(0xFF0F172A),
+      color: Color(0xFF1C1917),
       letterSpacing: -0.4,
     ),
-    iconTheme: const IconThemeData(color: Color(0xFF64748B), size: 22),
+    iconTheme: const IconThemeData(color: Color(0xFF78716C), size: 22),
     actionsIconTheme:
-        const IconThemeData(color: Color(0xFF64748B), size: 22),
+        const IconThemeData(color: Color(0xFF78716C), size: 22),
     systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
       statusBarColor: Colors.transparent,
       systemNavigationBarColor: Colors.transparent,
@@ -501,10 +502,10 @@ final ThemeData lightTheme = ThemeData(
     errorBorder: _border(const Color(0xFFDC2626)),
     focusedErrorBorder: _border(const Color(0xFFDC2626), w: 2),
     disabledBorder: _border(_lightBorder),
-    labelStyle: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
-    hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
-    prefixIconColor: const Color(0xFF94A3B8),
-    suffixIconColor: const Color(0xFF94A3B8),
+    labelStyle: const TextStyle(color: Color(0xFF78716C), fontSize: 14),
+    hintStyle: const TextStyle(color: Color(0xFFA8A29E), fontSize: 14),
+    prefixIconColor: const Color(0xFFA8A29E),
+    suffixIconColor: const Color(0xFFA8A29E),
     errorStyle: const TextStyle(color: Color(0xFFDC2626), fontSize: 12),
     floatingLabelStyle: TextStyle(
       color: _seed.withValues(alpha: 0.9),
@@ -568,21 +569,21 @@ final ThemeData lightTheme = ThemeData(
     labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
     iconTheme: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
-        return const IconThemeData(color: Color(0xFF0369A1), size: 22);
+        return const IconThemeData(color: Color(0xFFC2410C), size: 22);
       }
-      return const IconThemeData(color: Color(0xFF94A3B8), size: 22);
+      return const IconThemeData(color: Color(0xFFA8A29E), size: 22);
     }),
     labelTextStyle: WidgetStateProperty.resolveWith((states) {
       if (states.contains(WidgetState.selected)) {
         return const TextStyle(
-          color: Color(0xFF0369A1),
+          color: Color(0xFFC2410C),
           fontSize: 11,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.2,
         );
       }
       return const TextStyle(
-        color: Color(0xFF94A3B8),
+        color: Color(0xFFA8A29E),
         fontSize: 11,
         fontWeight: FontWeight.w500,
       );
@@ -641,11 +642,11 @@ final ThemeData lightTheme = ThemeData(
       fontFamily: kHeadingFontFamily,
       fontSize: 17,
       fontWeight: FontWeight.w700,
-      color: Color(0xFF0F172A),
+      color: Color(0xFF1C1917),
       letterSpacing: -0.2,
     ),
     contentTextStyle: const TextStyle(
-      color: Color(0xFF475569),
+      color: Color(0xFF57534E),
       fontSize: 14,
       height: 1.5,
     ),
@@ -654,7 +655,7 @@ final ThemeData lightTheme = ThemeData(
 
   // ── SnackBar ───────────────────────────────────────────────────────────────
   snackBarTheme: SnackBarThemeData(
-    backgroundColor: const Color(0xFF1E293B),
+    backgroundColor: const Color(0xFF292524),
     contentTextStyle: const TextStyle(
       color: Colors.white,
       fontSize: 14,
@@ -690,7 +691,7 @@ final ThemeData lightTheme = ThemeData(
     trackColor: WidgetStateProperty.resolveWith((states) {
       return states.contains(WidgetState.selected)
           ? _seed
-          : const Color(0xFFCBD5E1);
+          : const Color(0xFFD6D3D1);
     }),
     trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
   ),
