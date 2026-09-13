@@ -43,6 +43,7 @@ import 'presentation/screens/community/plan_activation_screen.dart';
 import 'presentation/screens/community/chat_screen.dart';
 import 'data/models/planned_activation_model.dart';
 import 'providers/settings_provider.dart';
+import 'providers/chat_provider.dart';
 
 final _rootNavigatorKey  = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -459,6 +460,7 @@ class _AppDrawer extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final l10n = context.l10n;
     final pendingCount = ref.watch(pendingSyncCountProvider);
+    final unreadChatCount = ref.watch(totalUnreadChatProvider);
     ref.watch(autoSyncProvider);
 
     void go(String path) {
@@ -566,6 +568,7 @@ class _AppDrawer extends ConsumerWidget {
                   icon: Icons.groups_outlined,
                   label: l10n.drawerCommunity,
                   onTap: () => go('/community'),
+                  badgeCount: unreadChatCount,
                 ),
                 const Divider(indent: 16, endIndent: 16),
                 _DrawerItem(
@@ -681,13 +684,23 @@ class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _DrawerItem({required this.icon, required this.label, required this.onTap});
+  final int badgeCount;
+  const _DrawerItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.badgeCount = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return ListTile(
-      leading: Icon(icon, color: cs.onSurfaceVariant, size: 22),
+      leading: Badge(
+        isLabelVisible: badgeCount > 0,
+        label: Text('$badgeCount'),
+        child: Icon(icon, color: cs.onSurfaceVariant, size: 22),
+      ),
       title: Text(label),
       dense: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

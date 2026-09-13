@@ -26,7 +26,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   bool _sending = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => ref.read(lastReadProvider.notifier).markRead(widget.roomId),
+    );
+  }
+
+  @override
   void dispose() {
+    ref.read(lastReadProvider.notifier).markRead(widget.roomId);
     _inputCtrl.dispose();
     _scrollCtrl.dispose();
     super.dispose();
@@ -505,6 +514,9 @@ class _MessageBubble extends ConsumerWidget {
   }
 
   void _showOptions(BuildContext context, WidgetRef ref) {
+    // Mesaj giriş kutusu odaklıysa uzun basınca klavye açık kalıp
+    // bottom sheet'in üstüne biniyordu — önce klavyeyi kapat.
+    FocusScope.of(context).unfocus();
     showModalBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(

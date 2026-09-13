@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/services/chat_notification_service.dart';
 import '../../../core/services/intent_handler.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/settings_provider.dart';
@@ -46,11 +47,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         return;
       }
       final pendingFile = await IntentHandler.getInitialFile();
+      final pendingRoom = await ChatNotificationService.getLaunchRoom();
       if (!mounted) return;
       context.go('/home');
       if (pendingFile != null) {
         await Future<void>.delayed(const Duration(milliseconds: 300));
         appRouter.push('/adif', extra: pendingFile);
+      } else if (pendingRoom != null) {
+        await Future<void>.delayed(const Duration(milliseconds: 300));
+        appRouter.push(
+          '/community/chat/${pendingRoom.roomId}',
+          extra: pendingRoom.roomName,
+        );
       }
     }
   }

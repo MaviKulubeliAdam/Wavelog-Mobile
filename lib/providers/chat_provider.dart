@@ -52,6 +52,76 @@ final subscribedChatRoomsProvider =
     AsyncNotifierProvider<SubscribedChatRoomsNotifier, Set<String>>(
         SubscribedChatRoomsNotifier.new);
 
+// ─── Okunma zamanı takibi (okunmamış sayaç rozetleri için) ──────────────────
+
+class LastReadNotifier extends AsyncNotifier<Map<String, DateTime>> {
+  static const _key = 'wl_chat_last_read';
+
+  @override
+  Future<Map<String, DateTime>> build() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getStringList(_key) ?? [];
+    final map = <String, DateTime>{};
+    for (final entry in raw) {
+      final parts = entry.split('|');
+      if (parts.length != 2) continue;
+      final ms = int.tryParse(parts[1]);
+      if (ms == null) continue;
+      map[parts[0]] = DateTime.fromMillisecondsSinceEpoch(ms, isUtc: true);
+    }
+    return map;
+  }
+
+  Future<void> markRead(String roomId) async {
+    final current = state.valueOrNull ?? {};
+    final updated = {...current, roomId: DateTime.now().toUtc()};
+    state = AsyncValue.data(updated);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList(
+      _key,
+      updated.entries
+          .map((e) => '${e.key}|${e.value.millisecondsSinceEpoch}')
+          .toList(),
+    );
+  }
+
+  DateTime? lastReadOf(String roomId) => state.valueOrNull?[roomId];
+}
+
+final lastReadProvider =
+    AsyncNotifierProvider<LastReadNotifier, Map<String, DateTime>>(
+        LastReadNotifier.new);
+
+/// Bir odadaki okunmamış (kendi mesajların hariç) mesaj sayısı.
+final unreadCountProvider = Provider.family<int, String>((ref, roomId) {
+  final messages = ref.watch(chatMessagesProvider(roomId)).valueOrNull ?? [];
+  final lastRead = ref.watch(lastReadProvider).valueOrNull?[roomId];
+  final myCallsign =
+      ref.watch(settingsProvider).activeStationCallsign?.toUpperCase() ?? '';
+
+  if (lastRead == null) {
+    return messages
+        .where((m) => m.callsign.toUpperCase() != myCallsign)
+        .length;
+  }
+  return messages
+      .where((m) =>
+          m.callsign.toUpperCase() != myCallsign &&
+          m.timestamp.isAfter(lastRead))
+      .length;
+});
+
+/// Takip edilen tüm odalardaki toplam okunmamış mesaj sayısı
+/// (drawer'daki Topluluk rozeti için).
+final totalUnreadChatProvider = Provider<int>((ref) {
+  final subscribed = ref.watch(subscribedChatRoomsProvider).valueOrNull ?? {};
+  var total = 0;
+  for (final roomId in subscribed) {
+    total += ref.watch(unreadCountProvider(roomId));
+  }
+  return total;
+});
+
 class ChatNotifier extends Notifier<void> {
   @override
   void build() {}
