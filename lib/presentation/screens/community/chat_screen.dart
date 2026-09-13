@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/chat_message_model.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../providers/chat_provider.dart';
 import '../../../providers/settings_provider.dart';
 
@@ -420,7 +421,6 @@ class _MessageBubble extends ConsumerWidget {
           _ReactionRow(
             message: message,
             roomId: roomId,
-            myCallsign: myCallsign,
           ),
         ],
       );
@@ -653,17 +653,18 @@ class _MessageBubble extends ConsumerWidget {
 class _ReactionRow extends ConsumerWidget {
   final ChatMessageModel message;
   final String roomId;
-  final String myCallsign;
 
   const _ReactionRow({
     required this.message,
     required this.roomId,
-    required this.myCallsign,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
+    // Reaksiyonlar Firestore'da uid ile tutuluyor (bkz. firestore.rules) —
+    // "benim mi" kontrolü de callsign değil uid üzerinden yapılmalı.
+    final myUid = ref.watch(firebaseAuthProvider).currentUser?.uid;
     final entries = message.reactions.entries
         .where((e) => e.value.isNotEmpty)
         .toList();
@@ -675,12 +676,10 @@ class _ReactionRow extends ConsumerWidget {
       children: entries.map((e) {
         final emoji = e.key;
         final count = e.value.length;
-        final mine = e.value
-            .map((c) => c.toUpperCase())
-            .contains(myCallsign.toUpperCase());
+        final mine = myUid != null && e.value.contains(myUid);
         return InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: myCallsign.isEmpty
+          onTap: myUid == null
               ? null
               : () => ref
                   .read(chatNotifierProvider.notifier)

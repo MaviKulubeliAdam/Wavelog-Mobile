@@ -15,6 +15,14 @@
         { "fieldPath": "callsign",  "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "planned_activations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "notified",    "order": "ASCENDING" },
+        { "fieldPath": "scheduledAt", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

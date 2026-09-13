@@ -2,11 +2,44 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Reaction toggling is validated per-emoji: the only change allowed is
+    // adding or removing the caller's own uid from exactly one emoji's list.
+    // hasAll() + exact size delta pins the diff to a single element even
+    // though list membership isn't positional.
+    function reactionToggleValid(emoji) {
+      let oldMap = resource.data.get('reactions', {});
+      let newMap = request.resource.data.reactions;
+      let oldList = oldMap.get(emoji, []);
+      let newList = newMap.get(emoji, []);
+      return newMap.diff(oldMap).affectedKeys().hasOnly([emoji])
+          && (
+               (newList.size() == oldList.size() + 1 && newList.hasAll(oldList)
+                && request.auth.uid in newList && !(request.auth.uid in oldList))
+               ||
+               (oldList.size() == newList.size() + 1 && oldList.hasAll(newList)
+                && request.auth.uid in oldList && !(request.auth.uid in newList))
+             );
+    }
+
+    function isValidReactionUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+          && request.resource.data.reactions is map
+          && request.resource.data.reactions.keys().hasOnly(['👍', '❤️', '😂', '😮', '😢', '🙏'])
+          && (
+               reactionToggleValid('👍') || reactionToggleValid('❤️') || reactionToggleValid('😂')
+               || reactionToggleValid('😮') || reactionToggleValid('😢') || reactionToggleValid('🙏')
+             );
+    }
+
     // ── Callsign ownership registry ──────────────────────────────────────────
     // Each document id = UPPERCASE callsign, value = { uid, claimedAt }
     // Once created it can never be updated or deleted — immutable binding.
     match /callsign_claims/{callsign} {
-      allow read: if true;
+      // Single-doc lookups only (needed to check/claim one specific known
+      // callsign) — collection-wide listing is blocked so the full
+      // callsign→uid mapping can't be scraped by an outside client.
+      allow get: if true;
+      allow list: if false;
       // Only the authenticated user can create a claim for themselves,
       // and only if that callsign is not yet taken.
       allow create: if request.auth != null
@@ -37,30 +70,35 @@ service cloud.firestore {
       //    notified can only flip true→false (re-arm) never be set to false
       //    from an already-false state (prevents spam re-notification).
       // b) Full edit: authenticated owner only, callsign & uid unchanged
-      allow update: if request.resource.data.diff(resource.data).affectedKeys()
-                          .hasOnly(['subscriberCount', 'notified'])
+      // Both branches require auth — note the auth check wraps the whole
+      // expression so operator precedence can't strand branch (a) unguarded.
+      allow update: if request.auth != null
                     && (
-                         (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['subscriberCount'])
-                          && (request.resource.data.subscriberCount == resource.data.subscriberCount + 1
-                              || request.resource.data.subscriberCount == resource.data.subscriberCount - 1)
-                          && request.resource.data.subscriberCount >= 0)
+                         (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['subscriberCount', 'notified'])
+                          && (
+                               (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['subscriberCount'])
+                                && (request.resource.data.subscriberCount == resource.data.subscriberCount + 1
+                                    || request.resource.data.subscriberCount == resource.data.subscriberCount - 1)
+                                && request.resource.data.subscriberCount >= 0)
+                               ||
+                               (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notified'])
+                                && resource.data.notified == true
+                                && request.resource.data.notified == false)
+                             ))
                          ||
-                         (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['notified'])
-                          && resource.data.notified == true
-                          && request.resource.data.notified == false)
-                       )
-                    || (request.auth != null
-                        && request.auth.uid == resource.data.get('uid', '')
-                        && request.resource.data.uid == resource.data.uid
-                        && request.resource.data.callsign == resource.data.callsign
-                        && request.resource.data.keys().hasAll([
-                             'callsign', 'type', 'scheduledAt', 'expiresAt',
-                             'bands', 'modes'
-                           ]));
+                         (request.auth.uid == resource.data.uid
+                          && request.resource.data.uid == resource.data.uid
+                          && request.resource.data.callsign == resource.data.callsign
+                          && request.resource.data.keys().hasAll([
+                               'callsign', 'type', 'scheduledAt', 'expiresAt',
+                               'bands', 'modes'
+                             ]))
+                       );
 
-      // Authenticated owner, OR legacy docs without uid field
+      // Owner only — every doc now carries a uid (legacy uid-less docs
+      // were removed as part of this fix).
       allow delete: if request.auth != null
-                    && (!('uid' in resource.data) || resource.data.uid == request.auth.uid);
+                    && resource.data.uid == request.auth.uid;
     }
 
     // ── Chat rooms ────────────────────────────────────────────────────────────
@@ -78,11 +116,12 @@ service cloud.firestore {
                     && get(/databases/$(database)/documents/callsign_claims/$(request.resource.data.callsign)).data.uid == request.auth.uid;
 
       // Edit: only the original sender, uid/callsign/timestamp unchanged —
-      // OR any authenticated user toggling only the reactions field
+      // OR any authenticated user toggling their own reaction (validated
+      // above so no one can spoof another uid's reaction or inject
+      // arbitrary keys/text via the reactions map).
       allow update: if request.auth != null
                     && (
-                         request.resource.data.diff(resource.data).affectedKeys()
-                           .hasOnly(['reactions'])
+                         isValidReactionUpdate()
                          ||
                          (request.auth.uid == resource.data.uid
                           && request.resource.data.uid == resource.data.uid

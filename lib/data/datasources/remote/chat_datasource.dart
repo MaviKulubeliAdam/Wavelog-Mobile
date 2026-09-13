@@ -32,17 +32,20 @@ class ChatDatasource {
   Future<void> deleteMessage(String roomId, String messageId) =>
       _messages(roomId).doc(messageId).delete();
 
+  // Reaksiyon listesi uid ile tutuluyor (callsign ile değil) — Firestore
+  // kuralı sadece request.auth.uid'in eklenip çıkarılmasına izin veriyor,
+  // bu yüzden burada başka bir kimlik göndermek zaten sunucuda reddedilir.
   Future<void> toggleReaction(
     String roomId,
     String messageId,
     String emoji,
-    String callsign,
+    String uid,
     bool adding,
   ) =>
       _messages(roomId).doc(messageId).update({
         'reactions.$emoji': adding
-            ? FieldValue.arrayUnion([callsign.toUpperCase()])
-            : FieldValue.arrayRemove([callsign.toUpperCase()]),
+            ? FieldValue.arrayUnion([uid])
+            : FieldValue.arrayRemove([uid]),
       });
 
   // FCM: Bu sohbet odasına yeni mesaj bildirimi almak isteyen

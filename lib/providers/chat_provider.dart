@@ -175,16 +175,14 @@ class ChatNotifier extends Notifier<void> {
 
   Future<void> toggleReaction(
       String roomId, ChatMessageModel message, String emoji) async {
-    final callsign = ref.read(settingsProvider).activeStationCallsign ?? '';
-    if (callsign.isEmpty) return;
-    final alreadyReacted = (message.reactions[emoji] ?? [])
-        .map((c) => c.toUpperCase())
-        .contains(callsign.toUpperCase());
+    final uid = ref.read(firebaseAuthProvider).currentUser?.uid;
+    if (uid == null) return;
+    final alreadyReacted = (message.reactions[emoji] ?? []).contains(uid);
     await ref.read(chatDatasourceProvider).toggleReaction(
           roomId,
           message.id,
           emoji,
-          callsign,
+          uid,
           !alreadyReacted,
         );
   }
