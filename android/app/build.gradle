@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.api.ApkVariantOutputImpl
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -40,6 +42,11 @@ android {
         versionCode flutter.versionCode
         // pubspec.yaml'daki sürümü kullan — sabit değer pubspec'i eziyordu
         versionName flutter.versionName
+        // Flutter'ın eklentisi ndk.abiFilters'ı otomatik dolduruyor, bu da
+        // splits.abi ile çakışıyor — abi seçimini splits'e bırak.
+        ndk {
+            abiFilters.clear()
+        }
     }
 
     buildTypes {
@@ -48,6 +55,28 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include "armeabi-v7a", "arm64-v8a", "x86_64"
+            universalApk false
+        }
+    }
+}
+
+// F-Droid requires a distinct versionCode per ABI split (see
+// https://f-droid.org/en/docs/Submitting_to_F-Droid_Quick_Start_Guide/#setup-abi-split).
+def abiCodes = ["armeabi-v7a": 1, "arm64-v8a": 2, "x86_64": 3]
+
+android.applicationVariants.configureEach { variant ->
+    variant.outputs.each { output ->
+        def abiVersionCode = abiCodes[output.filters.find { it.filterType == "ABI" }?.identifier]
+        if (abiVersionCode != null) {
+            ((ApkVariantOutputImpl) output).versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
     }
 }
