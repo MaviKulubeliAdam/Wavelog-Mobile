@@ -10,6 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.1'
+
+      - name: Decode release keystore
+        run: echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/wavelog-release.jks
+
+      - name: Write key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.RELEASE_STORE_PASSWORD }}
+          keyPassword=${{ secrets.RELEASE_KEY_PASSWORD }}
+          keyAlias=wavelog
+          storeFile=wavelog-release.jks
+          EOF
+
+      - run: flutter pub get
+
+      - name: Build per-ABI release APKs
+        run: flutter build apk --release --split-per-abi
+
+      - name: Create GitHub Release with signed APKs
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-release.apk
