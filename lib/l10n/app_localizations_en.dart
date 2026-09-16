@@ -87,6 +87,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get testingConnection => 'Testing...';
 
   @override
+  String get sslIssueTitle => 'SSL Certificate Issue';
+
+  @override
+  String get sslIssueBody =>
+      'This server\'s SSL certificate could not be verified — it may be self-signed or expired. Continue without verification? (Only recommended for servers you trust.)';
+
+  @override
+  String get sslIssueAllow => 'Continue Without Verification';
+
+  @override
+  String get scopeTestSectionTitle => 'Scope Test';
+
+  @override
+  String get scopeTestRunning => 'Testing permissions…';
+
+  @override
+  String get scopeTestAllPassed => 'All required scopes are present';
+
+  @override
+  String get scopeTestSomeFailed => 'Some scopes are missing';
+
+  @override
+  String get scopeTestAddHint => 'Add this scope when creating your API token';
+
+  @override
   String get connectionSuccess => 'Connection successful!';
 
   @override

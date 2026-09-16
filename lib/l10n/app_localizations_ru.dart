@@ -87,6 +87,32 @@ class AppLocalizationsRu extends AppLocalizations {
   String get testingConnection => 'Проверка...';
 
   @override
+  String get sslIssueTitle => 'Проблема с SSL-сертификатом';
+
+  @override
+  String get sslIssueBody =>
+      'Не удалось проверить SSL-сертификат этого сервера — возможно, он самоподписанный или просроченный. Продолжить без проверки? (Рекомендуется только для доверенных серверов.)';
+
+  @override
+  String get sslIssueAllow => 'Продолжить без проверки';
+
+  @override
+  String get scopeTestSectionTitle => 'Проверка прав доступа';
+
+  @override
+  String get scopeTestRunning => 'Проверка прав доступа…';
+
+  @override
+  String get scopeTestAllPassed => 'Все необходимые права доступа присутствуют';
+
+  @override
+  String get scopeTestSomeFailed => 'Некоторых прав доступа не хватает';
+
+  @override
+  String get scopeTestAddHint =>
+      'Добавьте это право доступа при создании API-токена';
+
+  @override
   String get connectionSuccess => 'Соединение установлено!';
 
   @override

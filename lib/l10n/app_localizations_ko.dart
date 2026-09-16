@@ -87,6 +87,31 @@ class AppLocalizationsKo extends AppLocalizations {
   String get testingConnection => '테스트 중...';
 
   @override
+  String get sslIssueTitle => 'SSL 인증서 문제';
+
+  @override
+  String get sslIssueBody =>
+      '이 서버의 SSL 인증서를 확인할 수 없습니다 — 자체 서명되었거나 만료되었을 수 있습니다. 검증 없이 계속하시겠습니까? (신뢰하는 서버에만 권장됩니다.)';
+
+  @override
+  String get sslIssueAllow => '검증 없이 계속';
+
+  @override
+  String get scopeTestSectionTitle => '권한 테스트';
+
+  @override
+  String get scopeTestRunning => '권한 테스트 중…';
+
+  @override
+  String get scopeTestAllPassed => '필요한 모든 권한이 있습니다';
+
+  @override
+  String get scopeTestSomeFailed => '일부 권한이 누락되었습니다';
+
+  @override
+  String get scopeTestAddHint => 'API 토큰을 만들 때 이 권한도 선택하세요';
+
+  @override
   String get connectionSuccess => '연결 성공!';
 
   @override

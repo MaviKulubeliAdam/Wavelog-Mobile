@@ -268,6 +268,54 @@ abstract class AppLocalizations {
   /// **'Testing...'**
   String get testingConnection;
 
+  /// No description provided for @sslIssueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'SSL Certificate Issue'**
+  String get sslIssueTitle;
+
+  /// No description provided for @sslIssueBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This server\'s SSL certificate could not be verified — it may be self-signed or expired. Continue without verification? (Only recommended for servers you trust.)'**
+  String get sslIssueBody;
+
+  /// No description provided for @sslIssueAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Without Verification'**
+  String get sslIssueAllow;
+
+  /// No description provided for @scopeTestSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scope Test'**
+  String get scopeTestSectionTitle;
+
+  /// No description provided for @scopeTestRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing permissions…'**
+  String get scopeTestRunning;
+
+  /// No description provided for @scopeTestAllPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'All required scopes are present'**
+  String get scopeTestAllPassed;
+
+  /// No description provided for @scopeTestSomeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Some scopes are missing'**
+  String get scopeTestSomeFailed;
+
+  /// No description provided for @scopeTestAddHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add this scope when creating your API token'**
+  String get scopeTestAddHint;
+
   /// No description provided for @connectionSuccess.
   ///
   /// In en, this message translates to:

@@ -22,6 +22,7 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
   bool _testing = false;
   String? _testResult;
   bool _testSuccess = false;
+  bool _allowInsecureSsl = false;
 
   @override
   void initState() {
@@ -38,9 +39,11 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
 
   Future<void> _saveAndContinue() async {
     if (!_formKey.currentState!.validate()) return;
+    final cleanUrl = normalizeServerUrl(_urlCtrl.text.trim());
+    await ref.read(settingsProvider.notifier).updateServerUrl(cleanUrl);
     await ref
         .read(settingsProvider.notifier)
-        .updateServerUrl(_urlCtrl.text.trim());
+        .setAllowInsecureSsl(_allowInsecureSsl);
     if (mounted) context.go('/login');
   }
 
@@ -56,11 +59,14 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
     // olmadığını kontrol et — API anahtarı bu adımda henüz girilmedi.
     final serverUrl = _urlCtrl.text.trim();
     final remote = WavelogRemoteDatasource(
-      dio: buildWavelogDio(serverUrl, bearerToken: ''),
+      dio: buildWavelogDio(serverUrl,
+          bearerToken: '', allowInsecureSsl: _allowInsecureSsl),
     );
 
     try {
-      final version = await remote.getVersion();
+      // checkVersion() (unlike getVersion()) rethrows on failure — needed
+      // here so an SSL failure can be told apart from "no server here".
+      final version = await remote.checkVersion();
       if (!mounted) return;
       setState(() {
         _testing = false;
@@ -68,6 +74,18 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
         _testResult = version != null
             ? 'Wavelog v$version — ${context.l10n.connectionSuccess}'
             : context.l10n.connectionSuccess;
+      });
+    } on SslException {
+      if (!mounted) return;
+      setState(() => _testing = false);
+      await _offerInsecureSsl();
+    } on UnauthorizedException {
+      // 401/403 still proves the server is reachable and is a Wavelog instance
+      if (!mounted) return;
+      setState(() {
+        _testing = false;
+        _testSuccess = true;
+        _testResult = context.l10n.connectionSuccess;
       });
     } on NetworkException {
       if (!mounted) return;
@@ -84,12 +102,44 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
         _testResult = context.l10n.errTimeout;
       });
     } catch (_) {
-      // 401/403 gibi auth hataları da sunucunun erişilebilir olduğunu gösterir
       if (!mounted) return;
       setState(() {
         _testing = false;
         _testSuccess = true;
         _testResult = context.l10n.connectionSuccess;
+      });
+    }
+  }
+
+  Future<void> _offerInsecureSsl() async {
+    final l10n = context.l10n;
+    final proceed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        icon: const Icon(Icons.warning_amber_rounded,
+            color: Colors.orange, size: 32),
+        title: Text(l10n.sslIssueTitle),
+        content: Text(l10n.sslIssueBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(l10n.sslIssueAllow),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (proceed == true) {
+      setState(() => _allowInsecureSsl = true);
+      await _testConnection();
+    } else {
+      setState(() {
+        _testSuccess = false;
+        _testResult = l10n.sslIssueTitle;
       });
     }
   }
@@ -180,6 +230,23 @@ class _ServerSetupScreenState extends ConsumerState<ServerSetupScreen> {
                                   _testSuccess ? Colors.green : Colors.red,
                               fontSize: 13,
                             ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                  if (_allowInsecureSsl) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.no_encryption_gmailerrorred,
+                            color: Colors.orange, size: 16),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            l10n.sslIssueAllow,
+                            style: const TextStyle(
+                                color: Colors.orange, fontSize: 12),
                           ),
                         ),
                       ],

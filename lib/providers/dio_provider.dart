@@ -14,16 +14,32 @@ final dioProvider = Provider<Dio>((ref) {
   return buildWavelogDio(baseUrl, bearerToken: apiKey, allowInsecureSsl: allowInsecure);
 });
 
-/// Strips legacy path suffixes from the server URL so that v2 endpoint paths
-/// (which start with /index.php/...) are never doubled.
-/// e.g. "https://example.com/index.php" → "https://example.com"
+/// Strips legacy/API path suffixes from the server URL so that v2 endpoint
+/// paths (which start with /index.php/api/v2/...) are never doubled.
+/// Users often paste in a URL they copied from their browser or from an API
+/// endpoint they tested, e.g. "https://example.com/index.php/api/v2" or
+/// even "https://example.com/api/v2/qso" — all of these should resolve to
+/// the same base "https://example.com", since ApiEndpoints always re-adds
+/// the canonical /index.php/api/v2 prefix itself.
+///   "https://example.com/index.php"        → "https://example.com"
+///   "https://example.com/api/v2"            → "https://example.com"
+///   "https://example.com/index.php/api/v2"  → "https://example.com"
+///   "https://example.com/api/v2/qso?x=1"    → "https://example.com"
 String normalizeServerUrl(String url) {
-  var u = url.trimRight().replaceAll(RegExp(r'/+$'), '');
-  // Strip /index.php suffix left over from v1 configuration
-  if (u.endsWith('/index.php')) {
+  var u = url.trim();
+  // Drop query string / fragment first so a pasted full endpoint URL
+  // (e.g. ".../api/v2/qso?station_id=1") doesn't leave stray characters.
+  u = u.split('?').first.split('#').first;
+  u = u.replaceAll(RegExp(r'/+$'), '');
+  // Strip an /api/vN path onward (with or without a leading /index.php),
+  // regardless of what follows it.
+  u = u.replaceFirst(
+      RegExp(r'(/index\.php)?/api/v\d+(/.*)?$', caseSensitive: false), '');
+  // Legacy: bare /index.php with no /api/vN suffix
+  if (u.toLowerCase().endsWith('/index.php')) {
     u = u.substring(0, u.length - '/index.php'.length);
   }
-  return u;
+  return u.replaceAll(RegExp(r'/+$'), '');
 }
 
 /// Wavelog sunucusuna uygun yapılandırılmış Dio örneği oluşturur.

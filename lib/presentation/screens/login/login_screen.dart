@@ -1,8 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/constants/api_endpoints.dart';
+import '../../../core/utils/api_token_notice.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/datasources/remote/wavelog_remote_datasource.dart';
 import '../../../data/models/station_model.dart';
@@ -307,6 +310,9 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
   bool _loading = false;
   String? _error;
 
+  bool _testingScopes = false;
+  List<_ScopeTestResult>? _scopeResults;
+
   @override
   void dispose() {
     _nameCtrl.dispose();
@@ -315,21 +321,71 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
     super.dispose();
   }
 
+  /// Lightweight, read-only probes per scope group — safe to run before the
+  /// user has even confirmed sign-in. Only *:read scopes are checked live;
+  /// write/delete scopes can't be tested without risking real data changes
+  /// on the user's server, so they're left to the full scope guide instead.
+  Future<List<_ScopeTestResult>> _runScopeTests(
+      Dio dio, String callsign) async {
+    Future<bool?> probe(String path, [Map<String, dynamic>? params]) async {
+      try {
+        await dio.get(path, queryParameters: params);
+        return true;
+      } on DioException catch (e) {
+        final code = e.response?.statusCode;
+        if (code == 401 || code == 403) return false;
+        return null; // network/timeout/etc — inconclusive, not a scope issue
+      } catch (_) {
+        return null;
+      }
+    }
+
+    return [
+      _ScopeTestResult('station:read', await probe(ApiEndpoints.station)),
+      _ScopeTestResult('logbook:read', await probe(ApiEndpoints.logbook)),
+      _ScopeTestResult('contest:read', await probe(ApiEndpoints.contest)),
+      _ScopeTestResult(
+          'statistic:read', await probe(ApiEndpoints.statistics)),
+      _ScopeTestResult(
+          'lookup:read',
+          await probe(ApiEndpoints.lookup, {
+            'callsign': callsign,
+            'detail': 'full',
+            'callbook': 'true',
+          })),
+      _ScopeTestResult('confirmation:read',
+          await probe(ApiEndpoints.confirmation, {'page': 1})),
+      _ScopeTestResult(
+          'qso:read', await probe(ApiEndpoints.qso, {'page': 1})),
+    ];
+  }
+
   Future<void> _addAndLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
       _loading = true;
       _error = null;
+      _testingScopes = true;
+      _scopeResults = null;
     });
 
     final callsign = _callsignCtrl.text.trim().toUpperCase();
     final apiKey = _apiKeyCtrl.text.trim();
+    final dio = buildWavelogDio(widget.serverUrl, bearerToken: apiKey);
+
+    // Scope diagnostics always run and stay visible, whether or not the
+    // overall sign-in below succeeds — the user needs this info either way.
+    final scopeResults = await _runScopeTests(dio, callsign);
+    if (!mounted) return;
+    setState(() {
+      _scopeResults = scopeResults;
+      _testingScopes = false;
+    });
 
     List<StationModel> stations = [];
     try {
-      final remote = WavelogRemoteDatasource(
-          dio: buildWavelogDio(widget.serverUrl, bearerToken: apiKey));
+      final remote = WavelogRemoteDatasource(dio: dio);
       stations = await remote.getStations();
     } catch (e) {
       if (!mounted) return;
@@ -358,6 +414,11 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
 
     await ref.read(profileProvider.notifier).addProfile(profile);
     await ref.read(settingsProvider.notifier).loginWithProfile(profile, match);
+    // Fresh setup — this account was just created with a v2 (wl2_-style) key,
+    // so the "you need to migrate to API v2" reminder on Home is irrelevant
+    // to them. Only pre-existing installs going through the migration screen
+    // should ever see that notice.
+    await ApiTokenNotice.markDismissed();
 
     if (mounted) {
       ref.invalidate(stationProvider);
@@ -445,6 +506,13 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
                   ),
                 ),
               ),
+              if (_testingScopes || _scopeResults != null) ...[
+                const SizedBox(height: 8),
+                _ScopeTestPanel(
+                  testing: _testingScopes,
+                  results: _scopeResults,
+                ),
+              ],
               if (_error != null) ...[
                 const SizedBox(height: 12),
                 Row(
@@ -476,6 +544,167 @@ class _AddProfileSheetState extends ConsumerState<_AddProfileSheet> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ── Scope test result & panel ────────────────────────────────────────────────
+
+/// [passed]: true = scope confirmed working, false = server rejected it
+/// (401/403 — likely missing from the token), null = could not be
+/// determined (network hiccup etc.) and isn't held against the user.
+class _ScopeTestResult {
+  final String scopeKey;
+  final bool? passed;
+  const _ScopeTestResult(this.scopeKey, this.passed);
+}
+
+/// Maps a scope key to its human description, reusing the same l10n strings
+/// as the full API Scope Guide screen so the two stay in sync.
+String _scopeDescription(BuildContext context, String scopeKey) {
+  final l10n = context.l10n;
+  switch (scopeKey) {
+    case 'station:read':
+      return l10n.scopeStationRead;
+    case 'logbook:read':
+      return l10n.scopeLogbookRead;
+    case 'contest:read':
+      return l10n.scopeContestRead;
+    case 'statistic:read':
+      return l10n.scopeStatisticsRead;
+    case 'lookup:read':
+      return l10n.scopeLookupRead;
+    case 'confirmation:read':
+      return l10n.scopeConfirmationRead;
+    case 'qso:read':
+      return l10n.scopeQsoRead;
+    default:
+      return scopeKey;
+  }
+}
+
+class _ScopeTestPanel extends StatelessWidget {
+  final bool testing;
+  final List<_ScopeTestResult>? results;
+  const _ScopeTestPanel({required this.testing, required this.results});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final cs = Theme.of(context).colorScheme;
+
+    if (testing) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+            const SizedBox(width: 10),
+            Text(l10n.scopeTestRunning,
+                style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant)),
+          ],
+        ),
+      );
+    }
+
+    final list = results;
+    if (list == null || list.isEmpty) return const SizedBox.shrink();
+
+    final failed = list.where((r) => r.passed == false).toList();
+    final allGood = failed.isEmpty;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: cs.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: (allGood ? Colors.green : Colors.orange).withValues(alpha: 0.4),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                allGood ? Icons.check_circle_rounded : Icons.warning_amber_rounded,
+                size: 16,
+                color: allGood ? Colors.green : Colors.orange,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                allGood ? l10n.scopeTestAllPassed : l10n.scopeTestSomeFailed,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: allGood ? Colors.green.shade700 : Colors.orange.shade800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ...list.map((r) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      r.passed == true
+                          ? Icons.check_circle_outline
+                          : r.passed == false
+                              ? Icons.cancel_outlined
+                              : Icons.help_outline,
+                      size: 14,
+                      color: r.passed == true
+                          ? Colors.green
+                          : r.passed == false
+                              ? Colors.red
+                              : cs.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${r.scopeKey} — ${_scopeDescription(context, r.scopeKey)}',
+                            style: TextStyle(
+                              fontSize: 11.5,
+                              fontFamily: 'monospace',
+                              color: r.passed == false
+                                  ? Colors.red.shade700
+                                  : cs.onSurfaceVariant,
+                            ),
+                          ),
+                          if (r.passed == false)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 1),
+                              child: Text(
+                                l10n.scopeTestAddHint,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.red.shade400,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+        ],
       ),
     );
   }

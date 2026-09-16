@@ -87,6 +87,32 @@ class AppLocalizationsTr extends AppLocalizations {
   String get testingConnection => 'Test ediliyor...';
 
   @override
+  String get sslIssueTitle => 'SSL Sertifika Sorunu';
+
+  @override
+  String get sslIssueBody =>
+      'Bu sunucunun SSL sertifikası doğrulanamadı — kendinden imzalı veya süresi dolmuş olabilir. Doğrulama yapılmadan devam edilsin mi? (Yalnızca güvendiğiniz sunucular için önerilir.)';
+
+  @override
+  String get sslIssueAllow => 'Doğrulamadan Devam Et';
+
+  @override
+  String get scopeTestSectionTitle => 'Yetki Testi';
+
+  @override
+  String get scopeTestRunning => 'Yetkiler test ediliyor…';
+
+  @override
+  String get scopeTestAllPassed => 'Gerekli tüm yetkiler mevcut';
+
+  @override
+  String get scopeTestSomeFailed => 'Bazı yetkiler eksik';
+
+  @override
+  String get scopeTestAddHint =>
+      'API token oluştururken bu yetkiyi de işaretleyin';
+
+  @override
   String get connectionSuccess => 'Bağlantı başarılı!';
 
   @override

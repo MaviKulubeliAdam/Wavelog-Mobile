@@ -87,6 +87,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get testingConnection => 'Teste...';
 
   @override
+  String get sslIssueTitle => 'SSL-Zertifikatproblem';
+
+  @override
+  String get sslIssueBody =>
+      'Das SSL-Zertifikat dieses Servers konnte nicht verifiziert werden — es könnte selbstsigniert oder abgelaufen sein. Ohne Verifizierung fortfahren? (Nur für Server empfohlen, denen Sie vertrauen.)';
+
+  @override
+  String get sslIssueAllow => 'Ohne Verifizierung fortfahren';
+
+  @override
+  String get scopeTestSectionTitle => 'Berechtigungstest';
+
+  @override
+  String get scopeTestRunning => 'Berechtigungen werden getestet…';
+
+  @override
+  String get scopeTestAllPassed =>
+      'Alle erforderlichen Berechtigungen vorhanden';
+
+  @override
+  String get scopeTestSomeFailed => 'Einige Berechtigungen fehlen';
+
+  @override
+  String get scopeTestAddHint =>
+      'Fügen Sie diese Berechtigung beim Erstellen Ihres API-Tokens hinzu';
+
+  @override
   String get connectionSuccess => 'Verbindung erfolgreich!';
 
   @override

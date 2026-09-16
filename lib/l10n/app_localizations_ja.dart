@@ -87,6 +87,31 @@ class AppLocalizationsJa extends AppLocalizations {
   String get testingConnection => 'テスト中...';
 
   @override
+  String get sslIssueTitle => 'SSL証明書の問題';
+
+  @override
+  String get sslIssueBody =>
+      'このサーバーのSSL証明書を検証できませんでした。自己署名または期限切れの可能性があります。検証をスキップして続行しますか?(信頼できるサーバーにのみ推奨されます)';
+
+  @override
+  String get sslIssueAllow => '検証せずに続行';
+
+  @override
+  String get scopeTestSectionTitle => '権限テスト';
+
+  @override
+  String get scopeTestRunning => '権限をテスト中…';
+
+  @override
+  String get scopeTestAllPassed => '必要な権限はすべて揃っています';
+
+  @override
+  String get scopeTestSomeFailed => '一部の権限が不足しています';
+
+  @override
+  String get scopeTestAddHint => 'APIトークン作成時にこの権限も選択してください';
+
+  @override
   String get connectionSuccess => '接続成功！';
 
   @override

@@ -87,6 +87,32 @@ class AppLocalizationsIt extends AppLocalizations {
   String get testingConnection => 'Test in corso...';
 
   @override
+  String get sslIssueTitle => 'Problema certificato SSL';
+
+  @override
+  String get sslIssueBody =>
+      'Il certificato SSL di questo server non è stato verificato — potrebbe essere autofirmato o scaduto. Continuare senza verifica? (Consigliato solo per server di cui ti fidi.)';
+
+  @override
+  String get sslIssueAllow => 'Continua senza verifica';
+
+  @override
+  String get scopeTestSectionTitle => 'Test dei permessi';
+
+  @override
+  String get scopeTestRunning => 'Test dei permessi in corso…';
+
+  @override
+  String get scopeTestAllPassed => 'Tutti i permessi richiesti sono presenti';
+
+  @override
+  String get scopeTestSomeFailed => 'Alcuni permessi mancano';
+
+  @override
+  String get scopeTestAddHint =>
+      'Aggiungi questo permesso durante la creazione del token API';
+
+  @override
   String get connectionSuccess => 'Connessione riuscita!';
 
   @override
