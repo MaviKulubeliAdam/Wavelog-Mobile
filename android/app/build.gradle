@@ -79,6 +79,33 @@ android.applicationVariants.configureEach { variant ->
             ((ApkVariantOutputImpl) output).versionCodeOverride = variant.versionCode * 10 + abiVersionCode
         }
     }
+
+    // The NDK linker embeds a .note.gnu.build-id in every compiled native
+    // library that is not derived solely from the input content, so two
+    // separate builds of the exact same source (e.g. the `jni` package's
+    // libdartjni.so) produce byte-different output purely from this note -
+    // confirmed by diffing F-Droid's from-source rebuild against our own:
+    // every other byte matched. Strip it post-build so both sides land on
+    // an identical (build-id-less) file.
+    def variantName = variant.name.capitalize()
+    tasks.matching { it.name == "strip${variantName}DebugSymbols" }.configureEach { stripTask ->
+        stripTask.doLast {
+            def objcopy = new File(android.ndkDirectory, "toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-objcopy")
+            if (!objcopy.exists()) {
+                objcopy = new File(android.ndkDirectory, "toolchains/llvm/prebuilt/windows-x86_64/bin/llvm-objcopy.exe")
+            }
+            stripTask.outputs.files.each { dir ->
+                if (dir.isDirectory()) {
+                    fileTree(dir: dir, include: "**/*.so").each { so ->
+                        exec {
+                            commandLine objcopy.path, "--remove-section=.note.gnu.build-id", so.path
+                            ignoreExitValue true
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 flutter {
