@@ -24,9 +24,15 @@ jobs:
           mkdir -p "$REPO_DIR"
           mv "$GITHUB_WORKSPACE"/* "$REPO_DIR"/
 
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.44.1'
+      - name: Clone Flutter SDK matching F-Droid's srclib method
+        # F-Droid builds by cloning flutter/flutter and checking out this
+        # exact tag (git -C $$flutter$$ checkout -f 3.44.1). Using
+        # subosito/flutter-action here instead produced a byte-different
+        # libdartjni.so (a prebuilt engine artifact, not something we
+        # compile), so we replicate F-Droid's own clone method exactly.
+        run: |
+          git clone --branch 3.44.1 --depth 1 https://github.com/flutter/flutter.git /opt/flutter
+          echo "/opt/flutter/bin" >> "$GITHUB_PATH"
 
       - name: Decode release keystore
         working-directory: /build/com.wavelog_mobile
