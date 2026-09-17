@@ -75,9 +75,9 @@ Community features include:
 
 The app is available in **9 languages**: English, Turkish, German, Polish, Russian, French, Italian, Japanese and Korean.
 
-[![Translation status](https://translate.wavelogmobile.app/widget/wavelog-mobile/app/svg-badge.svg)](https://translate.wavelogmobile.app/engage/wavelog-mobile/)
+[![Translation status](https://translate.wavelogmobile.app/widget/wavelog-mobile/app/svg-badge.svg)](https://translate.wavelogmobile.app/projects/wavelog-mobile/)
 
-Community translations are welcome and hosted on [Weblate](https://translate.wavelogmobile.app/engage/wavelog-mobile/). No account is needed to suggest translations — sign up, pick a language, and start translating. Changes are periodically merged into the `main-dev` branch automatically.
+Community translations are welcome and hosted on [Weblate](https://translate.wavelogmobile.app/projects/wavelog-mobile/). Sign up (or sign in with GitHub), pick a language, and start translating. Changes are periodically merged into the `main-dev` branch automatically.
 
 ## Tech Stack
 
