@@ -17,6 +17,14 @@ android {
     compileSdk 36
     ndkVersion flutter.ndkVersion
 
+    // AGP embeds a "Dependency metadata" block in the APK Signing Block by
+    // default (Play Console dependency transparency). F-Droid's scanner
+    // rejects any extra signing block, so it must be disabled here.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
