@@ -8,17 +8,32 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Must match the `repo=` path F-Droid's build recipe moves to — the
+      # Dart AOT snapshot (libapp.so) embeds the absolute build path, so a
+      # mismatch here breaks reproducible-build verification.
+      REPO_DIR: /build/com.wavelog_mobile
     steps:
       - uses: actions/checkout@v4
+
+      - name: Move checkout to fixed build path
+        run: |
+          sudo mkdir -p /build
+          sudo chown -R "$USER" /build
+          shopt -s dotglob
+          mkdir -p "$REPO_DIR"
+          mv "$GITHUB_WORKSPACE"/* "$REPO_DIR"/
 
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.1'
 
       - name: Decode release keystore
+        working-directory: /build/com.wavelog_mobile
         run: echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/wavelog-release.jks
 
       - name: Write key.properties
+        working-directory: /build/com.wavelog_mobile
         run: |
           cat > android/key.properties <<EOF
           storePassword=${{ secrets.RELEASE_STORE_PASSWORD }}
@@ -27,15 +42,18 @@ jobs:
           storeFile=wavelog-release.jks
           EOF
 
-      - run: flutter pub get
+      - name: flutter pub get
+        working-directory: /build/com.wavelog_mobile
+        run: flutter pub get --enforce-lockfile
 
       - name: Build per-ABI release APKs
+        working-directory: /build/com.wavelog_mobile
         run: flutter build apk --release --split-per-abi
 
       - name: Create GitHub Release with signed APKs
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-release.apk
+            /build/com.wavelog_mobile/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            /build/com.wavelog_mobile/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            /build/com.wavelog_mobile/build/app/outputs/flutter-apk/app-x86_64-release.apk
