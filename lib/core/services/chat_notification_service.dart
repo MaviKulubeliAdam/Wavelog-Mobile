@@ -16,6 +16,12 @@ class ChatNotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
   static bool _initialized = false;
 
+  /// ChatScreen açıkken kendi roomId'sini burada tutar (initState/dispose) —
+  /// o oda için gelen bildirim bastırılır, çünkü kullanıcı mesajı zaten
+  /// canlı olarak ekranda görüyor. Sadece ön planda anlamlı; arka planda/
+  /// kapalıyken ChatScreen zaten mount olmadığı için bu her zaman null olur.
+  static String? activeRoomId;
+
   static Future<void> initialize() async {
     if (_initialized) return;
     _initialized = true;
@@ -55,6 +61,10 @@ class ChatNotificationService {
     final roomName = data['roomName'] as String?;
     final callsign = data['callsign'] as String?;
     if (roomId == null || callsign == null) return;
+
+    if (roomId == activeRoomId) {
+      return; // bu oda zaten ekranda açık, mesaj canlı görünüyor
+    }
 
     final prefs = await SharedPreferences.getInstance();
     final myCallsign = prefs.getString(_keyActiveStationCallsign);

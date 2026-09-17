@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../../core/services/chat_notification_service.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../data/models/chat_message_model.dart';
 import '../../../providers/auth_provider.dart';
@@ -29,6 +30,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    ChatNotificationService.activeRoomId = widget.roomId;
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => ref.read(lastReadProvider.notifier).markRead(widget.roomId),
     );
@@ -36,6 +38,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
   @override
   void dispose() {
+    if (ChatNotificationService.activeRoomId == widget.roomId) {
+      ChatNotificationService.activeRoomId = null;
+    }
     ref.read(lastReadProvider.notifier).markRead(widget.roomId);
     _inputCtrl.dispose();
     _scrollCtrl.dispose();

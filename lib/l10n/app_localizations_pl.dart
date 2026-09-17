@@ -87,6 +87,32 @@ class AppLocalizationsPl extends AppLocalizations {
   String get testingConnection => 'Testowanie...';
 
   @override
+  String get sslIssueTitle => 'Problem z certyfikatem SSL';
+
+  @override
+  String get sslIssueBody =>
+      'Nie można zweryfikować certyfikatu SSL tego serwera — może być samopodpisany lub wygasły. Kontynuować bez weryfikacji? (Zalecane tylko dla zaufanych serwerów.)';
+
+  @override
+  String get sslIssueAllow => 'Kontynuuj bez weryfikacji';
+
+  @override
+  String get scopeTestSectionTitle => 'Test uprawnień';
+
+  @override
+  String get scopeTestRunning => 'Testowanie uprawnień…';
+
+  @override
+  String get scopeTestAllPassed => 'Wszystkie wymagane uprawnienia są obecne';
+
+  @override
+  String get scopeTestSomeFailed => 'Brakuje niektórych uprawnień';
+
+  @override
+  String get scopeTestAddHint =>
+      'Dodaj to uprawnienie podczas tworzenia tokenu API';
+
+  @override
   String get connectionSuccess => 'Połączono pomyślnie!';
 
   @override

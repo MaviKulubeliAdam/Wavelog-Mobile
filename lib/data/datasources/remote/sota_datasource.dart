@@ -3,9 +3,15 @@ import 'package:flutter/foundation.dart';
 import '../../models/sota_spot_model.dart';
 
 class SotaDatasource {
-  static const _baseUrl = 'https://api2.sota.org.uk';
+  // api2.sota.org.uk is deprecated (returns fake "DEPRECATED" placeholder
+  // records with HTTP 200 instead of real data — silently broken, no error
+  // to catch). api-db2.sota.org.uk is the current host as of 2026-09.
+  static const _baseUrl = 'https://api-db2.sota.org.uk';
   // Minimum 60 seconds between requests as per SOTA API rules
   static const _minInterval = Duration(seconds: 60);
+  // The new spots endpoint is a lookback window in minutes, not a count —
+  // 4 hours gives a reasonable "recent activity" list.
+  static const _spotsWindowMinutes = 240;
 
   final Dio _dio = Dio(BaseOptions(
     baseUrl: _baseUrl,
@@ -50,12 +56,21 @@ class SotaDatasource {
     required String spotter,
     String comments = '',
   }) async {
+    // summitCode here is the full reference (e.g. "G/LD-007"); the new API
+    // wants association and summit as separate fields on POST even though
+    // GET returns them pre-combined.
+    final ref = summitCode.toUpperCase().trim();
+    final slash = ref.indexOf('/');
+    final association = slash > 0 ? ref.substring(0, slash) : '';
+    final summit = slash > 0 ? ref.substring(slash + 1) : ref;
+
     await _dio.post<dynamic>(
       '/api/spots',
       data: {
-        'callsign': spotter.toUpperCase().trim(),
+        'posterCallsign': spotter.toUpperCase().trim(),
         'activatorCallsign': activatorCallsign.toUpperCase().trim(),
-        'summitCode': summitCode.toUpperCase().trim(),
+        'associationCode': association,
+        'summitCode': summit,
         'frequency': frequency.trim(),
         'mode': mode.trim(),
         'comments': comments.trim(),
@@ -63,7 +78,7 @@ class SotaDatasource {
     );
   }
 
-  Future<List<SotaSpotModel>> getSpots({int count = 50}) async {
+  Future<List<SotaSpotModel>> getSpots({int windowMinutes = _spotsWindowMinutes}) async {
     final now = DateTime.now();
     if (_cache != null &&
         _lastFetch != null &&
@@ -72,8 +87,9 @@ class SotaDatasource {
     }
 
     try {
+      // /all/all = no callsign/summit filter — every spot in the window.
       final response =
-          await _dio.get<List<dynamic>>('/api/spots/$count');
+          await _dio.get<List<dynamic>>('/api/spots/$windowMinutes/all/all');
       final list = response.data ?? [];
       final result = list
           .whereType<Map<String, dynamic>>()

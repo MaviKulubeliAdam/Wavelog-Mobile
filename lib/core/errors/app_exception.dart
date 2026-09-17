@@ -13,6 +13,15 @@ class NetworkException extends AppException {
       : super(code: 'NETWORK_ERROR');
 }
 
+/// TLS handshake / certificate verification failure — distinct from a plain
+/// NetworkException so callers can offer "continue without verification"
+/// instead of a generic connection-failed message.
+class SslException extends AppException {
+  const SslException(
+      [super.message = 'SSL sertifikası doğrulanamadı'])
+      : super(code: 'SSL_ERROR');
+}
+
 class TimeoutException extends AppException {
   const TimeoutException([super.message = 'Bağlantı zaman aşımına uğradı'])
       : super(code: 'TIMEOUT');

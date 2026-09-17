@@ -87,6 +87,33 @@ class AppLocalizationsFr extends AppLocalizations {
   String get testingConnection => 'Test en cours...';
 
   @override
+  String get sslIssueTitle => 'Problème de certificat SSL';
+
+  @override
+  String get sslIssueBody =>
+      'Le certificat SSL de ce serveur n\'a pas pu être vérifié — il est peut-être auto-signé ou expiré. Continuer sans vérification ? (Recommandé uniquement pour les serveurs de confiance.)';
+
+  @override
+  String get sslIssueAllow => 'Continuer sans vérification';
+
+  @override
+  String get scopeTestSectionTitle => 'Test des autorisations';
+
+  @override
+  String get scopeTestRunning => 'Test des autorisations…';
+
+  @override
+  String get scopeTestAllPassed =>
+      'Toutes les autorisations requises sont présentes';
+
+  @override
+  String get scopeTestSomeFailed => 'Certaines autorisations sont manquantes';
+
+  @override
+  String get scopeTestAddHint =>
+      'Ajoutez cette autorisation lors de la création de votre jeton API';
+
+  @override
   String get connectionSuccess => 'Connexion réussie !';
 
   @override

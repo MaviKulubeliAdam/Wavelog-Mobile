@@ -189,6 +189,20 @@ class WavelogRemoteDatasource {
     }
   }
 
+  /// Same request as [getVersion] but rethrows a mapped [AppException] on
+  /// failure instead of swallowing it — used by the server-setup connection
+  /// test, which needs to tell an SSL failure apart from "no server here".
+  Future<String?> checkVersion() async {
+    try {
+      final response = await _dio.get(ApiEndpoints.version);
+      final data = response.data;
+      if (data is Map) return data['version']?.toString();
+      return null;
+    } on DioException catch (e) {
+      throw _mapDioException(e);
+    }
+  }
+
   // ── Station list/create — v2 native ─────────────────────────────────────────
 
   Future<List<StationModel>> getStations() async {
@@ -718,10 +732,13 @@ class WavelogRemoteDatasource {
       case DioExceptionType.unknown:
         final inner = e.error;
         if (inner is HandshakeException) {
-          return const NetworkException(
+          return const SslException(
               'SSL certificate error — the server certificate chain could not be verified.');
         }
         return NetworkException(e.message ?? 'Unknown error');
+      case DioExceptionType.badCertificate:
+        return const SslException(
+            'SSL certificate error — the server certificate chain could not be verified.');
       default:
         return NetworkException(e.message ?? 'Unknown error');
     }

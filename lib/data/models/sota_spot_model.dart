@@ -37,11 +37,16 @@ class SotaSpotModel {
   }
 
   factory SotaSpotModel.fromJson(Map<String, dynamic> json) {
+    // Current API (api-db2) returns summitCode already combined as
+    // "ASSOC/SUMMIT" (e.g. "G/LD-007") and the summit's display name as
+    // summitName — there's no separate associationCode/summitDetails field
+    // on this endpoint anymore. Fall back to the old separate-field shape
+    // too, in case a future API revision splits them again.
+    final combinedRef = json['summitCode']?.toString() ?? '';
     final assoc = json['associationCode']?.toString() ?? '';
-    final summit = json['summitCode']?.toString() ?? '';
-    final ref = assoc.isNotEmpty && summit.isNotEmpty
-        ? '$assoc/$summit'
-        : (assoc + summit);
+    final ref = combinedRef.contains('/') || assoc.isEmpty
+        ? combinedRef
+        : '$assoc/$combinedRef';
     return SotaSpotModel(
       id: json['id'] as int? ?? 0,
       spotTime: parseUtcLoose(json['timeStamp']?.toString()),
@@ -50,7 +55,8 @@ class SotaSpotModel {
       freqMhz: json['frequency']?.toString() ?? '0',
       mode: json['mode']?.toString() ?? '',
       reference: ref,
-      summitDetails: json['summitDetails']?.toString() ?? '',
+      summitDetails:
+          json['summitName']?.toString() ?? json['summitDetails']?.toString() ?? '',
       comments: json['comments']?.toString() ?? '',
     );
   }

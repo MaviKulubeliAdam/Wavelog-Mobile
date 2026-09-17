@@ -38,9 +38,19 @@ OutlineInputBorder _border(Color c, {double w = 1.0}) => OutlineInputBorder(
       borderSide: BorderSide(color: c, width: w),
     );
 
+// ── Typography ────────────────────────────────────────────────────────────────
+// Manrope for headings, Inter for body/UI (set as ThemeData.fontFamily below),
+// JetBrains Mono for callsigns/RST/grid squares — vendored under assets/fonts/
+// (no runtime Google Fonts fetch — this app is used offline in the field and
+// ships a network-averse F-Droid build).
+const String kHeadingFontFamily = 'Manrope';
+const String kBodyFontFamily = 'Inter';
+const String kMonoFontFamily = 'JetBrains Mono';
+
 // ── Dark Theme ────────────────────────────────────────────────────────────────
 final ThemeData darkTheme = ThemeData(
   useMaterial3: true,
+  fontFamily: kBodyFontFamily,
   colorScheme: ColorScheme.fromSeed(
     seedColor: _seed,
     brightness: Brightness.dark,
@@ -66,6 +76,7 @@ final ThemeData darkTheme = ThemeData(
     surfaceTintColor: Colors.transparent,
     foregroundColor: Colors.white,
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 19,
       fontWeight: FontWeight.w700,
       color: Colors.white,
@@ -225,6 +236,7 @@ final ThemeData darkTheme = ThemeData(
       side: const BorderSide(color: _darkBorderMid),
     ),
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 17,
       fontWeight: FontWeight.w700,
       color: Colors.white,
@@ -299,14 +311,22 @@ final ThemeData darkTheme = ThemeData(
 
   // ── Text Theme ─────────────────────────────────────────────────────────────
   textTheme: const TextTheme(
-    headlineLarge:
-        TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1.0),
-    headlineMedium:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.5),
-    headlineSmall:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.3),
-    titleLarge:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.2),
+    headlineLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0),
+    headlineMedium: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5),
+    headlineSmall: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3),
+    titleLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2),
     titleMedium:
         TextStyle(fontWeight: FontWeight.w600, letterSpacing: -0.1),
     titleSmall: TextStyle(fontWeight: FontWeight.w600),
@@ -321,6 +341,7 @@ final ThemeData darkTheme = ThemeData(
 // ── Light Theme ───────────────────────────────────────────────────────────────
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
+  fontFamily: kBodyFontFamily,
   colorScheme: ColorScheme.fromSeed(
     seedColor: _seed,
     brightness: Brightness.light,
@@ -346,6 +367,7 @@ final ThemeData lightTheme = ThemeData(
     surfaceTintColor: Colors.transparent,
     foregroundColor: const Color(0xFF0F172A),
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 19,
       fontWeight: FontWeight.w700,
       color: Color(0xFF0F172A),
@@ -504,6 +526,7 @@ final ThemeData lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(_dialogRadius),
     ),
     titleTextStyle: const TextStyle(
+      fontFamily: kHeadingFontFamily,
       fontSize: 17,
       fontWeight: FontWeight.w700,
       color: Color(0xFF0F172A),
@@ -573,14 +596,22 @@ final ThemeData lightTheme = ThemeData(
 
   // ── Text Theme ─────────────────────────────────────────────────────────────
   textTheme: const TextTheme(
-    headlineLarge:
-        TextStyle(fontWeight: FontWeight.w800, letterSpacing: -1.0),
-    headlineMedium:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.5),
-    headlineSmall:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.3),
-    titleLarge:
-        TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.2),
+    headlineLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w800,
+        letterSpacing: -1.0),
+    headlineMedium: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.5),
+    headlineSmall: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.3),
+    titleLarge: TextStyle(
+        fontFamily: kHeadingFontFamily,
+        fontWeight: FontWeight.w700,
+        letterSpacing: -0.2),
     titleMedium:
         TextStyle(fontWeight: FontWeight.w600, letterSpacing: -0.1),
     titleSmall: TextStyle(fontWeight: FontWeight.w600),
