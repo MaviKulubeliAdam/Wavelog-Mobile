@@ -35,6 +35,7 @@ jobs:
         # subosito/flutter-action produced a byte-different libdartjni.so
         # (a prebuilt engine artifact, not something we compile), so we
         # replicate F-Droid's own clone method exactly instead of using it.
+        working-directory: /build/com.wavelog_mobile
         run: |
           flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/release.yml)
           [[ -n "$flutterVersion" ]]
