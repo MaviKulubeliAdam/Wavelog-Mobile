@@ -12,6 +12,9 @@
 .swiftpm/
 migrate_working_dir/
 
+# codebase-memory-mcp local index cache — regenerated per machine, not source
+.codebase-memory/
+
 # IntelliJ related
 *.iml
 *.ipr
