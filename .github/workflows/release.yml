@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # flutter-version: '3.44.1'
+    # (kept as a marker line for the fdroiddata recipe's version-extraction
+    # sed; the clone step below reads the same pin manually)
     env:
       # Must match the `repo=` path F-Droid's build recipe moves to — the
       # Dart AOT snapshot (libapp.so) embeds the absolute build path, so a
