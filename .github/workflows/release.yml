@@ -16,6 +16,12 @@ jobs:
       # Dart AOT snapshot (libapp.so) embeds the absolute build path, so a
       # mismatch here breaks reproducible-build verification.
       REPO_DIR: /build/com.wavelog_mobile
+      # F-Droid's recipe also pins PUB_CACHE to $repo/.pub-cache. The
+      # transitive jni package compiles libdartjni.so from C source via
+      # CMake, which embeds the pub cache's absolute path in the binary -
+      # a mismatch here breaks reproducible-build verification the same
+      # way an unmatched repo path did for libapp.so.
+      PUB_CACHE: /build/com.wavelog_mobile/.pub-cache
     steps:
       - uses: actions/checkout@v4
 
