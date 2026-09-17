@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # flutter-version: '3.44.1'
+    # (kept as a marker line for the fdroiddata recipe's version-extraction
+    # sed; the clone step below reads the same pin manually)
     env:
       # Must match the `repo=` path F-Droid's build recipe moves to — the
       # Dart AOT snapshot (libapp.so) embeds the absolute build path, so a
@@ -25,13 +28,17 @@ jobs:
           mv "$GITHUB_WORKSPACE"/* "$REPO_DIR"/
 
       - name: Clone Flutter SDK matching F-Droid's srclib method
-        # F-Droid builds by cloning flutter/flutter and checking out this
-        # exact tag (git -C $$flutter$$ checkout -f 3.44.1). Using
-        # subosito/flutter-action here instead produced a byte-different
-        # libdartjni.so (a prebuilt engine artifact, not something we
-        # compile), so we replicate F-Droid's own clone method exactly.
+        # F-Droid's prebuild step greps this same file for the marker
+        # comment above (search job.build for the literal word "marker")
+        # and does the equivalent of a checkout to that pinned version.
+        # Reading it here the same way keeps a single source of truth.
+        # subosito/flutter-action produced a byte-different libdartjni.so
+        # (a prebuilt engine artifact, not something we compile), so we
+        # replicate F-Droid's own clone method exactly instead of using it.
         run: |
-          git clone --branch 3.44.1 --depth 1 https://github.com/flutter/flutter.git /opt/flutter
+          flutterVersion=$(sed -n -E "s/.*flutter-version:\ '(.*)'/\1/p" .github/workflows/release.yml)
+          [[ -n "$flutterVersion" ]]
+          git clone --branch "$flutterVersion" --depth 1 https://github.com/flutter/flutter.git /opt/flutter
           echo "/opt/flutter/bin" >> "$GITHUB_PATH"
 
       - name: Decode release keystore
