@@ -1426,6 +1426,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Auto-spotting automatico durante un QSO a una stazione POTA o SOTA (cooldown 30 min)';
 
   @override
+  String get spotRefreshLabel => 'Intervallo di aggiornamento degli spot';
+
+  @override
+  String get spotRefreshHint =>
+      'Aggiorna automaticamente l\'elenco degli spot a questo intervallo';
+
+  @override
   String autoSpotSent(String ref) {
     return 'Auto-spot inviato: $ref';
   }

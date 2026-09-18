@@ -470,6 +470,8 @@
   "invalidNumber": "Nieprawidłowa liczba",
   "potaAutoSpot": "Automatyczny spot",
   "potaAutoSpotHint": "Automatycznie wysyła self-spot przy logowaniu QSO na stacji POTA lub SOTA (cooldown 30 min dla każdej)",
+  "spotRefreshLabel": "Częstotliwość odświeżania spotów",
+  "spotRefreshHint": "Automatycznie odświeża listę spotów w tym interwale",
   "autoSpotSent": "Automatyczny spot wysłany: {ref}",
   "autoSpotWillFire": "QSO wyśle spot",
   "autoSpotCooldown": "Spot wysłany · Następny za {min} min",

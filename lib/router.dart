@@ -148,7 +148,11 @@ final appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) {
         final prefill = s.uri.queryParameters['callsign'];
-        return AddQsoScreen(prefillCallsign: prefill);
+        return AddQsoScreen(
+          prefillCallsign: prefill,
+          prefillFrequencyMhz: s.uri.queryParameters['freq'],
+          prefillMode: s.uri.queryParameters['mode'],
+        );
       },
     ),
     GoRoute(

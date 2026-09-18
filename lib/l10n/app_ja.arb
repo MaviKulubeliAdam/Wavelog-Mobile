@@ -546,6 +546,8 @@
   "invalidNumber": "無効な数値",
   "potaAutoSpot": "自動スポット",
   "potaAutoSpotHint": "POTA または SOTA 局で QSO を記録する際に自動でセルフスポット（各 30 分のクールダウン）",
+  "spotRefreshLabel": "スポット更新間隔",
+  "spotRefreshHint": "この間隔でスポットリストを自動的に更新します",
   "autoSpotSent": "自動スポット送信: {ref}",
   "@autoSpotSent": {
     "placeholders": { "ref": { "type": "String" } }

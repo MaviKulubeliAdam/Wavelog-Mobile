@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../core/constants/band_mode_data.dart';
 import '../../../core/enums/activity_type.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
@@ -21,13 +23,57 @@ import '../../../router.dart';
 final _selectedActivityProvider =
     StateProvider<ActivityType>((_) => ActivityType.dx);
 
-class SpotScreen extends ConsumerWidget {
+class SpotScreen extends ConsumerStatefulWidget {
   const SpotScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SpotScreen> createState() => _SpotScreenState();
+}
+
+class _SpotScreenState extends ConsumerState<SpotScreen> {
+  Timer? _autoRefreshTimer;
+  int _timerSeconds = 0;
+  ActivityType _timerActivity = ActivityType.dx;
+
+  void _refreshSelected(ActivityType selected) {
+    switch (selected) {
+      case ActivityType.pota:
+        ref.invalidate(potaSpotsProvider);
+      case ActivityType.sota:
+        ref.invalidate(sotaSpotsProvider);
+      case ActivityType.wwff:
+        ref.invalidate(wwffSpotsProvider);
+      case ActivityType.dx:
+        ref.invalidate(dxSpotsProvider);
+      case ActivityType.iota:
+        break;
+    }
+  }
+
+  void _syncAutoRefreshTimer(int seconds, ActivityType selected) {
+    if (seconds == _timerSeconds && selected == _timerActivity) return;
+    _timerSeconds = seconds;
+    _timerActivity = selected;
+    _autoRefreshTimer?.cancel();
+    if (seconds <= 0) return;
+    _autoRefreshTimer = Timer.periodic(Duration(seconds: seconds), (_) {
+      if (mounted) _refreshSelected(_timerActivity);
+    });
+  }
+
+  @override
+  void dispose() {
+    _autoRefreshTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final selected = ref.watch(_selectedActivityProvider);
+    final refreshSeconds =
+        ref.watch(settingsProvider.select((s) => s.spotRefreshSeconds));
+    _syncAutoRefreshTimer(refreshSeconds, selected);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,20 +83,7 @@ class SpotScreen extends ConsumerWidget {
           if (selected.available)
             IconButton(
               icon: const Icon(Icons.refresh),
-              onPressed: () {
-                switch (selected) {
-                  case ActivityType.pota:
-                    ref.invalidate(potaSpotsProvider);
-                  case ActivityType.sota:
-                    ref.invalidate(sotaSpotsProvider);
-                  case ActivityType.wwff:
-                    ref.invalidate(wwffSpotsProvider);
-                  case ActivityType.dx:
-                    ref.invalidate(dxSpotsProvider);
-                  case ActivityType.iota:
-                    break;
-                }
-              },
+              onPressed: () => _refreshSelected(selected),
             ),
         ],
       ),
@@ -75,7 +108,7 @@ class SpotScreen extends ConsumerWidget {
       ),
       floatingActionButton: selected.canAddSpot
           ? FloatingActionButton.extended(
-              onPressed: () => _showAddSpot(context, ref, selected),
+              onPressed: () => _showAddSpot(context, selected),
               icon: const Icon(Icons.add),
               label: Text(l10n.spotAdd),
             )
@@ -104,8 +137,7 @@ class SpotScreen extends ConsumerWidget {
     );
   }
 
-  void _showAddSpot(
-      BuildContext context, WidgetRef ref, ActivityType activity) {
+  void _showAddSpot(BuildContext context, ActivityType activity) {
     final settings = ref.read(settingsProvider);
     final myCall = settings.activeStationCallsign ?? '';
 
@@ -308,6 +340,24 @@ String _formatAge(DateTime dt) {
   return '${diff.inDays}d';
 }
 
+/// Navigates to the QSO form, prefilled from a tapped spot. Frequency is
+/// always passed on; mode only when it's a recognised value — otherwise the
+/// user picks it themselves on the form (many spots, SOTA especially, don't
+/// report a mode at all).
+void _goLogSpot(BuildContext context, _SpotView spot) {
+  final params = <String, String>{'callsign': spot.activator};
+  if (spot.freqMhzForLog != null) params['freq'] = spot.freqMhzForLog!;
+  if (spot.modeForLog != null) params['mode'] = spot.modeForLog!;
+  context.push(Uri(path: '/add-qso', queryParameters: params).toString());
+}
+
+/// Returns [raw] uppercased when it's a recognised QSO-form mode, else null
+/// so the form falls back to manual entry instead of an invalid value.
+String? _validMode(String raw) {
+  final m = raw.trim().toUpperCase();
+  return kCommonModes.contains(m) ? m : null;
+}
+
 List<String> _distinct(Iterable<String?> values) =>
     values
         .whereType<String>()
@@ -328,6 +378,15 @@ class _SpotView {
   final String spotter;
   final DateTime time;
 
+  /// Frequency in MHz, ready to hand to the QSO form — null when the spot
+  /// carried no parseable frequency.
+  final String? freqMhzForLog;
+
+  /// Mode ready to hand to the QSO form — only set when it matches a known
+  /// [kCommonModes] entry. Many spots (SOTA especially) omit the mode, in
+  /// which case this stays null and the user picks it manually on the form.
+  final String? modeForLog;
+
   const _SpotView({
     required this.activator,
     required this.mode,
@@ -338,6 +397,8 @@ class _SpotView {
     required this.comments,
     required this.spotter,
     required this.time,
+    this.freqMhzForLog,
+    this.modeForLog,
   });
 }
 
@@ -345,11 +406,13 @@ class _SpotTile extends StatelessWidget {
   final _SpotView spot;
   final Color avatarBg;
   final Color avatarFg;
+  final VoidCallback? onTap;
 
   const _SpotTile({
     required this.spot,
     required this.avatarBg,
     required this.avatarFg,
+    this.onTap,
   });
 
   @override
@@ -358,6 +421,7 @@ class _SpotTile extends StatelessWidget {
     final dimmed = theme.colorScheme.onSurface.withValues(alpha: 0.5);
 
     return ListTile(
+      onTap: onTap,
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       leading: CircleAvatar(
@@ -489,6 +553,7 @@ class _SpotListSection extends StatelessWidget {
               spot: list[i],
               avatarBg: avatarBg,
               avatarFg: avatarFg,
+              onTap: () => _goLogSpot(context, list[i]),
             ),
           ),
         );
@@ -726,6 +791,11 @@ class _PotaSpotContent extends ConsumerWidget {
                       comments: s.comments,
                       spotter: s.spotter,
                       time: s.spotTime,
+                      freqMhzForLog: (double.tryParse(s.frequency) ?? 0) > 0
+                          ? ((double.parse(s.frequency) / 1000)
+                              .toStringAsFixed(3))
+                          : null,
+                      modeForLog: _validMode(s.mode),
                     ))
                 .toList()),
             onRefresh: () => ref.invalidate(potaSpotsProvider),
@@ -796,6 +866,10 @@ class _SotaSpotContent extends ConsumerWidget {
                       comments: s.comments,
                       spotter: s.spotter,
                       time: s.spotTime,
+                      freqMhzForLog: (double.tryParse(s.freqMhz) ?? 0) > 0
+                          ? double.parse(s.freqMhz).toStringAsFixed(3)
+                          : null,
+                      modeForLog: _validMode(s.mode),
                     ))
                 .toList()),
             onRefresh: () => ref.invalidate(sotaSpotsProvider),
@@ -866,6 +940,10 @@ class _WwffSpotContent extends ConsumerWidget {
                       comments: s.comments,
                       spotter: s.spotter,
                       time: s.spotTime,
+                      freqMhzForLog: s.freqKhz > 0
+                          ? (s.freqKhz / 1000.0).toStringAsFixed(3)
+                          : null,
+                      modeForLog: _validMode(s.mode),
                     ))
                 .toList()),
             onRefresh: () => ref.invalidate(wwffSpotsProvider),
@@ -926,6 +1004,11 @@ class _DxClusterContent extends ConsumerWidget {
                       comments: s.info,
                       spotter: s.spotter,
                       time: s.time,
+                      freqMhzForLog: (double.tryParse(s.frequency) ?? 0) > 0
+                          ? ((double.parse(s.frequency) / 1000)
+                              .toStringAsFixed(3))
+                          : null,
+                      modeForLog: _validMode(s.mode),
                     ))
                 .toList()),
             onRefresh: () => ref.invalidate(dxSpotsProvider),

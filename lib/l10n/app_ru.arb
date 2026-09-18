@@ -1,944 +1,946 @@
 {
-    "@@locale": "ru",
-    "appTitle": "Wavelog Mobile",
-    "splashConnecting": "ПОДКЛЮЧЕНИЕ",
-    "navHome": "Главная",
-    "navLogbook": "Журнал",
-    "navLookup": "Поиск",
-    "navStation": "Профиль QTH",
-    "save": "Сохранить",
-    "cancel": "Отмена",
-    "delete": "Удалить",
-    "refresh": "Обновить",
-    "continueBtn": "Продолжить",
-    "close": "Закрыть",
-    "retry": "Повторить",
-    "loading": "Загрузка...",
-    "error": "Ошибка",
-    "success": "Успешно",
-    "change": "Изменить",
-    "goWeb": "Перейти →",
-    "editOnWeb": "Редактировать на сайте",
-    "openInBrowser": "Открыть в браузере",
-    "serverSetupTitle": "Настройка сервера",
-    "serverSetupSubtitle": "Настройте ваш сервер Wavelog",
-    "serverUrlLabel": "URL сервера Wavelog",
-    "serverUrlHint": "https://log.example.com",
-    "testConnection": "Проверка соединения",
-    "testingConnection": "Проверка...",
-    "sslIssueTitle": "Проблема с SSL-сертификатом",
-    "sslIssueBody": "Не удалось проверить SSL-сертификат этого сервера — возможно, он самоподписанный или просроченный. Продолжить без проверки? (Рекомендуется только для доверенных серверов.)",
-    "sslIssueAllow": "Продолжить без проверки",
-    "scopeTestSectionTitle": "Проверка областей доступа",
-    "scopeTestRunning": "Проверка областей доступа…",
-    "scopeTestAllPassed": "Все необходимые области доступа присутствуют",
-    "scopeTestSomeFailed": "Некоторых областей доступа не хватает",
-    "scopeTestAddHint": "Добавьте эту область доступа при создании токена API",
-    "connectionSuccess": "Соединение установлено!",
-    "connectionFailed": "Ошибка соединения",
-    "apiKeyCopied": "Ключ API скопирован",
-    "loginTitle": "Вход",
-    "serverBtn": "Сервер",
-    "addAccountBtn": "Добавить аккаунт",
-    "signInBtn": "Войти",
-    "deleteProfile": "Удалить",
-    "deleteProfileTitle": "Удалить аккаунт",
-    "deleteProfileConfirm": "Удалить {name} с этого устройства?",
-    "@deleteProfileConfirm": {
-        "placeholders": {
-            "name": {
-                "type": "String"
-            }
-        }
-    },
-    "displayName": "Отображаемое имя",
-    "callsign": "Позывной",
-    "apiKeyLabel": "Ключ API",
-    "validating": "Проверка...",
-    "profileSaved": "Аккаунт сохранён",
-    "loginFailed": "Ошибка входа",
-    "noStationFound": "Станция не найдена — используется позывной",
-    "homeTitle": "Главная",
-    "addQso": "Добавить QSO",
-    "recentQsos": "Последние QSO",
-    "statsToday": "Сегодня",
-    "statsMonth": "Месяц",
-    "statsYear": "Год",
-    "statsTotal": "Всего",
-    "noRecentQsos": "QSO нет",
-    "syncNow": "Синхронизировать",
-    "pendingSync": "{count} QSO ожидают синхронизации",
-    "@pendingSync": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "offlineBanner": "Нет сети — QSO сохранены локально",
-    "activeStation": "Активный профиль QTH",
-    "logbookTitle": "Журнал",
-    "filterAll": "Все",
-    "filterAllModes": "Все виды модуляции",
-    "searchHint": "Поиск позывного...",
-    "noQsos": "QSO не найдены",
-    "qsoDetailTitle": "Детали QSO",
-    "qsoNotFound": "QSO не найдено",
-    "signal": "Сигнал",
-    "rstSent": "RST (TX)",
-    "rstReceived": "RST (RX)",
-    "txPower": "Мощность ТХ",
-    "counterStation": "Корреспондент",
-    "country": "Страна",
-    "continent": "Континент",
-    "dxcc": "DXCC",
-    "cqZone": "Зона CQ",
-    "ituZone": "Зона ITU",
-    "gridSquare": "Квадрат QTH-локатора",
-    "propMode": "Распространение",
-    "distance": "Расстояние",
-    "qslStatus": "Статус QSL",
-    "paperQsl": "QSL-карточка",
-    "lotwQsl": "LoTW",
-    "eqslQsl": "eQSL",
-    "qrzQsl": "QRZ.com",
-    "clublog": "Clublog",
-    "hrdlog": "HRDLog",
-    "qslSent": "TX",
-    "qslRcvd": "RX",
-    "qslReceived": "Получено",
-    "qslMethod": "Способ",
-    "awards": "Референции",
-    "iota": "IOTA",
-    "sota": "SOTA",
-    "wwff": "WWFF",
-    "pota": "POTA",
-    "myStation": "Моя профиль QTH",
-    "myCallsign": "Мой позывной",
-    "contest": "Контест",
-    "serialSent": "Порядковый номер (TX)",
-    "serialReceived": "Порядковый номер (RX)",
-    "solarConditions": "Солнечная активность",
-    "aIndex": "A-индекс",
-    "kIndex": "K-индекс",
-    "sfi": "SFI",
-    "notesSection": "Заметки",
-    "rawAdif": "Исходный ADIF",
-    "showAll": "Показать всё",
-    "showLess": "Свернуть",
-    "qrzProfile": "Профиль QRZ",
-    "addQsoTitle": "Добавить QSO",
-    "liveQso": "Вживую",
-    "historicalQso": "Прошедшее",
-    "callsignField": "Позывной *",
-    "lookupSearch": "Поиск в QRZ",
-    "liveDateTimeLabel": "Дата/Время (UTC) — сейчас",
-    "dateTimeLabel": "Дата/Время (UTC)",
-    "bandField": "Диапазон *",
-    "modeField": "Вид модуляции *",
-    "frequencyField": "Частота (МГц)",
-    "rstSentField": "RST передано *",
-    "rstRcvdField": "RST принято *",
-    "nameField": "Имя",
-    "qthField": "QTH",
-    "gridField": "QTH-локатор",
-    "commentField": "Комментарий",
-    "stationProfileField": "Профиль QTH",
-    "saveQsoBtn": "Сохранить QSO",
-    "qsoSaved": "✓  {callsign} сохранён",
-    "@qsoSaved": {
-        "placeholders": {
-            "callsign": {
-                "type": "String"
-            }
-        }
-    },
-    "qsoSavedLocal": "✓  {callsign} сохранён локально",
-    "@qsoSavedLocal": {
-        "placeholders": {
-            "callsign": {
-                "type": "String"
-            }
-        }
-    },
-    "noActiveStation": "Активный профиль QTH не выбран",
-    "lookupTitle": "Поиск позывного",
-    "lookupHint": "Введите позывной...",
-    "lookupBtn": "Поиск",
-    "recentSearches": "Последние запросы",
-    "clearHistory": "Очистить историю",
-    "makeQso": "Записать QSO",
-    "notFound": "Не найдено",
-    "stationsTitle": "Профили QTH",
-    "stationActivated": "{callsign} установлен как активный профиль QTH",
-    "@stationActivated": {
-        "placeholders": {
-            "callsign": {
-                "type": "String"
-            }
-        }
-    },
-    "stationWebInfo": "Добавляйте и редактируйте профили QTH через веб-интерфейс Wavelog.",
-    "noStations": "Нет профилей QTH",
-    "noStationsHint": "Добавьте профиль QTH через веб-интерфейс Wavelog.",
-    "addStationOnWeb": "Добавить профиль QTH в Wavelog",
-    "adifTitle": "Импорт / Экспорт ADIF",
-    "importTab": "Импорт",
-    "exportTab": "Экспорт",
-    "selectAdifFile": "Выбрать ADIF файл",
-    "selectFileBtn": "Выбрать файл (.adi / .adif)",
-    "stationRequired": "Профиль QTH *",
-    "importing": "Импорт... {done}/{total}",
-    "@importing": {
-        "placeholders": {
-            "done": {
-                "type": "int"
-            },
-            "total": {
-                "type": "int"
-            }
-        }
-    },
-    "importBtn": "Импорт",
-    "fileReadError": "Не удалось прочитать файл, попробуйте снова",
-    "invalidFileExtension": "Выберите файл с расширением .adi или .adif",
-    "exportFilters": "Фильтры экспорта",
-    "stationFilter": "Профиль QTH",
-    "allStations": "Все профили QTH",
-    "startDate": "Начало",
-    "endDate": "Конец",
-    "notSelected": "Не выбрано",
-    "clearDates": "Сбросить даты",
-    "exporting": "Экспорт...",
-    "exportAndShare": "Экспорт и отправка",
-    "copyPath": "Копировать путь",
-    "reshare": "Поделиться снова",
-    "pathCopied": "Путь скопирован",
-    "qsoExported": "{count} QSO экспортировано",
-    "@qsoExported": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "noStationForExport": "Профиль QTH для экспорта не найден",
-    "qsoImported": "{imported} / {total} QSO импортировано",
-    "@qsoImported": {
-        "placeholders": {
-            "imported": {
-                "type": "int"
-            },
-            "total": {
-                "type": "int"
-            }
-        }
-    },
-    "selectSaveLocation": "Выбрать место сохранения",
-    "copySuffix": "(Копия)",
-    "errNetwork": "Нет соединения — проверьте сеть",
-    "errTimeout": "Превышено время ожидания",
-    "errUnauthorized": "Неверный ключ API",
-    "settingsTitle": "Настройки",
-    "connectionSection": "Соединение",
-    "sessionSection": "Сессия",
-    "loggedIn": "Вы вошли",
-    "logoutBtn": "Выйти",
-    "logoutTitle": "Выход",
-    "logoutConfirm": "Вы уверены, что хотите выйти?",
-    "switchAccountBtn": "Сменить аккаунт",
-    "activeStationSection": "Активный профиль QTH",
-    "selectStationBtn": "Выбрать профиль QTH",
-    "addStationWeb": "Добавить профиль QTH на сайте",
-    "defaultsSection": "По умолчанию",
-    "defaultBand": "Диапазон по умолчанию",
-    "defaultMode": "Вид модуляции по умолчанию",
-    "appSection": "Приложение",
-    "darkTheme": "Тёмная тема",
-    "darkThemeHint": "Рекомендуется для работы в поле",
-    "offlineMode": "Офлайн-режим",
-    "offlineModeHint": "Сначала сохраняйте QSO локально, синхронизируйте позже",
-    "allowInsecureSsl": "Разрешить непроверенные SSL-сертификаты",
-    "allowInsecureSslHint": "Доверять самоподписанным или сертификатам частного ЦС (для собственных серверов). Не рекомендуется в публичных сетях.",
-    "languageLabel": "Язык",
-    "infoSection": "Информация",
-    "aboutAppBtn": "О приложении",
-    "aboutAppHint": "Версия, разработчик, лицензия",
-    "dataSection": "Данные",
-    "clearCacheBtn": "Очистить кэш QSO",
-    "clearCacheHint": "Удаляет локальный кэш QSO",
-    "clearCacheTitle": "Очистить кэш",
-    "clearCacheConfirm": "Локальный кэш QSO будет удалён. Это действие необратимо.",
-    "clearCacheAction": "Очистить",
-    "cacheCleared": "Кэш очищен",
-    "langSystem": "Как в системе",
-    "langEnglish": "English",
-    "langTurkish": "Türkçe",
-    "langPolish": "Polski",
-    "langGerman": "Deutsch",
-    "langFrench": "Français",
-    "langItalian": "Italiano",
-    "langJapanese": "日本語",
-    "langKorean": "한국어",
-    "langRussian": "Русский",
-    "aboutTitle": "О приложении",
-    "appDescription": "Приложение для Android для Wavelog c открытым исходным кодом",
-    "versionLabel": "Версия {version}  (Сборка {build})",
-    "@versionLabel": {
-        "placeholders": {
-            "version": {
-                "type": "String"
-            },
-            "build": {
-                "type": "String"
-            }
-        }
-    },
-    "mobileDeveloperSection": "Разработчик мобильного приложения",
-    "wavelogProjectSection": "Проект Wavelog",
-    "wavelogDescription": "Аппаратный журнал с веб-интерфейсом",
-    "coreDevelopers": "Основные разработчики",
-    "mitLicense": "Лицензия MIT",
-    "mitDescription": "Это приложение и проект Wavelog распространяются под лицензией MIT. Открытый исходный код, без гарантий.",
-    "licenseSection": "Лицензия",
-    "errorNoConnection": "Нет соединения",
-    "errorUnauthorized": "Не авторизован — проверьте ключ API",
-    "errorServer": "Ошибка сервера",
-    "patchRequiredTitle": "Требуется патч сервера",
-    "patchRequiredMessage": "Для редактирования и удаления требуется патч Wavelog Mobile API на вашем сервере.\n\nИнструкции по установке: sp9aqg.pl/install.html",
-    "patchRequiredBanner": "Для редактирования и удаления требуется патч Wavelog Mobile API на вашем сервере.",
-    "patchViewGuide": "Просмотр руководства",
-    "setupGuideTitle": "Руководство по настройке",
-    "setupGuideIntro": "Перед записью QSO подключите приложение к серверу Wavelog. Следуйте шагам ниже.",
-    "setupGuidePatchWarning": "Это приложение требует патча Wavelog Mobile на вашем сервере. Даже если вы создадите токен API v2 без него, приложение не будет работать корректно.",
-    "setupGuidePatchStepTitle": "Установить патч сервера",
-    "setupGuidePatchStepBody": "Приложение использует API v2 Wavelog, который требует небольшого патча на вашем сервере. Если вы его ещё не установили, откройте руководство и следуйте инструкциям.",
-    "setupGuidePatchBtn": "Руководство по установке",
-    "setupGuideStep1Title": "1. Адрес сервера",
-    "setupGuideStep1Body": "Введите адрес, который вы используете для доступа к Wavelog в браузере, например https://yourdomain.com — без завершающего слеша.",
-    "setupGuideStep2Title": "2. Токен API v2",
-    "setupGuideStep2Body": "В Wavelog: Ваш профиль → Ключи API → Токены API (API v2) → Новый токен API. Выберите предустановку «Wavelog Mobile» и подтвердите. Скопируйте токен (начинается с wl2_) и вставьте в приложение.",
-    "setupGuideStep3Title": "3. Позывной и отображаемое имя",
-    "setupGuideStep3Body": "Позывной: ваш личный позывной, используется для сопоставления с вашей станцией. Отображаемое имя: любой ярлык для идентификации этого входа на устройстве.",
-    "setupGuideContinueBtn": "Начать настройку",
-    "migrationTokenHint": "wl2_…",
-    "migrationTokenLabel": "Токен API v2",
-    "migrationValidateBtn": "Проверить и продолжить",
-    "migrationValidating": "Проверка…",
-    "migrationTokenEmpty": "Вставьте ваш токен wl2_.",
-    "migrationTokenInvalid": "Токен недействителен — проверьте и попробуйте снова.",
-    "patchNotInstalledTitle": "Патч не обнаружен",
-    "patchNotInstalledBody": "Патч Wavelog Mobile не установлен на вашем сервере.\n\nТокен API v2 (wl2_…) не будет работать без патча. Сначала выполните шаг 1.",
-    "patchInstallFirst": "Установить патч",
-    "appSubtitle": "Приложение для ведения аппаратного журнала радиостанции",
-    "switchToLightTheme": "Переключить на светлую тему",
-    "switchToDarkTheme": "Переключить на тёмную тему",
-    "deleteQsoTitle": "Удалить QSO",
-    "deleteQsoConfirm": "Удалить QSO с {callsign} от {date}?",
-    "@deleteQsoConfirm": {
-        "placeholders": {
-            "callsign": {
-                "type": "String"
-            },
-            "date": {
-                "type": "String"
-            }
-        }
-    },
-    "editTooltip": "Редактировать",
-    "shareAdifTooltip": "Поделиться ADIF",
-    "localNotSynced": "Локальная запись — ещё не синхронизирована",
-    "satellite": "Спутник",
-    "satelliteMode": "Спутниковый режим",
-    "antenna": "Антенна",
-    "nameLabel": "Имя",
-    "stateProvince": "Штат/Область",
-    "county": "Округ/Район",
-    "city": "Город",
-    "continentAF": "Африка",
-    "continentAN": "Антарктида",
-    "continentAS": "Азия",
-    "continentEU": "Европа",
-    "continentNA": "Северная Америка",
-    "continentOC": "Океания",
-    "continentSA": "Южная Америка",
-    "qrzProfileLoading": "Загрузка профиля QRZ...",
-    "viewOnQrz": "Открыть на QRZ.com  ({callsign})",
-    "@viewOnQrz": {
-        "placeholders": {
-            "callsign": {
-                "type": "String"
-            }
-        }
-    },
-    "qslMethods": "Способы QSL",
-    "bureau": "Бюро",
-    "qslManagerPrefix": "Менеджер: {manager}",
-    "@qslManagerPrefix": {
-        "placeholders": {
-            "manager": {
-                "type": "String"
-            }
-        }
-    },
-    "callsignCopied": "Позывной скопирован",
-    "uploadedStatus": "Загружено",
-    "notUploadedStatus": "Не загружено",
-    "matchedStatus": "Совпадает",
-    "toDeleteStatus": "К удалению",
-    "yes": "Да",
-    "requested": "Запрошено",
-    "no": "Нет",
-    "invalid": "Недействительно",
-    "viaDirect": "Напрямую",
-    "viaElectronic": "Электронно",
-    "viaMail": "Почтой",
-    "otherAdifFields": "Другие поля ADIF ({count})",
-    "@otherAdifFields": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "editQsoTitle": "Редактировать QSO",
-    "qsoUpdated": "QSO обновлено",
-    "qsoUpdatedLocal": "QSO обновлено локально",
-    "counterStationHint": "Введите позывной, чтобы увидеть информацию QRZ\nи предыдущие QSO.",
-    "previousQsosCount": "Предыдущие QSO ({count})",
-    "@previousQsosCount": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "morePreviousQsos": "+{count} ещё...",
-    "@morePreviousQsos": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "previousQsosWithCallsign": "Предыдущие QSO с {callsign}",
-    "@previousQsosWithCallsign": {
-        "placeholders": {
-            "callsign": {
-                "type": "String"
-            }
-        }
-    },
-    "totalQsos": "Всего {count}",
-    "@totalQsos": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "workedBefore": "Работали ранее",
-    "lastQsoLabel": "Последнее QSO",
-    "themeLabel": "Тема",
-    "darkThemeActive": "Тёмная тема активна",
-    "lightThemeActive": "Светлая тема активна",
-    "lightThemeLabel": "Светлая",
-    "darkThemeLabel": "Тёмная",
-    "commentNotes": "Комментарий / Заметки",
-    "commentLabel": "Комментарий",
-    "exchangeReceived": "Принятый контрольный номер",
-    "exchangeSent": "Переданный контрольный номер",
-    "contestIdLabel": "Контест",
-    "sigLabel": "SIG",
-    "stationSetup": "Настройка журнала",
-    "logbooks": "Журналы",
-    "locations": "Профили QTH",
-    "newLogbook": "Новый журнал",
-    "logbookName": "Название журнала",
-    "renameLogbook": "Переименовать",
-    "deleteLogbook": "Удалить журнал",
-    "setActiveLogbook": "Сделать активным",
-    "activeLogbook": "Активный журнал",
-    "editStation": "Редактировать",
-    "cloneStation": "Клонировать",
-    "deleteStation": "Удалить",
-    "deleteStationConfirm": "Удалить профиль QTH",
-    "deleteStationWarning": "Все QSO в этом профиле QTH будут безвозвратно удалены. Продолжить?",
-    "stationDeleted": "Профиль QTH удалён",
-    "stationUpdated": "Профиль QTH обновлён",
-    "stationCloned": "Профиль QTH клонирован",
-    "linkLocation": "Привязать профиль QTH",
-    "unlinkLocation": "Отвязать",
-    "linkedLocations": "Привязанные профили QTH",
-    "newStationName": "Название нового профиля QTH",
-    "deleteLogbookConfirm": "Удалить журнал",
-    "deleteLogbookWarning": "Этот журнал будет удалён. Связанные профили QTH сохранятся. Продолжить?",
-    "logbookDeleted": "Журнал удалён",
-    "hrdlogCode": "Код HRDLog",
-    "webAdifApiKey": "ключ API WebADIF",
-    "webAdifApiUrl": "URL API WebADIF",
-    "basicInfo": "Основная информация",
-    "locationSectionTitle": "Профиль QTH",
-    "awardReferences": "Референции",
-    "integrationsSectionTitle": "Интеграции",
-    "stationSettingsSection": "Настройки профиля QTH",
-    "editStationTitle": "Редактировать профиль QTH",
-    "newStationTitle": "Новый профиль QTH",
-    "saveChangesBtn": "Сохранить изменения",
-    "createStationBtn": "Создать профиль QTH",
-    "stationCreated": "Профиль QTH создан",
-    "stationCreateFailed": "Ошибка. Профиль с таким именем уже существует.",
-    "stationProfileNameLabel": "Название профиля QTH *",
-    "stationProfileNameHint": "Дом",
-    "cityQth": "Город / QTH",
-    "powerWatts": "Мощность (Вт)",
-    "dxccCountry": "DXCC / Страна",
-    "selectLabel": "Выбрать...",
-    "dxccSearch": "Поиск DXCC / Страны",
-    "deletedDxcc": "Удалённый DXCC",
-    "eqslQthNicknameLabel": "Псевдоним профиля QTH для eQSL",
-    "eqslDefaultMsgLabel": "Сообщение eQSL по умолчанию",
-    "pending": "Ожидает",
-    "uploadDisabled": "Отключено",
-    "uploadEnabled": "Включено",
-    "uploadRealtime": "В реальном времени",
-    "qrzApiKeyLabel": "Ключ API для журнала QRZ.com",
-    "qrzUploadLabel": "Загрузка на QRZ.com",
-    "clublogIgnoreTitle": "Игнорировать Clublog",
-    "clublogIgnoreSubtitle": "Исключить этот профиль QTH из загрузок Clublog",
-    "clublogRealtimeTitle": "Загрузка в Clublog в реальном времени",
-    "clublogRealtimeSubtitle": "Загружать QSO в Clublog в реальном времени",
-    "hrdlogUsernameLabel": "Имя пользователя HRDLog.net",
-    "hrdlogApiKeyLabel": "Ключ API для HRDLog.net",
-    "hrdlogUploadLabel": "Загрузка в HRDLog.net",
-    "qo100ApiKeyLabel": "Ключ API QO-100 DX Club",
-    "qo100RealtimeTitle": "Загрузка в QO-100 DX Club в реальном времени",
-    "qo100RealtimeSubtitle": "Загружать QSO в QO-100 DX Club в реальном времени",
-    "oqrsSectionTitle": "OQRS (Онлайн запрос QSL)",
-    "oqrsEnabledTitle": "OQRS включён",
-    "oqrsEnabledSubtitle": "Включить систему онлайн запросов QSL",
-    "oqrsTextLabel": "Описание OQRS",
-    "oqrsEmailLabel": "Email OQRS",
-    "setAsActiveStationTitle": "Установить профиль QTH активным",
-    "setAsActiveStationSubtitle": "Отметить этот профиль QTH, как активный в Wavelog",
-    "linkToActiveLogbookTitle": "Привязать к активному журналу",
-    "linkToActiveLogbookSubtitle": "Автоматически привязывать к активному журналу при создании",
-    "active": "Активен",
-    "loadDetailsFailed": "Не удалось загрузить подробности",
-    "cannotDeleteActiveStation": "Нельзя удалить активный профиль QTH.",
-    "navStats": "Статистика",
-    "statisticsTitle": "Статистика",
-    "uniqueCallsigns": "Уникальные позывные",
-    "currentStreak": "Текущая серия",
-    "streakDays": "{count} дн.",
-    "@streakDays": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "bandDistribution": "Распределение по диапазонам",
-    "modeDistribution": "Распределение по видам модуляции",
-    "perStation": "По профилям QTH",
-    "basedOnCache": "Статистика по диапазонам/видам модуляции/профилям QTH основана на кэшированных QSO.",
-    "statsTab": "Статистика",
-    "propagationTab": "Прохождение",
-    "bandConditions": "Условия на диапазонах",
-    "dayTime": "День",
-    "nightTime": "Ночь",
-    "conditionGood": "Хорошее",
-    "conditionFair": "Удовлетворительное",
-    "conditionPoor": "Плохое",
-    "lastUpdated": "Обновлено: {time}",
-    "@lastUpdated": {
-        "placeholders": {
-            "time": {
-                "type": "String"
-            }
-        }
-    },
-    "noSolarData": "Не удалось загрузить данные о солнечной активности",
-    "potaStats": "Статистика POTA",
-    "potaTotalQsos": "QSO POTA",
-    "potaActivatedParks": "Активированные парки",
-    "potaAllParks": "Все парки",
-    "potaActivatedBadge": "Активирован",
-    "potaAttemptBadge": "Попытка",
-    "potaNoStation": "Профиль станции POTA не настроен",
-    "potaNoQsos": "Нет QSO POTA в кэше",
-    "navSpot": "Споты",
-    "spotTitle": "Споты",
-    "spotAdd": "Добавить спот",
-    "spotSend": "Отправить спот",
-    "spotSent": "Спот отправлен!",
-    "spotNoResults": "Споты не найдены",
-    "spotLoadError": "Не удалось загрузить споты",
-    "spotActivator": "Позывной активатора",
-    "spotSpotter": "Позывной спотера",
-    "spotFrequency": "Частота (кГц)",
-    "spotReference": "Референция",
-    "spotComments": "Комментарии",
-    "spotCommentsHint": "QRZ, CQ POTA...",
-    "spotInvalidRef": "Неверный формат (например PL-0001)",
-    "sortNewest": "Сначала новые",
-    "sortOldest": "Сначала старые",
-    "filterBand": "Диапазон",
-    "filterMode": "Вид модуляции",
-    "filterCountry": "Страна",
-    "filterAssociation": "Ассоциация",
-    "spotAddComingSoon": "Добавить спот — скоро",
-    "filterClear": "Сбросить фильтры",
-    "mode": "Вид модуляции",
-    "required": "Требуется",
-    "invalidNumber": "Неверное число",
-    "potaAutoSpot": "Авто-спот",
-    "potaAutoSpotHint": "Автоматически отправлять спот при записи QSO в профиле QTH POTA или SOTA (перерыв 30 минут)",
-    "autoSpotSent": "Авто-спот отправлен: {ref}",
-    "@autoSpotSent": {
-        "placeholders": {
-            "ref": {
-                "type": "String"
-            }
-        }
-    },
-    "autoSpotWillFire": "QSO запустит отправку спота",
-    "autoSpotCooldown": "Спот отправлен · Следующий через {min} мин",
-    "@autoSpotCooldown": {
-        "placeholders": {
-            "min": {
-                "type": "int"
-            }
-        }
-    },
-    "autoSpotCooldownSoon": "Спот отправлен · Следующий спот скоро",
-    "autoSpotKeyChanged": "{fields} изменились · Будет отправлен новый спот",
-    "@autoSpotKeyChanged": {
-        "placeholders": {
-            "fields": {
-                "type": "String"
-            }
-        }
-    },
-    "autoSpotFieldFreq": "Частота",
-    "autoSpotFieldMode": "Вид модуляции",
-    "autoSpotFieldRef": "Парк",
-    "logbookSummaryTitle": "Последние QSO",
-    "todayQsoCount": "Сегодня: {count} QSO",
-    "@todayQsoCount": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "colDateTime": "Дата/Время",
-    "colRstSent": "RST(Прд)",
-    "colRstRcvd": "RST(Прм)",
-    "submodeLabel": "Подвид",
-    "selectedCount": "{count} выбрано",
-    "@selectedCount": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "selectAll": "Выбрать все",
-    "exportSelected": "Экспорт",
-    "deleteSelected": "Удалить",
-    "deleteSelectedConfirm": "Удалить {count} QSO?",
-    "@deleteSelectedConfirm": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "mapTitle": "Карта",
-    "mapNoData": "QSO с квадратом QTH-локатора не найдены",
-    "mapStationCount": "{count} станций",
-    "@mapStationCount": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "dxccProgress": "Прогресс DXCC",
-    "workedCountries": "Стработанные страны",
-    "dxccWorked": "Стработано",
-    "dxccUniqueEntities": "{count} уникальных DXCC",
-    "@dxccUniqueEntities": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "dxccConfirmed": "Подтверждено (LoTW / eQSL / QSL)",
-    "dxccRemaining": "Осталось",
-    "dxccLegendConfirmed": "Подтверждено",
-    "dxccLegendPending": "В ожидании",
-    "dxccLegendNotWorked": "Не стработано",
-    "spotSummitNotFound": "Вершина не найдена",
-    "spotParkNotFound": "Парк не найден",
-    "qsoTypeTitle": "Записать QSO",
-    "normalQso": "Обычное QSO",
-    "normalQsoDesc": "Стандартная запись контакта",
-    "contestQso": "QSO контеста",
-    "contestQsoDesc": "Быстрое ведение журнала контеста с контрольными номерами",
-    "contestLog": "Журнал контеста",
-    "contestSetup": "Настройка контеста",
-    "contestNameHint": "напр. CQ-WW-CW",
-    "ourExchange": "Наш контрольный номер",
-    "serialStart": "Начальный порядковый №",
-    "showExchangeFields": "Поля контрольного номера",
-    "startContest": "Начать запись журнала",
-    "endContest": "Завершить контест-сессию",
-    "endContestConfirm": "Завершить контест-сессию? (Счётчик последовательных номеров и настройки будут сброшены.)",
-    "serialSentLabel": "№ (TX)",
-    "serialRcvdLabel": "№ (RX)",
-    "exchangeSentLabel": "Контр. (TX)",
-    "exchangeRcvdLabel": "Контр. (RX)",
-    "gridSentLabel": "QTH-лок. (TX)",
-    "gridRcvdLabel": "QTH-лок. (RX)",
-    "logQso": "Записать QSO",
-    "qsoLogged": "QSO записано",
-    "contestRecentQsos": "Последние",
-    "contestSessions": "Контест-сессии",
-    "newSession": "Новая контест-сессия",
-    "noContestSessions": "Контест-сессий нет",
-    "noContestSessionsHint": "Создайте контест-сессию на сайте или нажмите +, чтобы начать здесь.",
-    "contestSessionActive": "Активна",
-    "contestSessionEnded": "Завершена",
-    "qsoCount": "{count} QSO",
-    "@qsoCount": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "contestSessionDates": "{start} – {end}",
-    "@contestSessionDates": {
-        "placeholders": {
-            "start": {
-                "type": "String"
-            },
-            "end": {
-                "type": "String"
-            }
-        }
-    },
-    "createContestSession": "Создать контест-сессию",
-    "sessionName": "Название контест-сессии (необязательно)",
-    "sessionNameHint": "напр. Домашний QTH — CW",
-    "selectContest": "Выбрать контест *",
-    "searchContest": "Поиск контестов...",
-    "serverContests": "С сервера",
-    "builtinContests": "Популярные контесты",
-    "startDateTime": "Дата/время начала *",
-    "endDateTime": "Дата/время окончания *",
-    "durationShortcut4h": "+4ч",
-    "durationShortcut12h": "+12ч",
-    "durationShortcut24h": "+24ч",
-    "durationShortcut48h": "+48ч",
-    "exchangeType": "Контрольные номера",
-    "exchangeTypeSerial": "Порядковый номер",
-    "exchangeTypeExchange": "Обмен (текст)",
-    "exchangeTypeBoth": "Порядковый номер + обмен (текст)",
-    "createSession": "Создать контест-сессию",
-    "sessionCreated": "Контест-сессия создана",
-    "sessionUpdated": "Контест-сессия обновлена",
-    "editContestSession": "Редактировать контест-сессию",
-    "saveChanges": "Сохранить изменения",
-    "deleteSession": "Удалить контест-сессию",
-    "deleteSessionConfirm": "Удалить эту контест-сессию? QSO, записанные в ней, останутся в журнале.",
-    "openSession": "Открыть для записи QSO",
-    "patchRequiredContest": "Управление контест-сессиями требует обновлённого патча Wavelog Mobile.",
-    "contestCalendarTitle": "Календарь контестов",
-    "contestCalendarNoContests": "Контесты не найдены.",
-    "contestCalendarToday": "Сегодня",
-    "contestCalendarThisWeek": "На этой неделе",
-    "contestCalendarUpcoming": "Предстоящие",
-    "contestCalendarRecentlyPast": "Недавно прошедшие",
-    "contestCalendarLoadError": "Не удалось загрузить календарь контестов",
-    "contestCalendarRefresh": "Обновить",
-    "contestCalendarRetry": "Повторить",
-    "upcomingContestsTitle": "Предстоящие контесты",
-    "viewAll": "Все",
-    "noUpcomingContests": "Предстоящих контестов не найдено.",
-    "contestTodayBadge": "СЕГОДНЯ",
-    "navStyleLabel": "Стиль навигации",
-    "navStyleModern": "Современный — FAB + меню",
-    "navStyleClassic": "Классический — 6 вкладок",
-    "drawerMap": "Карта",
-    "drawerContestCalendar": "Календарь контестов",
-    "drawerContestSessions": "Контест-сессии",
-    "drawerAdif": "ADIF",
-    "drawerMenu": "Меню",
-    "antennaCompassTitle": "Направление антенны",
-    "targetGrid": "Целевой квадрат QTH-локатора",
-    "calculate": "Вычислить",
-    "shortPath": "Короткий путь",
-    "longPath": "Длинный путь",
-    "azimuth": "Азимут",
-    "myHeading": "Курс",
-    "invalidGrid": "Неверный квадрат QTH-локатора",
-    "gpsLocating": "Определение GPS… подождите",
-    "gpsUnavailable": "GPS недоступен",
-    "drawerAntenna": "Направление антенны",
-    "achievementsTitle": "Достижения",
-    "achievementsEmpty": "Запишите первое QSO, чтобы начать получать значки!",
-    "shareAchievement": "Поделиться",
-    "achievementUnlocked": "Достижение разблокировано!",
-    "progressLabel": "{done} / {target}",
-    "@progressLabel": {
-        "placeholders": {
-            "done": {
-                "type": "int"
-            },
-            "target": {
-                "type": "int"
-            }
-        }
-    },
-    "drawerAchievements": "Достижения",
-    "drawerCommunity": "Сообщество",
-    "communityTitle": "Сообщество",
-    "communityNoActivations": "Запланированных активаций нет",
-    "communityBeFirst": "Будьте первым, кто объявит!",
-    "communityAnnounce": "Объявить активацию",
-    "communityFollow": "Подписаться",
-    "communityUnfollow": "Отписаться",
-    "communityFollowers": "{count} подписчиков",
-    "@communityFollowers": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "communityTypeGeneral": "Общая",
-    "communityCallsign": "Позывной",
-    "communityReference": "Референция",
-    "communitySotaRef": "Референция SOTA (TA/AN-001)",
-    "communityPotaRef": "Референция POTA (TA-0001)",
-    "communityScheduledTime": "Запланированное время",
-    "communityNote": "Заметка (необязательно)",
-    "communityNoteHint": "Краткая информация об активации...",
-    "communityAnnounceButton": "Объявить",
-    "communityAnnounced": "Активация объявлена!",
-    "communityRateLimit": "Вы недавно размещали объявление. Подождите несколько минут.",
-    "communityCallsignRequired": "Позывной обязателен",
-    "communityReferenceRequired": "Референция обязательна",
-    "communityBandRequired": "Выберите хотя бы один диапазон",
-    "communityActivations": "Активации",
-    "communityChat": "Чат",
-    "communityEditActivation": "Редактировать активацию",
-    "communityDeleteActivation": "Удалить активацию",
-    "communityDeleteActivationConfirm": "Удалить эту активацию? Это действие нельзя отменить.",
-    "communityUpdated": "Активация обновлена",
-    "chatRooms": "Комнаты чата",
-    "chatGeneral": "Общие",
-    "chatGeneralSubtitle": "Общий язык: английский",
-    "chatMessageHint": "Введите сообщение…",
-    "chatSend": "Отправить",
-    "chatEdit": "Редактировать",
-    "chatDelete": "Удалить",
-    "chatDeleteConfirm": "Удалить это сообщение?",
-    "chatEdited": "изменено",
-    "chatNoStation": "Выберите активный профиль QTH для чата",
-    "chatToday": "Сегодня",
-    "chatYesterday": "Вчера",
-    "chatFollow": "Подписаться",
-    "chatUnfollow": "Отписаться",
-    "chatFollowing": "Вы подписаны",
-    "chatAddReaction": "Добавить реакцию",
-    "gifPreparing": "Подготовка видео...",
-    "gifCapturing": "Захват кадров... {percent}%",
-    "@gifCapturing": {
-        "placeholders": {
-            "percent": {
-                "type": "int"
-            }
-        }
-    },
-    "gifEncoding": "Кодирование видео...",
-    "comingSoon": "Скоро",
-    "noCompassSensor": "Нет датчика компаса",
-    "fillFromGps": "Заполнить из GPS",
-    "locationPermissionDenied": "Доступ к геолокации запрещён",
-    "gpsError": "Ошибка GPS: {error}",
-    "@gpsError": {
-        "placeholders": {
-            "error": {
-                "type": "String"
-            }
-        }
-    },
-    "errParse": "Не удалось разобрать ответ сервера",
-    "errLocalStorage": "Ошибка локального хранилища",
-    "errServer": "Ошибка сервера",
-    "wpxPrefix": "Префикс WPX",
-    "nowBtn": "Сейчас",
-    "contestOtherCustom": "Другой / Пользовательский",
-    "sigInfo": "Информация SIG",
-    "migrationTitle": "Требуется API v2",
-    "migrationBody": "Wavelog Mobile теперь использует новый API Wavelog. Ваш старый ключ API недействителен — выполните шаги ниже для миграции.",
-    "migrationStep1Title": "Установить патч сервера",
-    "migrationStep1Body": "На ваш сервер Wavelog нужно установить небольшой файл обновления. Нажмите кнопку «Руководство по установке» ниже.",
-    "migrationInstallGuideBtn": "Руководство по установке",
-    "migrationStep2Title": "Создать новый токен API",
-    "migrationStep2Body": "В веб-интерфейсе Wavelog:\n  1. Откройте меню настроек (вверху справа)\n  2. Перейдите в «Ключи API» → «Токены API (API v2) »\n  3. Нажмите «Создать новый токен API»\n  4. Выберите предустановку «Wavelog Mobile»\n  5. Подтвердите и скопируйте токен\n  (Токен начинается с «wl2_»)",
-    "migrationStep3Title": "Обновить профиль",
-    "migrationStep3Body": "Нажмите кнопку ниже. Адрес сервера сохранится — просто вставьте новый токен.",
-    "migrationUpdateTokenBtn": "Обновить токен",
-    "migrationHelpBtn": "Помощь и руководство по установке",
-    "celebTitle": "Wavelog v3.2.0",
-    "celebSubtitle": "Патч сервера больше не нужен!",
-    "celebBody": "Все функции теперь работают напрямую через официальный API v2 Wavelog. Вы можете удалить старый патч с вашего сервера.\n\nЭто приложение теперь требует Wavelog v3.2.0 или выше.",
-    "celebCreateToken": "Создать токен API",
-    "celebSkip": "Пропустить",
-    "celebScopesTitle": "Области доступа для токена API v2",
-    "celebScopesBody": "При создании нового токена в интерфейсе Wavelog (Профиль → Ключи API → Создать новый токен API) выберите следующие области:",
-    "celebDone": "Понятно",
-    "scopeQsoRead": "Чтение QSO",
-    "scopeQsoWrite": "Добавление / обновление QSO",
-    "scopeQsoDelete": "Удаление QSO",
-    "scopeStationRead": "Чтение профилей QTH",
-    "scopeStationWrite": "Создание / обновление профилей QTH",
-    "scopeStationDelete": "Удаление профилей QTH",
-    "scopeLogbookRead": "Чтение журналов",
-    "scopeLogbookWrite": "Создание / обновление журналов",
-    "scopeLogbookDelete": "Удаление журналов",
-    "scopeContestRead": "Чтение контест-сессий",
-    "scopeContestWrite": "Создание / обновление контест-сессий",
-    "scopeContestDelete": "Удаление контест-сессий",
-    "scopeCatalogRead": "DXCC, административное деление и список контестов",
-    "scopeLookupRead": "Поиск позывных",
-    "scopeStatisticsRead": "Чтение статистики",
-    "scopeConfirmationRead": "Чтение подтверждений LoTW / eQSL / QRZ.com",
-    "scopeTestStation": "Профиль QTH",
-    "scopeTestLogbook": "Журнал",
-    "scopeTestQso": "QSO",
-    "scopeTestContest": "Контест",
-    "scopeTestConfirmation": "Подтверждение",
-    "scopeTestStatistics": "Статистика",
-    "scopeTestLookup": "Поиск",
-    "apiScopeGuideBtn": "Руководство по областям доступа API",
-    "apiScopeGuideTitle": "Руководство по областям доступа токена API",
-    "apiScopeGuideIntro": "При создании нового токена API в Wavelog (Ваш профиль → Ключи API) выберите все области ниже для полной функциональности приложения.",
-    "apiTokenNoticeTitle": "Создайте новый токен API",
-    "apiTokenNoticeBody": "API v2 Wavelog требует новый токен с определёнными областями доступа. Перейдите в Wavelog → Ваш профиль → Ключи API и создайте новый токен со всеми необходимыми областями. Нажмите кнопку «Руководство по токенам API» ниже для подробной информации.",
-    "apiTokenNoticeDontShow": "Не показывать снова",
-    "apiTokenNoticeIgnore": "Игнорировать",
-    "apiTokenNoticeScopeGuide": "Руководство по областям API",
-    "communitySignInTitle": "Подтвердить позывной",
-    "communitySignInSubtitle": "Войдите через Google, чтобы привязать аккаунт к своему позывному.",
-    "communitySignInButton": "Войти через Google",
-    "communitySignInNoStation": "Выберите активную станцию в настройках, прежде чем использовать функции сообщества.",
-    "communityCallsignTaken": "Этот позывной уже привязан к другому аккаунту Google.",
-    "communitySignOut": "Выйти и сменить аккаунт"
+  "@@locale": "ru",
+  "appTitle": "Wavelog Mobile",
+  "splashConnecting": "ПОДКЛЮЧЕНИЕ",
+  "navHome": "Главная",
+  "navLogbook": "Журнал",
+  "navLookup": "Поиск",
+  "navStation": "Профиль QTH",
+  "save": "Сохранить",
+  "cancel": "Отмена",
+  "delete": "Удалить",
+  "refresh": "Обновить",
+  "continueBtn": "Продолжить",
+  "close": "Закрыть",
+  "retry": "Повторить",
+  "loading": "Загрузка...",
+  "error": "Ошибка",
+  "success": "Успешно",
+  "change": "Изменить",
+  "goWeb": "Перейти →",
+  "editOnWeb": "Редактировать на сайте",
+  "openInBrowser": "Открыть в браузере",
+  "serverSetupTitle": "Настройка сервера",
+  "serverSetupSubtitle": "Настройте ваш сервер Wavelog",
+  "serverUrlLabel": "URL сервера Wavelog",
+  "serverUrlHint": "https://log.example.com",
+  "testConnection": "Проверка соединения",
+  "testingConnection": "Проверка...",
+  "sslIssueTitle": "Проблема с SSL-сертификатом",
+  "sslIssueBody": "Не удалось проверить SSL-сертификат этого сервера — возможно, он самоподписанный или просроченный. Продолжить без проверки? (Рекомендуется только для доверенных серверов.)",
+  "sslIssueAllow": "Продолжить без проверки",
+  "scopeTestSectionTitle": "Проверка областей доступа",
+  "scopeTestRunning": "Проверка областей доступа…",
+  "scopeTestAllPassed": "Все необходимые области доступа присутствуют",
+  "scopeTestSomeFailed": "Некоторых областей доступа не хватает",
+  "scopeTestAddHint": "Добавьте эту область доступа при создании токена API",
+  "connectionSuccess": "Соединение установлено!",
+  "connectionFailed": "Ошибка соединения",
+  "apiKeyCopied": "Ключ API скопирован",
+  "loginTitle": "Вход",
+  "serverBtn": "Сервер",
+  "addAccountBtn": "Добавить аккаунт",
+  "signInBtn": "Войти",
+  "deleteProfile": "Удалить",
+  "deleteProfileTitle": "Удалить аккаунт",
+  "deleteProfileConfirm": "Удалить {name} с этого устройства?",
+  "@deleteProfileConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "displayName": "Отображаемое имя",
+  "callsign": "Позывной",
+  "apiKeyLabel": "Ключ API",
+  "validating": "Проверка...",
+  "profileSaved": "Аккаунт сохранён",
+  "loginFailed": "Ошибка входа",
+  "noStationFound": "Станция не найдена — используется позывной",
+  "homeTitle": "Главная",
+  "addQso": "Добавить QSO",
+  "recentQsos": "Последние QSO",
+  "statsToday": "Сегодня",
+  "statsMonth": "Месяц",
+  "statsYear": "Год",
+  "statsTotal": "Всего",
+  "noRecentQsos": "QSO нет",
+  "syncNow": "Синхронизировать",
+  "pendingSync": "{count} QSO ожидают синхронизации",
+  "@pendingSync": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineBanner": "Нет сети — QSO сохранены локально",
+  "activeStation": "Активный профиль QTH",
+  "logbookTitle": "Журнал",
+  "filterAll": "Все",
+  "filterAllModes": "Все виды модуляции",
+  "searchHint": "Поиск позывного...",
+  "noQsos": "QSO не найдены",
+  "qsoDetailTitle": "Детали QSO",
+  "qsoNotFound": "QSO не найдено",
+  "signal": "Сигнал",
+  "rstSent": "RST (TX)",
+  "rstReceived": "RST (RX)",
+  "txPower": "Мощность ТХ",
+  "counterStation": "Корреспондент",
+  "country": "Страна",
+  "continent": "Континент",
+  "dxcc": "DXCC",
+  "cqZone": "Зона CQ",
+  "ituZone": "Зона ITU",
+  "gridSquare": "Квадрат QTH-локатора",
+  "propMode": "Распространение",
+  "distance": "Расстояние",
+  "qslStatus": "Статус QSL",
+  "paperQsl": "QSL-карточка",
+  "lotwQsl": "LoTW",
+  "eqslQsl": "eQSL",
+  "qrzQsl": "QRZ.com",
+  "clublog": "Clublog",
+  "hrdlog": "HRDLog",
+  "qslSent": "TX",
+  "qslRcvd": "RX",
+  "qslReceived": "Получено",
+  "qslMethod": "Способ",
+  "awards": "Референции",
+  "iota": "IOTA",
+  "sota": "SOTA",
+  "wwff": "WWFF",
+  "pota": "POTA",
+  "myStation": "Моя профиль QTH",
+  "myCallsign": "Мой позывной",
+  "contest": "Контест",
+  "serialSent": "Порядковый номер (TX)",
+  "serialReceived": "Порядковый номер (RX)",
+  "solarConditions": "Солнечная активность",
+  "aIndex": "A-индекс",
+  "kIndex": "K-индекс",
+  "sfi": "SFI",
+  "notesSection": "Заметки",
+  "rawAdif": "Исходный ADIF",
+  "showAll": "Показать всё",
+  "showLess": "Свернуть",
+  "qrzProfile": "Профиль QRZ",
+  "addQsoTitle": "Добавить QSO",
+  "liveQso": "Вживую",
+  "historicalQso": "Прошедшее",
+  "callsignField": "Позывной *",
+  "lookupSearch": "Поиск в QRZ",
+  "liveDateTimeLabel": "Дата/Время (UTC) — сейчас",
+  "dateTimeLabel": "Дата/Время (UTC)",
+  "bandField": "Диапазон *",
+  "modeField": "Вид модуляции *",
+  "frequencyField": "Частота (МГц)",
+  "rstSentField": "RST передано *",
+  "rstRcvdField": "RST принято *",
+  "nameField": "Имя",
+  "qthField": "QTH",
+  "gridField": "QTH-локатор",
+  "commentField": "Комментарий",
+  "stationProfileField": "Профиль QTH",
+  "saveQsoBtn": "Сохранить QSO",
+  "qsoSaved": "✓  {callsign} сохранён",
+  "@qsoSaved": {
+    "placeholders": {
+      "callsign": {
+        "type": "String"
+      }
+    }
+  },
+  "qsoSavedLocal": "✓  {callsign} сохранён локально",
+  "@qsoSavedLocal": {
+    "placeholders": {
+      "callsign": {
+        "type": "String"
+      }
+    }
+  },
+  "noActiveStation": "Активный профиль QTH не выбран",
+  "lookupTitle": "Поиск позывного",
+  "lookupHint": "Введите позывной...",
+  "lookupBtn": "Поиск",
+  "recentSearches": "Последние запросы",
+  "clearHistory": "Очистить историю",
+  "makeQso": "Записать QSO",
+  "notFound": "Не найдено",
+  "stationsTitle": "Профили QTH",
+  "stationActivated": "{callsign} установлен как активный профиль QTH",
+  "@stationActivated": {
+    "placeholders": {
+      "callsign": {
+        "type": "String"
+      }
+    }
+  },
+  "stationWebInfo": "Добавляйте и редактируйте профили QTH через веб-интерфейс Wavelog.",
+  "noStations": "Нет профилей QTH",
+  "noStationsHint": "Добавьте профиль QTH через веб-интерфейс Wavelog.",
+  "addStationOnWeb": "Добавить профиль QTH в Wavelog",
+  "adifTitle": "Импорт / Экспорт ADIF",
+  "importTab": "Импорт",
+  "exportTab": "Экспорт",
+  "selectAdifFile": "Выбрать ADIF файл",
+  "selectFileBtn": "Выбрать файл (.adi / .adif)",
+  "stationRequired": "Профиль QTH *",
+  "importing": "Импорт... {done}/{total}",
+  "@importing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "importBtn": "Импорт",
+  "fileReadError": "Не удалось прочитать файл, попробуйте снова",
+  "invalidFileExtension": "Выберите файл с расширением .adi или .adif",
+  "exportFilters": "Фильтры экспорта",
+  "stationFilter": "Профиль QTH",
+  "allStations": "Все профили QTH",
+  "startDate": "Начало",
+  "endDate": "Конец",
+  "notSelected": "Не выбрано",
+  "clearDates": "Сбросить даты",
+  "exporting": "Экспорт...",
+  "exportAndShare": "Экспорт и отправка",
+  "copyPath": "Копировать путь",
+  "reshare": "Поделиться снова",
+  "pathCopied": "Путь скопирован",
+  "qsoExported": "{count} QSO экспортировано",
+  "@qsoExported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noStationForExport": "Профиль QTH для экспорта не найден",
+  "qsoImported": "{imported} / {total} QSO импортировано",
+  "@qsoImported": {
+    "placeholders": {
+      "imported": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "selectSaveLocation": "Выбрать место сохранения",
+  "copySuffix": "(Копия)",
+  "errNetwork": "Нет соединения — проверьте сеть",
+  "errTimeout": "Превышено время ожидания",
+  "errUnauthorized": "Неверный ключ API",
+  "settingsTitle": "Настройки",
+  "connectionSection": "Соединение",
+  "sessionSection": "Сессия",
+  "loggedIn": "Вы вошли",
+  "logoutBtn": "Выйти",
+  "logoutTitle": "Выход",
+  "logoutConfirm": "Вы уверены, что хотите выйти?",
+  "switchAccountBtn": "Сменить аккаунт",
+  "activeStationSection": "Активный профиль QTH",
+  "selectStationBtn": "Выбрать профиль QTH",
+  "addStationWeb": "Добавить профиль QTH на сайте",
+  "defaultsSection": "По умолчанию",
+  "defaultBand": "Диапазон по умолчанию",
+  "defaultMode": "Вид модуляции по умолчанию",
+  "appSection": "Приложение",
+  "darkTheme": "Тёмная тема",
+  "darkThemeHint": "Рекомендуется для работы в поле",
+  "offlineMode": "Офлайн-режим",
+  "offlineModeHint": "Сначала сохраняйте QSO локально, синхронизируйте позже",
+  "allowInsecureSsl": "Разрешить непроверенные SSL-сертификаты",
+  "allowInsecureSslHint": "Доверять самоподписанным или сертификатам частного ЦС (для собственных серверов). Не рекомендуется в публичных сетях.",
+  "languageLabel": "Язык",
+  "infoSection": "Информация",
+  "aboutAppBtn": "О приложении",
+  "aboutAppHint": "Версия, разработчик, лицензия",
+  "dataSection": "Данные",
+  "clearCacheBtn": "Очистить кэш QSO",
+  "clearCacheHint": "Удаляет локальный кэш QSO",
+  "clearCacheTitle": "Очистить кэш",
+  "clearCacheConfirm": "Локальный кэш QSO будет удалён. Это действие необратимо.",
+  "clearCacheAction": "Очистить",
+  "cacheCleared": "Кэш очищен",
+  "langSystem": "Как в системе",
+  "langEnglish": "English",
+  "langTurkish": "Türkçe",
+  "langPolish": "Polski",
+  "langGerman": "Deutsch",
+  "langFrench": "Français",
+  "langItalian": "Italiano",
+  "langJapanese": "日本語",
+  "langKorean": "한국어",
+  "langRussian": "Русский",
+  "aboutTitle": "О приложении",
+  "appDescription": "Приложение для Android для Wavelog c открытым исходным кодом",
+  "versionLabel": "Версия {version}  (Сборка {build})",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "build": {
+        "type": "String"
+      }
+    }
+  },
+  "mobileDeveloperSection": "Разработчик мобильного приложения",
+  "wavelogProjectSection": "Проект Wavelog",
+  "wavelogDescription": "Аппаратный журнал с веб-интерфейсом",
+  "coreDevelopers": "Основные разработчики",
+  "mitLicense": "Лицензия MIT",
+  "mitDescription": "Это приложение и проект Wavelog распространяются под лицензией MIT. Открытый исходный код, без гарантий.",
+  "licenseSection": "Лицензия",
+  "errorNoConnection": "Нет соединения",
+  "errorUnauthorized": "Не авторизован — проверьте ключ API",
+  "errorServer": "Ошибка сервера",
+  "patchRequiredTitle": "Требуется патч сервера",
+  "patchRequiredMessage": "Для редактирования и удаления требуется патч Wavelog Mobile API на вашем сервере.\n\nИнструкции по установке: sp9aqg.pl/install.html",
+  "patchRequiredBanner": "Для редактирования и удаления требуется патч Wavelog Mobile API на вашем сервере.",
+  "patchViewGuide": "Просмотр руководства",
+  "setupGuideTitle": "Руководство по настройке",
+  "setupGuideIntro": "Перед записью QSO подключите приложение к серверу Wavelog. Следуйте шагам ниже.",
+  "setupGuidePatchWarning": "Это приложение требует патча Wavelog Mobile на вашем сервере. Даже если вы создадите токен API v2 без него, приложение не будет работать корректно.",
+  "setupGuidePatchStepTitle": "Установить патч сервера",
+  "setupGuidePatchStepBody": "Приложение использует API v2 Wavelog, который требует небольшого патча на вашем сервере. Если вы его ещё не установили, откройте руководство и следуйте инструкциям.",
+  "setupGuidePatchBtn": "Руководство по установке",
+  "setupGuideStep1Title": "1. Адрес сервера",
+  "setupGuideStep1Body": "Введите адрес, который вы используете для доступа к Wavelog в браузере, например https://yourdomain.com — без завершающего слеша.",
+  "setupGuideStep2Title": "2. Токен API v2",
+  "setupGuideStep2Body": "В Wavelog: Ваш профиль → Ключи API → Токены API (API v2) → Новый токен API. Выберите предустановку «Wavelog Mobile» и подтвердите. Скопируйте токен (начинается с wl2_) и вставьте в приложение.",
+  "setupGuideStep3Title": "3. Позывной и отображаемое имя",
+  "setupGuideStep3Body": "Позывной: ваш личный позывной, используется для сопоставления с вашей станцией. Отображаемое имя: любой ярлык для идентификации этого входа на устройстве.",
+  "setupGuideContinueBtn": "Начать настройку",
+  "migrationTokenHint": "wl2_…",
+  "migrationTokenLabel": "Токен API v2",
+  "migrationValidateBtn": "Проверить и продолжить",
+  "migrationValidating": "Проверка…",
+  "migrationTokenEmpty": "Вставьте ваш токен wl2_.",
+  "migrationTokenInvalid": "Токен недействителен — проверьте и попробуйте снова.",
+  "patchNotInstalledTitle": "Патч не обнаружен",
+  "patchNotInstalledBody": "Патч Wavelog Mobile не установлен на вашем сервере.\n\nТокен API v2 (wl2_…) не будет работать без патча. Сначала выполните шаг 1.",
+  "patchInstallFirst": "Установить патч",
+  "appSubtitle": "Приложение для ведения аппаратного журнала радиостанции",
+  "switchToLightTheme": "Переключить на светлую тему",
+  "switchToDarkTheme": "Переключить на тёмную тему",
+  "deleteQsoTitle": "Удалить QSO",
+  "deleteQsoConfirm": "Удалить QSO с {callsign} от {date}?",
+  "@deleteQsoConfirm": {
+    "placeholders": {
+      "callsign": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "editTooltip": "Редактировать",
+  "shareAdifTooltip": "Поделиться ADIF",
+  "localNotSynced": "Локальная запись — ещё не синхронизирована",
+  "satellite": "Спутник",
+  "satelliteMode": "Спутниковый режим",
+  "antenna": "Антенна",
+  "nameLabel": "Имя",
+  "stateProvince": "Штат/Область",
+  "county": "Округ/Район",
+  "city": "Город",
+  "continentAF": "Африка",
+  "continentAN": "Антарктида",
+  "continentAS": "Азия",
+  "continentEU": "Европа",
+  "continentNA": "Северная Америка",
+  "continentOC": "Океания",
+  "continentSA": "Южная Америка",
+  "qrzProfileLoading": "Загрузка профиля QRZ...",
+  "viewOnQrz": "Открыть на QRZ.com  ({callsign})",
+  "@viewOnQrz": {
+    "placeholders": {
+      "callsign": {
+        "type": "String"
+      }
+    }
+  },
+  "qslMethods": "Способы QSL",
+  "bureau": "Бюро",
+  "qslManagerPrefix": "Менеджер: {manager}",
+  "@qslManagerPrefix": {
+    "placeholders": {
+      "manager": {
+        "type": "String"
+      }
+    }
+  },
+  "callsignCopied": "Позывной скопирован",
+  "uploadedStatus": "Загружено",
+  "notUploadedStatus": "Не загружено",
+  "matchedStatus": "Совпадает",
+  "toDeleteStatus": "К удалению",
+  "yes": "Да",
+  "requested": "Запрошено",
+  "no": "Нет",
+  "invalid": "Недействительно",
+  "viaDirect": "Напрямую",
+  "viaElectronic": "Электронно",
+  "viaMail": "Почтой",
+  "otherAdifFields": "Другие поля ADIF ({count})",
+  "@otherAdifFields": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "editQsoTitle": "Редактировать QSO",
+  "qsoUpdated": "QSO обновлено",
+  "qsoUpdatedLocal": "QSO обновлено локально",
+  "counterStationHint": "Введите позывной, чтобы увидеть информацию QRZ\nи предыдущие QSO.",
+  "previousQsosCount": "Предыдущие QSO ({count})",
+  "@previousQsosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "morePreviousQsos": "+{count} ещё...",
+  "@morePreviousQsos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "previousQsosWithCallsign": "Предыдущие QSO с {callsign}",
+  "@previousQsosWithCallsign": {
+    "placeholders": {
+      "callsign": {
+        "type": "String"
+      }
+    }
+  },
+  "totalQsos": "Всего {count}",
+  "@totalQsos": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workedBefore": "Работали ранее",
+  "lastQsoLabel": "Последнее QSO",
+  "themeLabel": "Тема",
+  "darkThemeActive": "Тёмная тема активна",
+  "lightThemeActive": "Светлая тема активна",
+  "lightThemeLabel": "Светлая",
+  "darkThemeLabel": "Тёмная",
+  "commentNotes": "Комментарий / Заметки",
+  "commentLabel": "Комментарий",
+  "exchangeReceived": "Принятый контрольный номер",
+  "exchangeSent": "Переданный контрольный номер",
+  "contestIdLabel": "Контест",
+  "sigLabel": "SIG",
+  "stationSetup": "Настройка журнала",
+  "logbooks": "Журналы",
+  "locations": "Профили QTH",
+  "newLogbook": "Новый журнал",
+  "logbookName": "Название журнала",
+  "renameLogbook": "Переименовать",
+  "deleteLogbook": "Удалить журнал",
+  "setActiveLogbook": "Сделать активным",
+  "activeLogbook": "Активный журнал",
+  "editStation": "Редактировать",
+  "cloneStation": "Клонировать",
+  "deleteStation": "Удалить",
+  "deleteStationConfirm": "Удалить профиль QTH",
+  "deleteStationWarning": "Все QSO в этом профиле QTH будут безвозвратно удалены. Продолжить?",
+  "stationDeleted": "Профиль QTH удалён",
+  "stationUpdated": "Профиль QTH обновлён",
+  "stationCloned": "Профиль QTH клонирован",
+  "linkLocation": "Привязать профиль QTH",
+  "unlinkLocation": "Отвязать",
+  "linkedLocations": "Привязанные профили QTH",
+  "newStationName": "Название нового профиля QTH",
+  "deleteLogbookConfirm": "Удалить журнал",
+  "deleteLogbookWarning": "Этот журнал будет удалён. Связанные профили QTH сохранятся. Продолжить?",
+  "logbookDeleted": "Журнал удалён",
+  "hrdlogCode": "Код HRDLog",
+  "webAdifApiKey": "ключ API WebADIF",
+  "webAdifApiUrl": "URL API WebADIF",
+  "basicInfo": "Основная информация",
+  "locationSectionTitle": "Профиль QTH",
+  "awardReferences": "Референции",
+  "integrationsSectionTitle": "Интеграции",
+  "stationSettingsSection": "Настройки профиля QTH",
+  "editStationTitle": "Редактировать профиль QTH",
+  "newStationTitle": "Новый профиль QTH",
+  "saveChangesBtn": "Сохранить изменения",
+  "createStationBtn": "Создать профиль QTH",
+  "stationCreated": "Профиль QTH создан",
+  "stationCreateFailed": "Ошибка. Профиль с таким именем уже существует.",
+  "stationProfileNameLabel": "Название профиля QTH *",
+  "stationProfileNameHint": "Дом",
+  "cityQth": "Город / QTH",
+  "powerWatts": "Мощность (Вт)",
+  "dxccCountry": "DXCC / Страна",
+  "selectLabel": "Выбрать...",
+  "dxccSearch": "Поиск DXCC / Страны",
+  "deletedDxcc": "Удалённый DXCC",
+  "eqslQthNicknameLabel": "Псевдоним профиля QTH для eQSL",
+  "eqslDefaultMsgLabel": "Сообщение eQSL по умолчанию",
+  "pending": "Ожидает",
+  "uploadDisabled": "Отключено",
+  "uploadEnabled": "Включено",
+  "uploadRealtime": "В реальном времени",
+  "qrzApiKeyLabel": "Ключ API для журнала QRZ.com",
+  "qrzUploadLabel": "Загрузка на QRZ.com",
+  "clublogIgnoreTitle": "Игнорировать Clublog",
+  "clublogIgnoreSubtitle": "Исключить этот профиль QTH из загрузок Clublog",
+  "clublogRealtimeTitle": "Загрузка в Clublog в реальном времени",
+  "clublogRealtimeSubtitle": "Загружать QSO в Clublog в реальном времени",
+  "hrdlogUsernameLabel": "Имя пользователя HRDLog.net",
+  "hrdlogApiKeyLabel": "Ключ API для HRDLog.net",
+  "hrdlogUploadLabel": "Загрузка в HRDLog.net",
+  "qo100ApiKeyLabel": "Ключ API QO-100 DX Club",
+  "qo100RealtimeTitle": "Загрузка в QO-100 DX Club в реальном времени",
+  "qo100RealtimeSubtitle": "Загружать QSO в QO-100 DX Club в реальном времени",
+  "oqrsSectionTitle": "OQRS (Онлайн запрос QSL)",
+  "oqrsEnabledTitle": "OQRS включён",
+  "oqrsEnabledSubtitle": "Включить систему онлайн запросов QSL",
+  "oqrsTextLabel": "Описание OQRS",
+  "oqrsEmailLabel": "Email OQRS",
+  "setAsActiveStationTitle": "Установить профиль QTH активным",
+  "setAsActiveStationSubtitle": "Отметить этот профиль QTH, как активный в Wavelog",
+  "linkToActiveLogbookTitle": "Привязать к активному журналу",
+  "linkToActiveLogbookSubtitle": "Автоматически привязывать к активному журналу при создании",
+  "active": "Активен",
+  "loadDetailsFailed": "Не удалось загрузить подробности",
+  "cannotDeleteActiveStation": "Нельзя удалить активный профиль QTH.",
+  "navStats": "Статистика",
+  "statisticsTitle": "Статистика",
+  "uniqueCallsigns": "Уникальные позывные",
+  "currentStreak": "Текущая серия",
+  "streakDays": "{count} дн.",
+  "@streakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bandDistribution": "Распределение по диапазонам",
+  "modeDistribution": "Распределение по видам модуляции",
+  "perStation": "По профилям QTH",
+  "basedOnCache": "Статистика по диапазонам/видам модуляции/профилям QTH основана на кэшированных QSO.",
+  "statsTab": "Статистика",
+  "propagationTab": "Прохождение",
+  "bandConditions": "Условия на диапазонах",
+  "dayTime": "День",
+  "nightTime": "Ночь",
+  "conditionGood": "Хорошее",
+  "conditionFair": "Удовлетворительное",
+  "conditionPoor": "Плохое",
+  "lastUpdated": "Обновлено: {time}",
+  "@lastUpdated": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "noSolarData": "Не удалось загрузить данные о солнечной активности",
+  "potaStats": "Статистика POTA",
+  "potaTotalQsos": "QSO POTA",
+  "potaActivatedParks": "Активированные парки",
+  "potaAllParks": "Все парки",
+  "potaActivatedBadge": "Активирован",
+  "potaAttemptBadge": "Попытка",
+  "potaNoStation": "Профиль станции POTA не настроен",
+  "potaNoQsos": "Нет QSO POTA в кэше",
+  "navSpot": "Споты",
+  "spotTitle": "Споты",
+  "spotAdd": "Добавить спот",
+  "spotSend": "Отправить спот",
+  "spotSent": "Спот отправлен!",
+  "spotNoResults": "Споты не найдены",
+  "spotLoadError": "Не удалось загрузить споты",
+  "spotActivator": "Позывной активатора",
+  "spotSpotter": "Позывной спотера",
+  "spotFrequency": "Частота (кГц)",
+  "spotReference": "Референция",
+  "spotComments": "Комментарии",
+  "spotCommentsHint": "QRZ, CQ POTA...",
+  "spotInvalidRef": "Неверный формат (например PL-0001)",
+  "sortNewest": "Сначала новые",
+  "sortOldest": "Сначала старые",
+  "filterBand": "Диапазон",
+  "filterMode": "Вид модуляции",
+  "filterCountry": "Страна",
+  "filterAssociation": "Ассоциация",
+  "spotAddComingSoon": "Добавить спот — скоро",
+  "filterClear": "Сбросить фильтры",
+  "mode": "Вид модуляции",
+  "required": "Требуется",
+  "invalidNumber": "Неверное число",
+  "potaAutoSpot": "Авто-спот",
+  "potaAutoSpotHint": "Автоматически отправлять спот при записи QSO в профиле QTH POTA или SOTA (перерыв 30 минут)",
+  "autoSpotSent": "Авто-спот отправлен: {ref}",
+  "@autoSpotSent": {
+    "placeholders": {
+      "ref": {
+        "type": "String"
+      }
+    }
+  },
+  "autoSpotWillFire": "QSO запустит отправку спота",
+  "autoSpotCooldown": "Спот отправлен · Следующий через {min} мин",
+  "@autoSpotCooldown": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "autoSpotCooldownSoon": "Спот отправлен · Следующий спот скоро",
+  "autoSpotKeyChanged": "{fields} изменились · Будет отправлен новый спот",
+  "@autoSpotKeyChanged": {
+    "placeholders": {
+      "fields": {
+        "type": "String"
+      }
+    }
+  },
+  "autoSpotFieldFreq": "Частота",
+  "autoSpotFieldMode": "Вид модуляции",
+  "autoSpotFieldRef": "Парк",
+  "logbookSummaryTitle": "Последние QSO",
+  "todayQsoCount": "Сегодня: {count} QSO",
+  "@todayQsoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "colDateTime": "Дата/Время",
+  "colRstSent": "RST(Прд)",
+  "colRstRcvd": "RST(Прм)",
+  "submodeLabel": "Подвид",
+  "selectedCount": "{count} выбрано",
+  "@selectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "selectAll": "Выбрать все",
+  "exportSelected": "Экспорт",
+  "deleteSelected": "Удалить",
+  "deleteSelectedConfirm": "Удалить {count} QSO?",
+  "@deleteSelectedConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mapTitle": "Карта",
+  "mapNoData": "QSO с квадратом QTH-локатора не найдены",
+  "mapStationCount": "{count} станций",
+  "@mapStationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dxccProgress": "Прогресс DXCC",
+  "workedCountries": "Стработанные страны",
+  "dxccWorked": "Стработано",
+  "dxccUniqueEntities": "{count} уникальных DXCC",
+  "@dxccUniqueEntities": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dxccConfirmed": "Подтверждено (LoTW / eQSL / QSL)",
+  "dxccRemaining": "Осталось",
+  "dxccLegendConfirmed": "Подтверждено",
+  "dxccLegendPending": "В ожидании",
+  "dxccLegendNotWorked": "Не стработано",
+  "spotSummitNotFound": "Вершина не найдена",
+  "spotParkNotFound": "Парк не найден",
+  "qsoTypeTitle": "Записать QSO",
+  "normalQso": "Обычное QSO",
+  "normalQsoDesc": "Стандартная запись контакта",
+  "contestQso": "QSO контеста",
+  "contestQsoDesc": "Быстрое ведение журнала контеста с контрольными номерами",
+  "contestLog": "Журнал контеста",
+  "contestSetup": "Настройка контеста",
+  "contestNameHint": "напр. CQ-WW-CW",
+  "ourExchange": "Наш контрольный номер",
+  "serialStart": "Начальный порядковый №",
+  "showExchangeFields": "Поля контрольного номера",
+  "startContest": "Начать запись журнала",
+  "endContest": "Завершить контест-сессию",
+  "endContestConfirm": "Завершить контест-сессию? (Счётчик последовательных номеров и настройки будут сброшены.)",
+  "serialSentLabel": "№ (TX)",
+  "serialRcvdLabel": "№ (RX)",
+  "exchangeSentLabel": "Контр. (TX)",
+  "exchangeRcvdLabel": "Контр. (RX)",
+  "gridSentLabel": "QTH-лок. (TX)",
+  "gridRcvdLabel": "QTH-лок. (RX)",
+  "logQso": "Записать QSO",
+  "qsoLogged": "QSO записано",
+  "contestRecentQsos": "Последние",
+  "contestSessions": "Контест-сессии",
+  "newSession": "Новая контест-сессия",
+  "noContestSessions": "Контест-сессий нет",
+  "noContestSessionsHint": "Создайте контест-сессию на сайте или нажмите +, чтобы начать здесь.",
+  "contestSessionActive": "Активна",
+  "contestSessionEnded": "Завершена",
+  "qsoCount": "{count} QSO",
+  "@qsoCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contestSessionDates": "{start} – {end}",
+  "@contestSessionDates": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "createContestSession": "Создать контест-сессию",
+  "sessionName": "Название контест-сессии (необязательно)",
+  "sessionNameHint": "напр. Домашний QTH — CW",
+  "selectContest": "Выбрать контест *",
+  "searchContest": "Поиск контестов...",
+  "serverContests": "С сервера",
+  "builtinContests": "Популярные контесты",
+  "startDateTime": "Дата/время начала *",
+  "endDateTime": "Дата/время окончания *",
+  "durationShortcut4h": "+4ч",
+  "durationShortcut12h": "+12ч",
+  "durationShortcut24h": "+24ч",
+  "durationShortcut48h": "+48ч",
+  "exchangeType": "Контрольные номера",
+  "exchangeTypeSerial": "Порядковый номер",
+  "exchangeTypeExchange": "Обмен (текст)",
+  "exchangeTypeBoth": "Порядковый номер + обмен (текст)",
+  "createSession": "Создать контест-сессию",
+  "sessionCreated": "Контест-сессия создана",
+  "sessionUpdated": "Контест-сессия обновлена",
+  "editContestSession": "Редактировать контест-сессию",
+  "saveChanges": "Сохранить изменения",
+  "deleteSession": "Удалить контест-сессию",
+  "deleteSessionConfirm": "Удалить эту контест-сессию? QSO, записанные в ней, останутся в журнале.",
+  "openSession": "Открыть для записи QSO",
+  "patchRequiredContest": "Управление контест-сессиями требует обновлённого патча Wavelog Mobile.",
+  "contestCalendarTitle": "Календарь контестов",
+  "contestCalendarNoContests": "Контесты не найдены.",
+  "contestCalendarToday": "Сегодня",
+  "contestCalendarThisWeek": "На этой неделе",
+  "contestCalendarUpcoming": "Предстоящие",
+  "contestCalendarRecentlyPast": "Недавно прошедшие",
+  "contestCalendarLoadError": "Не удалось загрузить календарь контестов",
+  "contestCalendarRefresh": "Обновить",
+  "contestCalendarRetry": "Повторить",
+  "upcomingContestsTitle": "Предстоящие контесты",
+  "viewAll": "Все",
+  "noUpcomingContests": "Предстоящих контестов не найдено.",
+  "contestTodayBadge": "СЕГОДНЯ",
+  "navStyleLabel": "Стиль навигации",
+  "navStyleModern": "Современный — FAB + меню",
+  "navStyleClassic": "Классический — 6 вкладок",
+  "drawerMap": "Карта",
+  "drawerContestCalendar": "Календарь контестов",
+  "drawerContestSessions": "Контест-сессии",
+  "drawerAdif": "ADIF",
+  "drawerMenu": "Меню",
+  "antennaCompassTitle": "Направление антенны",
+  "targetGrid": "Целевой квадрат QTH-локатора",
+  "calculate": "Вычислить",
+  "shortPath": "Короткий путь",
+  "longPath": "Длинный путь",
+  "azimuth": "Азимут",
+  "myHeading": "Курс",
+  "invalidGrid": "Неверный квадрат QTH-локатора",
+  "gpsLocating": "Определение GPS… подождите",
+  "gpsUnavailable": "GPS недоступен",
+  "drawerAntenna": "Направление антенны",
+  "achievementsTitle": "Достижения",
+  "achievementsEmpty": "Запишите первое QSO, чтобы начать получать значки!",
+  "shareAchievement": "Поделиться",
+  "achievementUnlocked": "Достижение разблокировано!",
+  "progressLabel": "{done} / {target}",
+  "@progressLabel": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "drawerAchievements": "Достижения",
+  "drawerCommunity": "Сообщество",
+  "communityTitle": "Сообщество",
+  "communityNoActivations": "Запланированных активаций нет",
+  "communityBeFirst": "Будьте первым, кто объявит!",
+  "communityAnnounce": "Объявить активацию",
+  "communityFollow": "Подписаться",
+  "communityUnfollow": "Отписаться",
+  "communityFollowers": "{count} подписчиков",
+  "@communityFollowers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "communityTypeGeneral": "Общая",
+  "communityCallsign": "Позывной",
+  "communityReference": "Референция",
+  "communitySotaRef": "Референция SOTA (TA/AN-001)",
+  "communityPotaRef": "Референция POTA (TA-0001)",
+  "communityScheduledTime": "Запланированное время",
+  "communityNote": "Заметка (необязательно)",
+  "communityNoteHint": "Краткая информация об активации...",
+  "communityAnnounceButton": "Объявить",
+  "communityAnnounced": "Активация объявлена!",
+  "communityRateLimit": "Вы недавно размещали объявление. Подождите несколько минут.",
+  "communityCallsignRequired": "Позывной обязателен",
+  "communityReferenceRequired": "Референция обязательна",
+  "communityBandRequired": "Выберите хотя бы один диапазон",
+  "communityActivations": "Активации",
+  "communityChat": "Чат",
+  "communityEditActivation": "Редактировать активацию",
+  "communityDeleteActivation": "Удалить активацию",
+  "communityDeleteActivationConfirm": "Удалить эту активацию? Это действие нельзя отменить.",
+  "communityUpdated": "Активация обновлена",
+  "chatRooms": "Комнаты чата",
+  "chatGeneral": "Общие",
+  "chatGeneralSubtitle": "Общий язык: английский",
+  "chatMessageHint": "Введите сообщение…",
+  "chatSend": "Отправить",
+  "chatEdit": "Редактировать",
+  "chatDelete": "Удалить",
+  "chatDeleteConfirm": "Удалить это сообщение?",
+  "chatEdited": "изменено",
+  "chatNoStation": "Выберите активный профиль QTH для чата",
+  "chatToday": "Сегодня",
+  "chatYesterday": "Вчера",
+  "chatFollow": "Подписаться",
+  "chatUnfollow": "Отписаться",
+  "chatFollowing": "Вы подписаны",
+  "chatAddReaction": "Добавить реакцию",
+  "gifPreparing": "Подготовка видео...",
+  "gifCapturing": "Захват кадров... {percent}%",
+  "@gifCapturing": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "gifEncoding": "Кодирование видео...",
+  "comingSoon": "Скоро",
+  "noCompassSensor": "Нет датчика компаса",
+  "fillFromGps": "Заполнить из GPS",
+  "locationPermissionDenied": "Доступ к геолокации запрещён",
+  "gpsError": "Ошибка GPS: {error}",
+  "@gpsError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "errParse": "Не удалось разобрать ответ сервера",
+  "errLocalStorage": "Ошибка локального хранилища",
+  "errServer": "Ошибка сервера",
+  "wpxPrefix": "Префикс WPX",
+  "nowBtn": "Сейчас",
+  "contestOtherCustom": "Другой / Пользовательский",
+  "sigInfo": "Информация SIG",
+  "migrationTitle": "Требуется API v2",
+  "migrationBody": "Wavelog Mobile теперь использует новый API Wavelog. Ваш старый ключ API недействителен — выполните шаги ниже для миграции.",
+  "migrationStep1Title": "Установить патч сервера",
+  "migrationStep1Body": "На ваш сервер Wavelog нужно установить небольшой файл обновления. Нажмите кнопку «Руководство по установке» ниже.",
+  "migrationInstallGuideBtn": "Руководство по установке",
+  "migrationStep2Title": "Создать новый токен API",
+  "migrationStep2Body": "В веб-интерфейсе Wavelog:\n  1. Откройте меню настроек (вверху справа)\n  2. Перейдите в «Ключи API» → «Токены API (API v2) »\n  3. Нажмите «Создать новый токен API»\n  4. Выберите предустановку «Wavelog Mobile»\n  5. Подтвердите и скопируйте токен\n  (Токен начинается с «wl2_»)",
+  "migrationStep3Title": "Обновить профиль",
+  "migrationStep3Body": "Нажмите кнопку ниже. Адрес сервера сохранится — просто вставьте новый токен.",
+  "migrationUpdateTokenBtn": "Обновить токен",
+  "migrationHelpBtn": "Помощь и руководство по установке",
+  "celebTitle": "Wavelog v3.2.0",
+  "celebSubtitle": "Патч сервера больше не нужен!",
+  "celebBody": "Все функции теперь работают напрямую через официальный API v2 Wavelog. Вы можете удалить старый патч с вашего сервера.\n\nЭто приложение теперь требует Wavelog v3.2.0 или выше.",
+  "celebCreateToken": "Создать токен API",
+  "celebSkip": "Пропустить",
+  "celebScopesTitle": "Области доступа для токена API v2",
+  "celebScopesBody": "При создании нового токена в интерфейсе Wavelog (Профиль → Ключи API → Создать новый токен API) выберите следующие области:",
+  "celebDone": "Понятно",
+  "scopeQsoRead": "Чтение QSO",
+  "scopeQsoWrite": "Добавление / обновление QSO",
+  "scopeQsoDelete": "Удаление QSO",
+  "scopeStationRead": "Чтение профилей QTH",
+  "scopeStationWrite": "Создание / обновление профилей QTH",
+  "scopeStationDelete": "Удаление профилей QTH",
+  "scopeLogbookRead": "Чтение журналов",
+  "scopeLogbookWrite": "Создание / обновление журналов",
+  "scopeLogbookDelete": "Удаление журналов",
+  "scopeContestRead": "Чтение контест-сессий",
+  "scopeContestWrite": "Создание / обновление контест-сессий",
+  "scopeContestDelete": "Удаление контест-сессий",
+  "scopeCatalogRead": "DXCC, административное деление и список контестов",
+  "scopeLookupRead": "Поиск позывных",
+  "scopeStatisticsRead": "Чтение статистики",
+  "scopeConfirmationRead": "Чтение подтверждений LoTW / eQSL / QRZ.com",
+  "scopeTestStation": "Профиль QTH",
+  "scopeTestLogbook": "Журнал",
+  "scopeTestQso": "QSO",
+  "scopeTestContest": "Контест",
+  "scopeTestConfirmation": "Подтверждение",
+  "scopeTestStatistics": "Статистика",
+  "scopeTestLookup": "Поиск",
+  "apiScopeGuideBtn": "Руководство по областям доступа API",
+  "apiScopeGuideTitle": "Руководство по областям доступа токена API",
+  "apiScopeGuideIntro": "При создании нового токена API в Wavelog (Ваш профиль → Ключи API) выберите все области ниже для полной функциональности приложения.",
+  "apiTokenNoticeTitle": "Создайте новый токен API",
+  "apiTokenNoticeBody": "API v2 Wavelog требует новый токен с определёнными областями доступа. Перейдите в Wavelog → Ваш профиль → Ключи API и создайте новый токен со всеми необходимыми областями. Нажмите кнопку «Руководство по токенам API» ниже для подробной информации.",
+  "apiTokenNoticeDontShow": "Не показывать снова",
+  "apiTokenNoticeIgnore": "Игнорировать",
+  "apiTokenNoticeScopeGuide": "Руководство по областям API",
+  "communitySignInTitle": "Подтвердить позывной",
+  "communitySignInSubtitle": "Войдите через Google, чтобы привязать аккаунт к своему позывному.",
+  "communitySignInButton": "Войти через Google",
+  "communitySignInNoStation": "Выберите активную станцию в настройках, прежде чем использовать функции сообщества.",
+  "communityCallsignTaken": "Этот позывной уже привязан к другому аккаунту Google.",
+  "communitySignOut": "Выйти и сменить аккаунт",
+  "spotRefreshLabel": "Интервал обновления спотов",
+  "spotRefreshHint": "Автоматически обновляет список спотов с этим интервалом"
 }
