@@ -976,6 +976,10 @@
   "@potaAutoSpot": {},
   "potaAutoSpotHint": "Автоматически отправлять спот при записи QSO на станции POTA или SOTA (перерыв 30 минут)",
   "@potaAutoSpotHint": {},
+  "spotRefreshLabel": "Интервал обновления спотов",
+  "@spotRefreshLabel": {},
+  "spotRefreshHint": "Автоматически обновляет список спотов с этим интервалом",
+  "@spotRefreshHint": {},
   "autoSpotSent": "Авто-спот отправлен: {ref}",
   "@autoSpotSent": {
     "placeholders": { "ref": { "type": "String" } }

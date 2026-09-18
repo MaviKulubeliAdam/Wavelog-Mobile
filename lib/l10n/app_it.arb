@@ -469,6 +469,8 @@
   "invalidNumber": "Numero non valido",
   "potaAutoSpot": "Auto-Spot",
   "potaAutoSpotHint": "Auto-spotting automatico durante un QSO a una stazione POTA o SOTA (cooldown 30 min)",
+  "spotRefreshLabel": "Intervallo di aggiornamento degli spot",
+  "spotRefreshHint": "Aggiorna automaticamente l'elenco degli spot a questo intervallo",
   "autoSpotSent": "Auto-spot inviato: {ref}",
   "@autoSpotSent": { "placeholders": { "ref": { "type": "String" } } },
   "autoSpotWillFire": "Il QSO attiverà uno spot",

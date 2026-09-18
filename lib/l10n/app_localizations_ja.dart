@@ -1407,6 +1407,12 @@ class AppLocalizationsJa extends AppLocalizations {
       'POTA または SOTA 局で QSO を記録する際に自動でセルフスポット（各 30 分のクールダウン）';
 
   @override
+  String get spotRefreshLabel => 'スポット更新間隔';
+
+  @override
+  String get spotRefreshHint => 'この間隔でスポットリストを自動的に更新します';
+
+  @override
   String autoSpotSent(String ref) {
     return '自動スポット送信: $ref';
   }

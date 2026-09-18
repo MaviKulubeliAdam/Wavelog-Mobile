@@ -28,7 +28,24 @@ import '../../../providers/station_provider.dart';
 class AddQsoScreen extends ConsumerStatefulWidget {
   final String? prefillCallsign;
   final QsoModel? editQso;
-  const AddQsoScreen({super.key, this.prefillCallsign, this.editQso});
+
+  /// Spot-tap prefill — frequency in MHz (e.g. "14.285"). When set, the
+  /// screen skips restoring the last-used band/frequency so the spot's own
+  /// frequency wins.
+  final String? prefillFrequencyMhz;
+
+  /// Spot-tap prefill — only applied when it matches a known [kCommonModes]
+  /// entry. Many spots (SOTA especially) don't report a mode at all, in
+  /// which case this stays null and the user picks it manually.
+  final String? prefillMode;
+
+  const AddQsoScreen({
+    super.key,
+    this.prefillCallsign,
+    this.editQso,
+    this.prefillFrequencyMhz,
+    this.prefillMode,
+  });
 
   @override
   ConsumerState<AddQsoScreen> createState() => _AddQsoScreenState();
@@ -121,6 +138,20 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _dxccCountry = edit.country ?? edit.rawAdif?['COUNTRY'] ?? edit.dxcc;
       _dxccFlag = edit.rawAdif?['APP_WAVELOG_FLAG'];
     } else {
+      // Spot-tap prefill: apply mode first (only if recognised) and derive
+      // the band from the spot's frequency, so both are in place before the
+      // submode default below is computed.
+      final prefillMode = widget.prefillMode;
+      if (prefillMode != null && kCommonModes.contains(prefillMode)) {
+        _mode = prefillMode;
+      }
+      final prefillFreq = widget.prefillFrequencyMhz;
+      final prefillFreqValue =
+          prefillFreq != null ? double.tryParse(prefillFreq) : null;
+      if (prefillFreqValue != null) {
+        _band = getBandFromFreq(prefillFreqValue) ?? _band;
+      }
+
       // Start with the band-convention default; user's saved preference (loaded
       // asynchronously below) will override this if one exists for this band+mode.
       _submode = (_memBand == _band && _memMode == _mode)
@@ -130,7 +161,9 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _callsignCtrl = TextEditingController(
           text: widget.prefillCallsign?.toUpperCase() ?? '');
       _freqCtrl = TextEditingController(
-          text: kBandCenterFreqMhz[_band]?.toString() ?? '');
+          text: prefillFreqValue != null
+              ? prefillFreqValue.toStringAsFixed(3)
+              : kBandCenterFreqMhz[_band]?.toString() ?? '');
       _rstSentCtrl = TextEditingController(text: getDefaultRst(_mode));
       _rstRcvdCtrl = TextEditingController(text: getDefaultRst(_mode));
       _nameCtrl = TextEditingController();
@@ -158,8 +191,12 @@ class _AddQsoScreenState extends ConsumerState<AddQsoScreen> {
       _updateAutoSpotStatus();
       _startStatusTimer();
       if (edit == null) {
-        _loadLastBand();
-        _loadLastFreq();
+        // A spot-tap prefill already set band/frequency — don't let the
+        // last-used-session restore clobber it.
+        if (widget.prefillFrequencyMhz == null) {
+          _loadLastBand();
+          _loadLastFreq();
+        }
         _loadLastSubmode(_band, _mode);
       }
       if (_potaRefs.isNotEmpty) _lookupPotaRefs();

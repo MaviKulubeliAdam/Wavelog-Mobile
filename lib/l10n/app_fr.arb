@@ -469,6 +469,8 @@
   "invalidNumber": "Nombre invalide",
   "potaAutoSpot": "Auto-Spot",
   "potaAutoSpotHint": "S'auto-spotter automatiquement lors d'un QSO à une station POTA ou SOTA (délai de 30 min)",
+  "spotRefreshLabel": "Intervalle d'actualisation des spots",
+  "spotRefreshHint": "Actualise automatiquement la liste des spots à cet intervalle",
   "autoSpotSent": "Auto-spot envoyé : {ref}",
   "@autoSpotSent": { "placeholders": { "ref": { "type": "String" } } },
   "autoSpotWillFire": "Le QSO déclenchera un spot",

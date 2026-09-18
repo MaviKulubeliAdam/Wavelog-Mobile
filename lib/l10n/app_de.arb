@@ -551,6 +551,8 @@
 
   "potaAutoSpot": "Auto-Spot",
   "potaAutoSpotHint": "Automatisch selbst-spotten beim Loggen eines QSOs an einer POTA- oder SOTA-Station (30 min Abkühlung)",
+  "spotRefreshLabel": "Spot-Aktualisierungsintervall",
+  "spotRefreshHint": "Aktualisiert die Spot-Liste automatisch in diesem Intervall",
   "autoSpotSent": "Auto-Spot gesendet: {ref}",
   "@autoSpotSent": {
     "placeholders": { "ref": { "type": "String" } }

@@ -2806,6 +2806,18 @@ abstract class AppLocalizations {
   /// **'Automatically self-spot when logging a QSO at a POTA or SOTA station (30 min cooldown each)'**
   String get potaAutoSpotHint;
 
+  /// No description provided for @spotRefreshLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Spot refresh interval'**
+  String get spotRefreshLabel;
+
+  /// No description provided for @spotRefreshHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatically reload the spot list at this interval'**
+  String get spotRefreshHint;
+
   /// No description provided for @autoSpotSent.
   ///
   /// In en, this message translates to:

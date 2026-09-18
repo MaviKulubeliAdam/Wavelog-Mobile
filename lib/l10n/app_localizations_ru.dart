@@ -1424,6 +1424,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Автоматически отправлять спот при записи QSO на станции POTA или SOTA (перерыв 30 минут)';
 
   @override
+  String get spotRefreshLabel => 'Интервал обновления спотов';
+
+  @override
+  String get spotRefreshHint =>
+      'Автоматически обновляет список спотов с этим интервалом';
+
+  @override
   String autoSpotSent(String ref) {
     return 'Авто-спот отправлен: $ref';
   }

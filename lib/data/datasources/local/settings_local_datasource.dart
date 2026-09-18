@@ -25,6 +25,7 @@ class SettingsLocalDatasource {
   static const _keyLocale                = 'wl_locale';
   static const _keyUseModernNav          = 'wl_use_modern_nav';
   static const _keyAllowInsecureSsl      = 'wl_allow_insecure_ssl';
+  static const _keySpotRefreshSeconds    = 'wl_spot_refresh_seconds';
 
   Future<SettingsModel> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -67,6 +68,7 @@ class SettingsLocalDatasource {
       locale:                 prefs.getString(_keyLocale),
       useModernNav:           prefs.getBool(_keyUseModernNav) ?? true,
       allowInsecureSsl:       prefs.getBool(_keyAllowInsecureSsl) ?? false,
+      spotRefreshSeconds:     prefs.getInt(_keySpotRefreshSeconds) ?? 0,
     );
   }
 
@@ -111,6 +113,7 @@ class SettingsLocalDatasource {
     await prefs.setBool(_keyPotaAutoSpot, settings.potaAutoSpotEnabled);
     await prefs.setBool(_keyUseModernNav, settings.useModernNav);
     await prefs.setBool(_keyAllowInsecureSsl, settings.allowInsecureSsl);
+    await prefs.setInt(_keySpotRefreshSeconds, settings.spotRefreshSeconds);
     if (settings.locale != null) {
       await prefs.setString(_keyLocale, settings.locale!);
     } else {

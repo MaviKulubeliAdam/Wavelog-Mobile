@@ -1407,6 +1407,12 @@ class AppLocalizationsKo extends AppLocalizations {
       'POTA 또는 SOTA 스테이션에서 QSO를 기록할 때 자동으로 셀프 스팟 (각 30분 쿨다운)';
 
   @override
+  String get spotRefreshLabel => '스팟 새로고침 간격';
+
+  @override
+  String get spotRefreshHint => '이 간격으로 스팟 목록을 자동으로 새로고침합니다';
+
+  @override
   String autoSpotSent(String ref) {
     return '자동 스팟 전송됨: $ref';
   }
