@@ -976,6 +976,10 @@
   "@potaAutoSpot": {},
   "potaAutoSpotHint": "Automatically self-spot when logging a QSO at a POTA or SOTA station (30 min cooldown each)",
   "@potaAutoSpotHint": {},
+  "spotRefreshLabel": "Spot refresh interval",
+  "@spotRefreshLabel": {},
+  "spotRefreshHint": "Automatically reload the spot list at this interval",
+  "@spotRefreshHint": {},
   "autoSpotSent": "Auto-spot sent: {ref}",
   "@autoSpotSent": {
     "placeholders": { "ref": { "type": "String" } }

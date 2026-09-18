@@ -479,6 +479,8 @@
   "invalidNumber": "Geçersiz sayı",
   "potaAutoSpot": "Otomatik Spot",
   "potaAutoSpotHint": "POTA veya SOTA istasyonuna QSO girildiğinde otomatik self-spot atar (her biri için 30 dk cooldown)",
+  "spotRefreshLabel": "Spot yenileme aralığı",
+  "spotRefreshHint": "Spot listesini bu aralıkla otomatik yeniler",
   "autoSpotSent": "Otomatik spot gönderildi: {ref}",
   "autoSpotWillFire": "QSO kaydedilince spot atılacak",
   "autoSpotCooldown": "Spot atıldı · Sonraki: {min} dk",

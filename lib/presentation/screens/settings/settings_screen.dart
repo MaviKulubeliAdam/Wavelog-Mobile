@@ -458,6 +458,27 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onChanged: (v) =>
                   ref.read(settingsProvider.notifier).setPotaAutoSpot(v),
             ),
+            ListTile(
+              leading: const Icon(Icons.timer_outlined),
+              title: Text(l10n.spotRefreshLabel),
+              subtitle: Text(l10n.spotRefreshHint),
+              trailing: DropdownButton<int>(
+                value: settings.spotRefreshSeconds,
+                underline: const SizedBox.shrink(),
+                items: const [
+                  DropdownMenuItem(value: 0, child: Text('—')),
+                  DropdownMenuItem(value: 30, child: Text('30s')),
+                  DropdownMenuItem(value: 60, child: Text('1m')),
+                  DropdownMenuItem(value: 120, child: Text('2m')),
+                  DropdownMenuItem(value: 300, child: Text('5m')),
+                ],
+                onChanged: (v) => v != null
+                    ? ref
+                        .read(settingsProvider.notifier)
+                        .setSpotRefreshSeconds(v)
+                    : null,
+              ),
+            ),
 
             // Language picker
             DropdownButtonFormField<String?>(

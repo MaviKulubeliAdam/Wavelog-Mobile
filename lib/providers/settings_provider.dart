@@ -127,6 +127,12 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
     state = s;
   }
 
+  Future<void> setSpotRefreshSeconds(int value) async {
+    final s = state.copyWith(spotRefreshSeconds: value);
+    await _repo.saveSettings(s);
+    state = s;
+  }
+
   Future<void> setLocale(String? locale) async {
     final s = locale == null
         ? state.copyWith(clearLocale: true)
@@ -149,6 +155,7 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
       darkTheme: state.darkTheme,
       offlineModeEnabled: state.offlineModeEnabled,
       locale: state.locale,
+      spotRefreshSeconds: state.spotRefreshSeconds,
     );
     await _repo.saveSettings(s);
     state = s;
@@ -162,6 +169,7 @@ class SettingsNotifier extends StateNotifier<SettingsModel> {
       darkTheme: state.darkTheme,
       offlineModeEnabled: state.offlineModeEnabled,
       locale: state.locale,
+      spotRefreshSeconds: state.spotRefreshSeconds,
     );
     await _repo.saveSettings(s);
     state = s;

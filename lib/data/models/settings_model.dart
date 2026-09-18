@@ -15,6 +15,9 @@ class SettingsModel {
   final bool useModernNav;
   final bool allowInsecureSsl;
 
+  /// Auto-refresh interval for the spot list, in seconds. 0 = off (manual only).
+  final int spotRefreshSeconds;
+
   const SettingsModel({
     this.serverUrl = '',
     this.apiKey = '',
@@ -31,6 +34,7 @@ class SettingsModel {
     this.locale,
     this.useModernNav = true,
     this.allowInsecureSsl = false,
+    this.spotRefreshSeconds = 0,
   });
 
   bool get hasValidConfig => serverUrl.isNotEmpty;
@@ -63,6 +67,7 @@ class SettingsModel {
     bool clearLocale = false,
     bool? useModernNav,
     bool? allowInsecureSsl,
+    int? spotRefreshSeconds,
   }) {
     return SettingsModel(
       serverUrl: serverUrl ?? this.serverUrl,
@@ -89,6 +94,7 @@ class SettingsModel {
       locale: clearLocale ? null : (locale ?? this.locale),
       useModernNav: useModernNav ?? this.useModernNav,
       allowInsecureSsl: allowInsecureSsl ?? this.allowInsecureSsl,
+      spotRefreshSeconds: spotRefreshSeconds ?? this.spotRefreshSeconds,
     );
   }
 }

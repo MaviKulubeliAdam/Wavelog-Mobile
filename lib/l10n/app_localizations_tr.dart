@@ -1423,6 +1423,12 @@ class AppLocalizationsTr extends AppLocalizations {
       'POTA veya SOTA istasyonuna QSO girildiğinde otomatik self-spot atar (her biri için 30 dk cooldown)';
 
   @override
+  String get spotRefreshLabel => 'Spot yenileme aralığı';
+
+  @override
+  String get spotRefreshHint => 'Spot listesini bu aralıkla otomatik yeniler';
+
+  @override
   String autoSpotSent(String ref) {
     return 'Otomatik spot gönderildi: $ref';
   }
