@@ -754,20 +754,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Prima di poter registrare QSO, connetti l\'app al tuo server Wavelog.';
 
   @override
-  String get setupGuidePatchWarning =>
-      'Questa app richiede il patch Wavelog Mobile sul tuo server.';
-
-  @override
-  String get setupGuidePatchStepTitle => 'Installa patch server';
-
-  @override
-  String get setupGuidePatchStepBody =>
-      'L\'app utilizza l\'API v2 di Wavelog, che richiede un piccolo patch sul tuo server.';
-
-  @override
-  String get setupGuidePatchBtn => 'Guida installazione';
-
-  @override
   String get setupGuideStep1Title => '1. Indirizzo server';
 
   @override
@@ -779,7 +765,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get setupGuideStep2Body =>
-      'In Wavelog, vai in Impostazioni → API → Token API (v2) → Nuovo token. Seleziona il preset \"Wavelog Mobile\" e conferma. Copia il token generato (inizia con wl2_).';
+      'In Wavelog, vai in Impostazioni → API → Token API (v2) → Nuovo token e seleziona i permessi (scope) necessari all\'app (l\'app li verifica per te dopo aver incollato il token). Copia il token generato (inizia con wl2_) e incollalo nell\'app.';
 
   @override
   String get setupGuideStep3Title => '3. Nominativo e Nome visualizzato';

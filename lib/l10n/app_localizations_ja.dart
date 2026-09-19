@@ -747,20 +747,6 @@ class AppLocalizationsJa extends AppLocalizations {
       'QSO を記録する前に、アプリを Wavelog サーバーに接続してください。以下の手順に従ってください。';
 
   @override
-  String get setupGuidePatchWarning =>
-      'このアプリはサーバーへの Wavelog Mobile パッチのインストールが必要です。';
-
-  @override
-  String get setupGuidePatchStepTitle => 'サーバーパッチをインストール';
-
-  @override
-  String get setupGuidePatchStepBody =>
-      'アプリは Wavelog の API v2 を使用しており、サーバーへの小さなパッチが必要です。まだインストールしていない場合は、インストールガイドを開いて手順に従ってください。';
-
-  @override
-  String get setupGuidePatchBtn => 'インストールガイド';
-
-  @override
   String get setupGuideStep1Title => '1. サーバーアドレス';
 
   @override
@@ -772,7 +758,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get setupGuideStep2Body =>
-      'Wavelog で、設定 → API → API トークン (v2) → 新しいトークン を選択します。「Wavelog Mobile」プリセットを選んで確認し、生成されたトークン（wl2_ で始まる）をコピーしてアプリに貼り付けてください。';
+      'Wavelog で、設定 → API → API トークン (v2) → 新しいトークン を開き、アプリに必要なスコープを選択します（トークンを貼り付けた後、アプリが自動で確認します）。生成されたトークン（wl2_ で始まる）をコピーしてアプリに貼り付けます。';
 
   @override
   String get setupGuideStep3Title => '3. コールサインと表示名';

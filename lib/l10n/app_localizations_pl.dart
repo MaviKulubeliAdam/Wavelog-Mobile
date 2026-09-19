@@ -755,20 +755,6 @@ class AppLocalizationsPl extends AppLocalizations {
       'Zanim zaczniesz logować QSO, połącz aplikację z serwerem Wavelog. Wykonaj poniższe kroki.';
 
   @override
-  String get setupGuidePatchWarning =>
-      'Ta aplikacja wymaga zainstalowania łatki Wavelog Mobile na Twoim serwerze. Nawet jeśli wygenerujesz token API v2 bez niej, aplikacja nie będzie działać poprawnie.';
-
-  @override
-  String get setupGuidePatchStepTitle => 'Zainstaluj łatkę serwera';
-
-  @override
-  String get setupGuidePatchStepBody =>
-      'Aplikacja korzysta z API v2 Wavelog, które wymaga małej łatki na Twoim serwerze. Jeśli jej jeszcze nie zainstalowałeś, otwórz Przewodnik instalacji i wykonaj kroki dla swojej konfiguracji (klasycznej lub Docker).';
-
-  @override
-  String get setupGuidePatchBtn => 'Przewodnik instalacji';
-
-  @override
   String get setupGuideStep1Title => '1. Adres serwera';
 
   @override
@@ -780,7 +766,7 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get setupGuideStep2Body =>
-      'W Wavelog przejdź do Ustawienia → API → Tokeny API (v2) → Nowy token. Wybierz preset \"Wavelog Mobile\" i potwierdź. Skopiuj wygenerowany token (zaczyna się od wl2_) i wklej go w aplikacji.';
+      'W Wavelog przejdź do Ustawienia → API → Tokeny API (v2) → Nowy token i wybierz uprawnienia (scope) potrzebne aplikacji (aplikacja sprawdzi je za Ciebie po wklejeniu tokenu). Skopiuj wygenerowany token (zaczyna się od wl2_) i wklej go w aplikacji.';
 
   @override
   String get setupGuideStep3Title => '3. Znak wywoławczy i nazwa wyświetlana';

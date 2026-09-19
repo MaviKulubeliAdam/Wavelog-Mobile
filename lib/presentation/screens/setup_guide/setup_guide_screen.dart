@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../core/utils/l10n_extension.dart';
 import '../../../providers/settings_provider.dart';
 
@@ -12,21 +11,12 @@ import '../../../providers/settings_provider.dart';
 class SetupGuideScreen extends ConsumerWidget {
   const SetupGuideScreen({super.key});
 
-  static const _patchUrl = 'https://sp9aqg.pl/install.html';
-
   void _continue(BuildContext context, WidgetRef ref) {
     final settings = ref.read(settingsProvider);
     if (!settings.hasValidConfig) {
       context.go('/server-setup');
     } else {
       context.go('/login');
-    }
-  }
-
-  Future<void> _openPatch() async {
-    final uri = Uri.parse(_patchUrl);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
 
@@ -53,45 +43,7 @@ class SetupGuideScreen extends ConsumerWidget {
                     color: cs.secondary,
                   ),
             ),
-            const SizedBox(height: 16),
-
-            // Patch requirement warning banner
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: cs.errorContainer.withValues(alpha: 0.4),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: cs.error.withValues(alpha: 0.4)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.warning_amber_rounded, color: cs.error, size: 20),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      l10n.setupGuidePatchWarning,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: cs.onErrorContainer,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 20),
-
-            // Patch install step (step 0)
-            _GuideStep(
-              icon: Icons.download_rounded,
-              title: l10n.setupGuidePatchStepTitle,
-              body: l10n.setupGuidePatchStepBody,
-              action: TextButton.icon(
-                onPressed: _openPatch,
-                icon: const Icon(Icons.open_in_browser, size: 16),
-                label: Text(l10n.setupGuidePatchBtn),
-              ),
-            ),
 
             _GuideStep(
               icon: Icons.link,
@@ -128,13 +80,11 @@ class _GuideStep extends StatelessWidget {
   final IconData icon;
   final String title;
   final String body;
-  final Widget? action;
 
   const _GuideStep({
     required this.icon,
     required this.title,
     required this.body,
-    this.action,
   });
 
   @override
@@ -168,10 +118,6 @@ class _GuideStep extends StatelessWidget {
                         color: cs.onSurfaceVariant,
                       ),
                 ),
-                if (action != null) ...[
-                  const SizedBox(height: 4),
-                  action!,
-                ],
               ],
             ),
           ),

@@ -754,20 +754,6 @@ class AppLocalizationsTr extends AppLocalizations {
       'QSO kaydetmeye başlamadan önce uygulamayı Wavelog sunucunuza bağlayın. Aşağıdaki adımları izleyin.';
 
   @override
-  String get setupGuidePatchWarning =>
-      'Bu uygulama, sunucunuzda Wavelog Mobile yamasının kurulu olmasını gerektirir. Bu yamayı uygulamazsanız API v2 token oluştursanız dahi düzgün çalışmayacaktır.';
-
-  @override
-  String get setupGuidePatchStepTitle => 'Sunucu Yamasını Kurun';
-
-  @override
-  String get setupGuidePatchStepBody =>
-      'Uygulama, Wavelog\'un API v2 sistemini kullanır ve sunucunuzda küçük bir yama gerektirir. Henüz kurmadıysanız önce Kurulum Kılavuzu\'nu açıp kurulumu tamamlayın.';
-
-  @override
-  String get setupGuidePatchBtn => 'Kurulum Kılavuzu';
-
-  @override
   String get setupGuideStep1Title => '1. Sunucu Adresi';
 
   @override
@@ -779,7 +765,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get setupGuideStep2Body =>
-      'Wavelog\'da Ayarlar → API → API Token\'ları (v2) → Yeni Token\'a gidin. \"Wavelog Mobile\" ön ayarını seçip onaylayın. Oluşturulan token\'ı (wl2_ ile başlar) kopyalayıp uygulamaya yapıştırın.';
+      'Wavelog\'da Ayarlar → API → API Token\'ları (v2) → Yeni Token\'a gidin ve uygulamanın ihtiyaç duyduğu yetkileri (scope) seçin (token\'ı yapıştırdıktan sonra uygulama bunları sizin için kontrol eder). Oluşturulan token\'ı (wl2_ ile başlar) kopyalayıp uygulamaya yapıştırın.';
 
   @override
   String get setupGuideStep3Title => '3. Çağrı İşareti ve Görünen Ad';

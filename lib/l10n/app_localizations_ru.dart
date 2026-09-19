@@ -24,7 +24,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navLookup => 'Поиск';
 
   @override
-  String get navStation => 'Станция';
+  String get navStation => 'Профиль QTH';
 
   @override
   String get save => 'Сохранить';
@@ -81,7 +81,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get serverUrlHint => 'https://log.example.com';
 
   @override
-  String get testConnection => 'Проверить соединение';
+  String get testConnection => 'Проверка соединения';
 
   @override
   String get testingConnection => 'Проверка...';
@@ -97,20 +97,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sslIssueAllow => 'Продолжить без проверки';
 
   @override
-  String get scopeTestSectionTitle => 'Проверка прав доступа';
+  String get scopeTestSectionTitle => 'Проверка областей доступа';
 
   @override
-  String get scopeTestRunning => 'Проверка прав доступа…';
+  String get scopeTestRunning => 'Проверка областей доступа…';
 
   @override
-  String get scopeTestAllPassed => 'Все необходимые права доступа присутствуют';
+  String get scopeTestAllPassed =>
+      'Все необходимые области доступа присутствуют';
 
   @override
-  String get scopeTestSomeFailed => 'Некоторых прав доступа не хватает';
+  String get scopeTestSomeFailed => 'Некоторых областей доступа не хватает';
 
   @override
   String get scopeTestAddHint =>
-      'Добавьте это право доступа при создании API-токена';
+      'Добавьте эту область доступа при создании токена API';
 
   @override
   String get connectionSuccess => 'Соединение установлено!';
@@ -119,7 +120,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get connectionFailed => 'Ошибка соединения';
 
   @override
-  String get apiKeyCopied => 'API-ключ скопирован';
+  String get apiKeyCopied => 'Ключ API скопирован';
 
   @override
   String get loginTitle => 'Вход';
@@ -151,7 +152,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get callsign => 'Позывной';
 
   @override
-  String get apiKeyLabel => 'API-ключ';
+  String get apiKeyLabel => 'Ключ API';
 
   @override
   String get validating => 'Проверка...';
@@ -201,7 +202,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get offlineBanner => 'Нет сети — QSO сохранены локально';
 
   @override
-  String get activeStation => 'Активная станция';
+  String get activeStation => 'Активный профиль QTH';
 
   @override
   String get logbookTitle => 'Журнал';
@@ -210,7 +211,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get filterAll => 'Все';
 
   @override
-  String get filterAllModes => 'Все виды';
+  String get filterAllModes => 'Все виды модуляции';
 
   @override
   String get searchHint => 'Поиск позывного...';
@@ -228,10 +229,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get signal => 'Сигнал';
 
   @override
-  String get rstSent => 'RST отпр.';
+  String get rstSent => 'RST (TX)';
 
   @override
-  String get rstReceived => 'RST прин.';
+  String get rstReceived => 'RST (RX)';
 
   @override
   String get txPower => 'Мощность ТХ';
@@ -255,7 +256,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get ituZone => 'Зона ITU';
 
   @override
-  String get gridSquare => 'Квадрат сетки';
+  String get gridSquare => 'Квадрат QTH-локатора';
 
   @override
   String get propMode => 'Распространение';
@@ -267,7 +268,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get qslStatus => 'Статус QSL';
 
   @override
-  String get paperQsl => 'Бумажный';
+  String get paperQsl => 'QSL-карточка';
 
   @override
   String get lotwQsl => 'LoTW';
@@ -279,25 +280,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get qrzQsl => 'QRZ.com';
 
   @override
-  String get clublog => 'Club Log';
+  String get clublog => 'Clublog';
 
   @override
   String get hrdlog => 'HRDLog';
 
   @override
-  String get qslSent => 'Отпр.';
+  String get qslSent => 'TX';
 
   @override
-  String get qslRcvd => 'Прин.';
+  String get qslRcvd => 'RX';
 
   @override
-  String get qslReceived => 'Получен';
+  String get qslReceived => 'Получено';
 
   @override
-  String get qslMethod => 'Метод';
+  String get qslMethod => 'Способ';
 
   @override
-  String get awards => 'Дипломные ссылки';
+  String get awards => 'Референции';
 
   @override
   String get iota => 'IOTA';
@@ -312,7 +313,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pota => 'POTA';
 
   @override
-  String get myStation => 'Моя станция';
+  String get myStation => 'Моя профиль QTH';
 
   @override
   String get myCallsign => 'Мой позывной';
@@ -321,13 +322,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get contest => 'Контест';
 
   @override
-  String get serialSent => 'Серийный отпр.';
+  String get serialSent => 'Порядковый номер (TX)';
 
   @override
-  String get serialReceived => 'Серийный прин.';
+  String get serialReceived => 'Порядковый номер (RX)';
 
   @override
-  String get solarConditions => 'Солнечные условия';
+  String get solarConditions => 'Солнечная активность';
 
   @override
   String get aIndex => 'A-индекс';
@@ -357,19 +358,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get addQsoTitle => 'Добавить QSO';
 
   @override
-  String get liveQso => 'Прямой QSO';
+  String get liveQso => 'Вживую';
 
   @override
-  String get historicalQso => 'Исторический QSO';
+  String get historicalQso => 'Прошедшее';
 
   @override
   String get callsignField => 'Позывной *';
 
   @override
-  String get lookupSearch => 'Поиск QRZ';
+  String get lookupSearch => 'Поиск в QRZ';
 
   @override
-  String get liveDateTimeLabel => 'Дата/Время (UTC) — Прямой эфир';
+  String get liveDateTimeLabel => 'Дата/Время (UTC) — сейчас';
 
   @override
   String get dateTimeLabel => 'Дата/Время (UTC)';
@@ -378,13 +379,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bandField => 'Диапазон *';
 
   @override
-  String get modeField => 'Вид *';
+  String get modeField => 'Вид модуляции *';
 
   @override
   String get frequencyField => 'Частота (МГц)';
 
   @override
-  String get rstSentField => 'RST отправлено *';
+  String get rstSentField => 'RST передано *';
 
   @override
   String get rstRcvdField => 'RST принято *';
@@ -396,13 +397,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get qthField => 'QTH';
 
   @override
-  String get gridField => 'Квадрат сетки';
+  String get gridField => 'QTH-локатор';
 
   @override
   String get commentField => 'Комментарий';
 
   @override
-  String get stationProfileField => 'Профиль станции';
+  String get stationProfileField => 'Профиль QTH';
 
   @override
   String get saveQsoBtn => 'Сохранить QSO';
@@ -418,7 +419,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get noActiveStation => 'Нет активной станции';
+  String get noActiveStation => 'Активный профиль QTH не выбран';
 
   @override
   String get lookupTitle => 'Поиск позывного';
@@ -427,7 +428,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get lookupHint => 'Введите позывной...';
 
   @override
-  String get lookupBtn => 'Найти';
+  String get lookupBtn => 'Поиск';
 
   @override
   String get recentSearches => 'Последние запросы';
@@ -442,28 +443,29 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notFound => 'Не найдено';
 
   @override
-  String get stationsTitle => 'Станции';
+  String get stationsTitle => 'Профили QTH';
 
   @override
   String stationActivated(String callsign) {
-    return '$callsign установлен как активная станция';
+    return '$callsign установлен как активный профиль QTH';
   }
 
   @override
   String get stationWebInfo =>
-      'Добавляйте и редактируйте станции через веб-интерфейс Wavelog.';
+      'Добавляйте и редактируйте профили QTH через веб-интерфейс Wavelog.';
 
   @override
-  String get noStations => 'Нет станций';
+  String get noStations => 'Нет профилей QTH';
 
   @override
-  String get noStationsHint => 'Добавьте станцию через веб-интерфейс Wavelog.';
+  String get noStationsHint =>
+      'Добавьте профиль QTH через веб-интерфейс Wavelog.';
 
   @override
-  String get addStationOnWeb => 'Добавить станцию в Wavelog';
+  String get addStationOnWeb => 'Добавить профиль QTH в Wavelog';
 
   @override
-  String get adifTitle => 'ADIF Импорт / Экспорт';
+  String get adifTitle => 'Импорт / Экспорт ADIF';
 
   @override
   String get importTab => 'Импорт';
@@ -478,7 +480,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectFileBtn => 'Выбрать файл (.adi / .adif)';
 
   @override
-  String get stationRequired => 'Профиль станции *';
+  String get stationRequired => 'Профиль QTH *';
 
   @override
   String importing(int done, int total) {
@@ -499,10 +501,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get exportFilters => 'Фильтры экспорта';
 
   @override
-  String get stationFilter => 'Станция';
+  String get stationFilter => 'Профиль QTH';
 
   @override
-  String get allStations => 'Все станции';
+  String get allStations => 'Все профили QTH';
 
   @override
   String get startDate => 'Начало';
@@ -537,7 +539,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get noStationForExport => 'Станция для экспорта не найдена';
+  String get noStationForExport => 'Профиль QTH для экспорта не найден';
 
   @override
   String qsoImported(int imported, int total) {
@@ -557,7 +559,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get errTimeout => 'Превышено время ожидания';
 
   @override
-  String get errUnauthorized => 'Неверный API-ключ';
+  String get errUnauthorized => 'Неверный ключ API';
 
   @override
   String get settingsTitle => 'Настройки';
@@ -584,13 +586,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get switchAccountBtn => 'Сменить аккаунт';
 
   @override
-  String get activeStationSection => 'Активная станция';
+  String get activeStationSection => 'Активный профиль QTH';
 
   @override
-  String get selectStationBtn => 'Выбрать станцию';
+  String get selectStationBtn => 'Выбрать профиль QTH';
 
   @override
-  String get addStationWeb => 'Добавить станцию на сайте';
+  String get addStationWeb => 'Добавить профиль QTH на сайте';
 
   @override
   String get defaultsSection => 'По умолчанию';
@@ -599,7 +601,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get defaultBand => 'Диапазон по умолчанию';
 
   @override
-  String get defaultMode => 'Вид по умолчанию';
+  String get defaultMode => 'Вид модуляции по умолчанию';
 
   @override
   String get appSection => 'Приложение';
@@ -659,7 +661,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get cacheCleared => 'Кэш очищен';
 
   @override
-  String get langSystem => 'Системный';
+  String get langSystem => 'Как в системе';
 
   @override
   String get langEnglish => 'English';
@@ -692,7 +694,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get aboutTitle => 'О приложении';
 
   @override
-  String get appDescription => 'Открытое приложение для Android для Wavelog';
+  String get appDescription =>
+      'Приложение для Android для Wavelog c открытым исходным кодом';
 
   @override
   String versionLabel(String version, String build) {
@@ -706,8 +709,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get wavelogProjectSection => 'Проект Wavelog';
 
   @override
-  String get wavelogDescription =>
-      'Веб-система ведения радиолюбительского журнала';
+  String get wavelogDescription => 'Аппаратный журнал с веб-интерфейсом';
 
   @override
   String get coreDevelopers => 'Основные разработчики';
@@ -726,7 +728,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get errorNoConnection => 'Нет соединения';
 
   @override
-  String get errorUnauthorized => 'Не авторизован — проверьте API-ключ';
+  String get errorUnauthorized => 'Не авторизован — проверьте ключ API';
 
   @override
   String get errorServer => 'Ошибка сервера';
@@ -753,32 +755,18 @@ class AppLocalizationsRu extends AppLocalizations {
       'Перед записью QSO подключите приложение к серверу Wavelog. Следуйте шагам ниже.';
 
   @override
-  String get setupGuidePatchWarning =>
-      'Это приложение требует патча Wavelog Mobile на вашем сервере. Даже если вы создадите токен API v2 без него, приложение не будет работать корректно.';
-
-  @override
-  String get setupGuidePatchStepTitle => 'Установить патч сервера';
-
-  @override
-  String get setupGuidePatchStepBody =>
-      'Приложение использует API v2 Wavelog, который требует небольшого патча на вашем сервере. Если вы его ещё не установили, откройте руководство и следуйте инструкциям.';
-
-  @override
-  String get setupGuidePatchBtn => 'Руководство по установке';
-
-  @override
   String get setupGuideStep1Title => '1. Адрес сервера';
 
   @override
   String get setupGuideStep1Body =>
-      'Введите адрес, который вы используете для открытия Wavelog в браузере, например https://yourdomain.com — без завершающего слеша.';
+      'Введите адрес, который вы используете для доступа к Wavelog в браузере, например https://yourdomain.com — без завершающего слеша.';
 
   @override
   String get setupGuideStep2Title => '2. Токен API v2';
 
   @override
   String get setupGuideStep2Body =>
-      'В Wavelog: Настройки → API → Токены API (v2) → Новый токен. Выберите предустановку «Wavelog Mobile» и подтвердите. Скопируйте токен (начинается с wl2_) и вставьте в приложение.';
+      'В Wavelog: Ваш профиль → Ключи API → Токены API (API v2) → Новый токен API и выберите нужные приложению разрешения (scopes) (после вставки токена приложение проверит их за вас). Скопируйте созданный токен (начинается с wl2_) и вставьте его в приложение.';
 
   @override
   String get setupGuideStep3Title => '3. Позывной и отображаемое имя';
@@ -820,7 +808,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get patchInstallFirst => 'Установить патч';
 
   @override
-  String get appSubtitle => 'Приложение для ведения радиолюбительского журнала';
+  String get appSubtitle =>
+      'Приложение для ведения аппаратного журнала радиостанции';
 
   @override
   String get switchToLightTheme => 'Переключить на светлую тему';
@@ -858,10 +847,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nameLabel => 'Имя';
 
   @override
-  String get stateProvince => 'Штат/Провинция';
+  String get stateProvince => 'Штат/Область';
 
   @override
-  String get county => 'Округ';
+  String get county => 'Округ/Район';
 
   @override
   String get city => 'Город';
@@ -896,7 +885,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get qslMethods => 'Методы QSL';
+  String get qslMethods => 'Способы QSL';
 
   @override
   String get bureau => 'Бюро';
@@ -910,10 +899,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get callsignCopied => 'Позывной скопирован';
 
   @override
-  String get uploadedStatus => 'Загружен';
+  String get uploadedStatus => 'Загружено';
 
   @override
-  String get notUploadedStatus => 'Не загружен';
+  String get notUploadedStatus => 'Не загружено';
 
   @override
   String get matchedStatus => 'Совпадает';
@@ -925,19 +914,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get yes => 'Да';
 
   @override
-  String get requested => 'Запрошен';
+  String get requested => 'Запрошено';
 
   @override
   String get no => 'Нет';
 
   @override
-  String get invalid => 'Недействительный';
+  String get invalid => 'Недействительно';
 
   @override
-  String get viaDirect => 'Прямой';
+  String get viaDirect => 'Напрямую';
 
   @override
-  String get viaElectronic => 'Электронный';
+  String get viaElectronic => 'Электронно';
 
   @override
   String get viaMail => 'Почтой';
@@ -984,7 +973,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get workedBefore => 'Работали ранее';
 
   @override
-  String get lastQsoLabel => 'Последний QSO';
+  String get lastQsoLabel => 'Последнее QSO';
 
   @override
   String get themeLabel => 'Тема';
@@ -1008,10 +997,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get commentLabel => 'Комментарий';
 
   @override
-  String get exchangeReceived => 'Принятый обмен';
+  String get exchangeReceived => 'Принятый контрольный номер';
 
   @override
-  String get exchangeSent => 'Отправленный обмен';
+  String get exchangeSent => 'Переданный контрольный номер';
 
   @override
   String get contestIdLabel => 'Контест';
@@ -1020,13 +1009,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sigLabel => 'SIG';
 
   @override
-  String get stationSetup => 'Настройка станции';
+  String get stationSetup => 'Настройка журнала';
 
   @override
   String get logbooks => 'Журналы';
 
   @override
-  String get locations => 'Локации';
+  String get locations => 'Профили QTH';
 
   @override
   String get newLogbook => 'Новый журнал';
@@ -1056,39 +1045,39 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteStation => 'Удалить';
 
   @override
-  String get deleteStationConfirm => 'Удалить станцию';
+  String get deleteStationConfirm => 'Удалить профиль QTH';
 
   @override
   String get deleteStationWarning =>
-      'Все QSO этой станции будут безвозвратно удалены. Продолжить?';
+      'Все QSO в этом профиле QTH будут безвозвратно удалены. Продолжить?';
 
   @override
-  String get stationDeleted => 'Станция удалена';
+  String get stationDeleted => 'Профиль QTH удалён';
 
   @override
-  String get stationUpdated => 'Станция обновлена';
+  String get stationUpdated => 'Профиль QTH обновлён';
 
   @override
-  String get stationCloned => 'Станция клонирована';
+  String get stationCloned => 'Профиль QTH клонирован';
 
   @override
-  String get linkLocation => 'Связать локацию';
+  String get linkLocation => 'Привязать профиль QTH';
 
   @override
   String get unlinkLocation => 'Отвязать';
 
   @override
-  String get linkedLocations => 'Связанные локации';
+  String get linkedLocations => 'Привязанные профили QTH';
 
   @override
-  String get newStationName => 'Новое название станции';
+  String get newStationName => 'Название нового профиля QTH';
 
   @override
   String get deleteLogbookConfirm => 'Удалить журнал';
 
   @override
   String get deleteLogbookWarning =>
-      'Этот журнал будет удалён. Связанные локации сохранятся. Продолжить?';
+      'Этот журнал будет удалён. Связанные профили QTH сохранятся. Продолжить?';
 
   @override
   String get logbookDeleted => 'Журнал удалён';
@@ -1097,50 +1086,50 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hrdlogCode => 'Код HRDLog';
 
   @override
-  String get webAdifApiKey => 'WebADIF API-ключ';
+  String get webAdifApiKey => 'ключ API WebADIF';
 
   @override
-  String get webAdifApiUrl => 'WebADIF API URL';
+  String get webAdifApiUrl => 'URL API WebADIF';
 
   @override
   String get basicInfo => 'Основная информация';
 
   @override
-  String get locationSectionTitle => 'Локация';
+  String get locationSectionTitle => 'Профиль QTH';
 
   @override
-  String get awardReferences => 'Дипломные ссылки';
+  String get awardReferences => 'Референции';
 
   @override
   String get integrationsSectionTitle => 'Интеграции';
 
   @override
-  String get stationSettingsSection => 'Настройки станции';
+  String get stationSettingsSection => 'Настройки профиля QTH';
 
   @override
-  String get editStationTitle => 'Редактировать станцию';
+  String get editStationTitle => 'Редактировать профиль QTH';
 
   @override
-  String get newStationTitle => 'Новая станция';
+  String get newStationTitle => 'Новый профиль QTH';
 
   @override
   String get saveChangesBtn => 'Сохранить изменения';
 
   @override
-  String get createStationBtn => 'Создать станцию';
+  String get createStationBtn => 'Создать профиль QTH';
 
   @override
-  String get stationCreated => 'Станция создана';
+  String get stationCreated => 'Профиль QTH создан';
 
   @override
   String get stationCreateFailed =>
       'Ошибка. Профиль с таким именем уже существует.';
 
   @override
-  String get stationProfileNameLabel => 'Название профиля станции *';
+  String get stationProfileNameLabel => 'Название профиля QTH *';
 
   @override
-  String get stationProfileNameHint => 'Домашняя станция';
+  String get stationProfileNameHint => 'Дом';
 
   @override
   String get cityQth => 'Город / QTH';
@@ -1155,13 +1144,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get selectLabel => 'Выбрать...';
 
   @override
-  String get dxccSearch => 'Поиск DXCC / Страна';
+  String get dxccSearch => 'Поиск DXCC / Страны';
 
   @override
   String get deletedDxcc => 'Удалённый DXCC';
 
   @override
-  String get eqslQthNicknameLabel => 'Псевдоним QTH для eQSL';
+  String get eqslQthNicknameLabel => 'Псевдоним профиля QTH для eQSL';
 
   @override
   String get eqslDefaultMsgLabel => 'Сообщение eQSL по умолчанию';
@@ -1179,7 +1168,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get uploadRealtime => 'В реальном времени';
 
   @override
-  String get qrzApiKeyLabel => 'API-ключ журнала QRZ.com';
+  String get qrzApiKeyLabel => 'Ключ API для журнала QRZ.com';
 
   @override
   String get qrzUploadLabel => 'Загрузка на QRZ.com';
@@ -1189,10 +1178,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get clublogIgnoreSubtitle =>
-      'Исключить эту станцию из загрузок Clublog';
+      'Исключить этот профиль QTH из загрузок Clublog';
 
   @override
-  String get clublogRealtimeTitle => 'Clublog в реальном времени';
+  String get clublogRealtimeTitle => 'Загрузка в Clublog в реальном времени';
 
   @override
   String get clublogRealtimeSubtitle =>
@@ -1202,29 +1191,30 @@ class AppLocalizationsRu extends AppLocalizations {
   String get hrdlogUsernameLabel => 'Имя пользователя HRDLog.net';
 
   @override
-  String get hrdlogApiKeyLabel => 'API-ключ HRDLog.net';
+  String get hrdlogApiKeyLabel => 'Ключ API для HRDLog.net';
 
   @override
-  String get hrdlogUploadLabel => 'Загрузка на HRDLog.net';
+  String get hrdlogUploadLabel => 'Загрузка в HRDLog.net';
 
   @override
-  String get qo100ApiKeyLabel => 'API-ключ QO-100 DX Club';
+  String get qo100ApiKeyLabel => 'Ключ API QO-100 DX Club';
 
   @override
-  String get qo100RealtimeTitle => 'QO-100 DX Club в реальном времени';
+  String get qo100RealtimeTitle =>
+      'Загрузка в QO-100 DX Club в реальном времени';
 
   @override
   String get qo100RealtimeSubtitle =>
       'Загружать QSO в QO-100 DX Club в реальном времени';
 
   @override
-  String get oqrsSectionTitle => 'OQRS (Онлайн QSL)';
+  String get oqrsSectionTitle => 'OQRS (Онлайн запрос QSL)';
 
   @override
   String get oqrsEnabledTitle => 'OQRS включён';
 
   @override
-  String get oqrsEnabledSubtitle => 'Включить систему онлайн-запросов QSL';
+  String get oqrsEnabledSubtitle => 'Включить систему онлайн запросов QSL';
 
   @override
   String get oqrsTextLabel => 'Описание OQRS';
@@ -1233,11 +1223,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get oqrsEmailLabel => 'Email OQRS';
 
   @override
-  String get setAsActiveStationTitle => 'Сделать активной станцией';
+  String get setAsActiveStationTitle => 'Установить профиль QTH активным';
 
   @override
   String get setAsActiveStationSubtitle =>
-      'Отметить эту станцию как активную в Wavelog';
+      'Отметить этот профиль QTH, как активный в Wavelog';
 
   @override
   String get linkToActiveLogbookTitle => 'Привязать к активному журналу';
@@ -1247,13 +1237,14 @@ class AppLocalizationsRu extends AppLocalizations {
       'Автоматически привязывать к активному журналу при создании';
 
   @override
-  String get active => 'Активна';
+  String get active => 'Активен';
 
   @override
-  String get loadDetailsFailed => 'Не удалось загрузить детали';
+  String get loadDetailsFailed => 'Не удалось загрузить подробности';
 
   @override
-  String get cannotDeleteActiveStation => 'Нельзя удалить активную станцию.';
+  String get cannotDeleteActiveStation =>
+      'Нельзя удалить активный профиль QTH.';
 
   @override
   String get navStats => 'Статистика';
@@ -1276,14 +1267,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bandDistribution => 'Распределение по диапазонам';
 
   @override
-  String get modeDistribution => 'Распределение по видам';
+  String get modeDistribution => 'Распределение по видам модуляции';
 
   @override
-  String get perStation => 'По станциям';
+  String get perStation => 'По профилям QTH';
 
   @override
   String get basedOnCache =>
-      'Статистика диапазона/вида/станции основана на кэшированных QSO.';
+      'Статистика по диапазонам/видам модуляции/профилям QTH основана на кэшированных QSO.';
 
   @override
   String get statsTab => 'Статистика';
@@ -1315,7 +1306,8 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get noSolarData => 'Не удалось загрузить солнечные данные';
+  String get noSolarData =>
+      'Не удалось загрузить данные о солнечной активности';
 
   @override
   String get potaStats => 'Статистика POTA';
@@ -1342,7 +1334,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get potaNoQsos => 'Нет QSO POTA в кэше';
 
   @override
-  String get navSpot => 'Спот';
+  String get navSpot => 'Споты';
 
   @override
   String get spotTitle => 'Споты';
@@ -1372,7 +1364,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get spotFrequency => 'Частота (кГц)';
 
   @override
-  String get spotReference => 'Ссылка на парк';
+  String get spotReference => 'Референция';
 
   @override
   String get spotComments => 'Комментарии';
@@ -1393,7 +1385,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get filterBand => 'Диапазон';
 
   @override
-  String get filterMode => 'Вид';
+  String get filterMode => 'Вид модуляции';
 
   @override
   String get filterCountry => 'Страна';
@@ -1408,10 +1400,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get filterClear => 'Сбросить фильтры';
 
   @override
-  String get mode => 'Вид';
+  String get mode => 'Вид модуляции';
 
   @override
-  String get required => 'Обязательно';
+  String get required => 'Требуется';
 
   @override
   String get invalidNumber => 'Неверное число';
@@ -1421,7 +1413,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get potaAutoSpotHint =>
-      'Автоматически отправлять спот при записи QSO на станции POTA или SOTA (перерыв 30 минут)';
+      'Автоматически отправлять спот при записи QSO в профиле QTH POTA или SOTA (перерыв 30 минут)';
 
   @override
   String get spotRefreshLabel => 'Интервал обновления спотов';
@@ -1436,7 +1428,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get autoSpotWillFire => 'QSO вызовет спот';
+  String get autoSpotWillFire => 'QSO запустит отправку спота';
 
   @override
   String autoSpotCooldown(int min) {
@@ -1455,7 +1447,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get autoSpotFieldFreq => 'Частота';
 
   @override
-  String get autoSpotFieldMode => 'Вид';
+  String get autoSpotFieldMode => 'Вид модуляции';
 
   @override
   String get autoSpotFieldRef => 'Парк';
@@ -1472,10 +1464,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get colDateTime => 'Дата/Время';
 
   @override
-  String get colRstSent => 'RST(О)';
+  String get colRstSent => 'RST(Прд)';
 
   @override
-  String get colRstRcvd => 'RST(П)';
+  String get colRstRcvd => 'RST(Прм)';
 
   @override
   String get submodeLabel => 'Подвид';
@@ -1503,7 +1495,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get mapTitle => 'Карта';
 
   @override
-  String get mapNoData => 'QSO с квадратом сетки не найдены';
+  String get mapNoData => 'QSO с квадратом QTH-локатора не найдены';
 
   @override
   String mapStationCount(int count) {
@@ -1514,14 +1506,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dxccProgress => 'Прогресс DXCC';
 
   @override
-  String get workedCountries => 'Отработанные страны';
+  String get workedCountries => 'Стработанные страны';
 
   @override
-  String get dxccWorked => 'Отработано';
+  String get dxccWorked => 'Стработано';
 
   @override
   String dxccUniqueEntities(int count) {
-    return '$count уникальных объектов';
+    return '$count уникальных DXCC';
   }
 
   @override
@@ -1534,10 +1526,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get dxccLegendConfirmed => 'Подтверждено';
 
   @override
-  String get dxccLegendPending => 'Ожидает';
+  String get dxccLegendPending => 'В ожидании';
 
   @override
-  String get dxccLegendNotWorked => 'Не отработано';
+  String get dxccLegendNotWorked => 'Не стработано';
 
   @override
   String get spotSummitNotFound => 'Вершина не найдена';
@@ -1549,16 +1541,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get qsoTypeTitle => 'Записать QSO';
 
   @override
-  String get normalQso => 'Обычный QSO';
+  String get normalQso => 'Обычное QSO';
 
   @override
   String get normalQsoDesc => 'Стандартная запись контакта';
 
   @override
-  String get contestQso => 'Контестный QSO';
+  String get contestQso => 'QSO контеста';
 
   @override
-  String get contestQsoDesc => 'Быстрое ведение журнала контеста с обменом';
+  String get contestQsoDesc =>
+      'Быстрое ведение журнала контеста с контрольными номерами';
 
   @override
   String get contestLog => 'Журнал контеста';
@@ -1570,63 +1563,63 @@ class AppLocalizationsRu extends AppLocalizations {
   String get contestNameHint => 'напр. CQ-WW-CW';
 
   @override
-  String get ourExchange => 'Наш обмен';
+  String get ourExchange => 'Наш контрольный номер';
 
   @override
-  String get serialStart => 'Начальный серийный №';
+  String get serialStart => 'Начальный порядковый №';
 
   @override
-  String get showExchangeFields => 'Поля обмена';
+  String get showExchangeFields => 'Поля контрольного номера';
 
   @override
-  String get startContest => 'Начать ведение журнала';
+  String get startContest => 'Начать запись журнала';
 
   @override
-  String get endContest => 'Завершить сессию';
+  String get endContest => 'Завершить контест-сессию';
 
   @override
   String get endContestConfirm =>
-      'Завершить контестную сессию? (Серийный счётчик и настройки будут сброшены.)';
+      'Завершить контест-сессию? (Счётчик последовательных номеров и настройки будут сброшены.)';
 
   @override
-  String get serialSentLabel => 'Отпр. №';
+  String get serialSentLabel => '№ (TX)';
 
   @override
-  String get serialRcvdLabel => 'Прин. №';
+  String get serialRcvdLabel => '№ (RX)';
 
   @override
-  String get exchangeSentLabel => 'Отпр. обмен';
+  String get exchangeSentLabel => 'Контр. (TX)';
 
   @override
-  String get exchangeRcvdLabel => 'Прин. обмен';
+  String get exchangeRcvdLabel => 'Контр. (RX)';
 
   @override
-  String get gridSentLabel => 'Сетка О';
+  String get gridSentLabel => 'QTH-лок. (TX)';
 
   @override
-  String get gridRcvdLabel => 'Сетка П';
+  String get gridRcvdLabel => 'QTH-лок. (RX)';
 
   @override
   String get logQso => 'Записать QSO';
 
   @override
-  String get qsoLogged => 'QSO записан';
+  String get qsoLogged => 'QSO записано';
 
   @override
   String get contestRecentQsos => 'Последние';
 
   @override
-  String get contestSessions => 'Контестные сессии';
+  String get contestSessions => 'Контест-сессии';
 
   @override
-  String get newSession => 'Новая сессия';
+  String get newSession => 'Новая контест-сессия';
 
   @override
-  String get noContestSessions => 'Контестных сессий нет';
+  String get noContestSessions => 'Контест-сессий нет';
 
   @override
   String get noContestSessionsHint =>
-      'Создайте сессию на сайте или нажмите +, чтобы начать здесь.';
+      'Создайте контест-сессию на сайте или нажмите +, чтобы начать здесь.';
 
   @override
   String get contestSessionActive => 'Активна';
@@ -1645,13 +1638,13 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get createContestSession => 'Создать контестную сессию';
+  String get createContestSession => 'Создать контест-сессию';
 
   @override
-  String get sessionName => 'Название сессии (необязательно)';
+  String get sessionName => 'Название контест-сессии (необязательно)';
 
   @override
-  String get sessionNameHint => 'напр. Домашняя станция — CW';
+  String get sessionNameHint => 'напр. Домашний QTH — CW';
 
   @override
   String get selectContest => 'Выбрать контест *';
@@ -1684,45 +1677,45 @@ class AppLocalizationsRu extends AppLocalizations {
   String get durationShortcut48h => '+48ч';
 
   @override
-  String get exchangeType => 'Тип обмена';
+  String get exchangeType => 'Контрольные номера';
 
   @override
-  String get exchangeTypeSerial => 'Серийный номер';
+  String get exchangeTypeSerial => 'Порядковый номер';
 
   @override
-  String get exchangeTypeExchange => 'Текстовый обмен';
+  String get exchangeTypeExchange => 'Обмен (текст)';
 
   @override
-  String get exchangeTypeBoth => 'Серийный + текстовый обмен';
+  String get exchangeTypeBoth => 'Порядковый номер + обмен (текст)';
 
   @override
-  String get createSession => 'Создать сессию';
+  String get createSession => 'Создать контест-сессию';
 
   @override
-  String get sessionCreated => 'Контестная сессия создана';
+  String get sessionCreated => 'Контест-сессия создана';
 
   @override
-  String get sessionUpdated => 'Контестная сессия обновлена';
+  String get sessionUpdated => 'Контест-сессия обновлена';
 
   @override
-  String get editContestSession => 'Редактировать контестную сессию';
+  String get editContestSession => 'Редактировать контест-сессию';
 
   @override
   String get saveChanges => 'Сохранить изменения';
 
   @override
-  String get deleteSession => 'Удалить сессию';
+  String get deleteSession => 'Удалить контест-сессию';
 
   @override
   String get deleteSessionConfirm =>
-      'Удалить эту контестную сессию? QSO, записанные в ней, останутся в журнале.';
+      'Удалить эту контест-сессию? QSO, записанные в ней, останутся в журнале.';
 
   @override
-  String get openSession => 'Открыть для ведения журнала';
+  String get openSession => 'Открыть для записи QSO';
 
   @override
   String get patchRequiredContest =>
-      'Управление контестными сессиями требует обновлённого патча Wavelog Mobile.';
+      'Управление контест-сессиями требует обновлённого патча Wavelog Mobile.';
 
   @override
   String get contestCalendarTitle => 'Календарь контестов';
@@ -1780,7 +1773,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get drawerContestCalendar => 'Календарь контестов';
 
   @override
-  String get drawerContestSessions => 'Контестные сессии';
+  String get drawerContestSessions => 'Контест-сессии';
 
   @override
   String get drawerAdif => 'ADIF';
@@ -1792,7 +1785,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get antennaCompassTitle => 'Направление антенны';
 
   @override
-  String get targetGrid => 'Целевой квадрат сетки';
+  String get targetGrid => 'Целевой квадрат QTH-локатора';
 
   @override
   String get calculate => 'Вычислить';
@@ -1810,7 +1803,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get myHeading => 'Курс';
 
   @override
-  String get invalidGrid => 'Неверный квадрат сетки';
+  String get invalidGrid => 'Неверный квадрат QTH-локатора';
 
   @override
   String get gpsLocating => 'Определение GPS… подождите';
@@ -1825,7 +1818,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get achievementsTitle => 'Достижения';
 
   @override
-  String get achievementsEmpty => 'Запишите первый QSO, чтобы получить значки!';
+  String get achievementsEmpty =>
+      'Запишите первое QSO, чтобы начать получать значки!';
 
   @override
   String get shareAchievement => 'Поделиться';
@@ -1874,13 +1868,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get communityCallsign => 'Позывной';
 
   @override
-  String get communityReference => 'Ссылка';
+  String get communityReference => 'Референция';
 
   @override
-  String get communitySotaRef => 'Ссылка SOTA (TA/AN-001)';
+  String get communitySotaRef => 'Референция SOTA (TA/AN-001)';
 
   @override
-  String get communityPotaRef => 'Ссылка POTA (TA-0001)';
+  String get communityPotaRef => 'Референция POTA (TA-0001)';
 
   @override
   String get communityScheduledTime => 'Запланированное время';
@@ -1905,7 +1899,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get communityCallsignRequired => 'Позывной обязателен';
 
   @override
-  String get communityReferenceRequired => 'Ссылка обязательна';
+  String get communityReferenceRequired => 'Референция обязательна';
 
   @override
   String get communityBandRequired => 'Выберите хотя бы один диапазон';
@@ -1933,7 +1927,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatRooms => 'Комнаты чата';
 
   @override
-  String get chatGeneral => 'Общий';
+  String get chatGeneral => 'Общие';
 
   @override
   String get chatGeneralSubtitle => 'Общий язык: английский';
@@ -1957,7 +1951,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get chatEdited => 'изменено';
 
   @override
-  String get chatNoStation => 'Установите активную станцию для чата';
+  String get chatNoStation => 'Выберите активный профиль QTH для чата';
 
   @override
   String get chatToday => 'Сегодня';
@@ -2031,7 +2025,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get migrationBody =>
-      'Wavelog Mobile теперь использует новый API Wavelog. Ваш старый API-ключ недействителен — выполните шаги ниже для миграции.';
+      'Wavelog Mobile теперь использует новый API Wavelog. Ваш старый ключ API недействителен — выполните шаги ниже для миграции.';
 
   @override
   String get migrationStep1Title => 'Установить патч сервера';
@@ -2048,7 +2042,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get migrationStep2Body =>
-      'В веб-интерфейсе Wavelog:\n  1. Откройте меню настроек (вверху справа)\n  2. Перейдите в «API» → «Токены API»\n  3. Нажмите «Новый токен»\n  4. Выберите предустановку «Wavelog Mobile»\n  5. Подтвердите и скопируйте токен\n  (Токен начинается с «wl2_»)';
+      'В веб-интерфейсе Wavelog:\n  1. Откройте меню настроек (вверху справа)\n  2. Перейдите в «Ключи API» → «Токены API (API v2) »\n  3. Нажмите «Создать новый токен API»\n  4. Выберите предустановку «Wavelog Mobile»\n  5. Подтвердите и скопируйте токен\n  (Токен начинается с «wl2_»)';
 
   @override
   String get migrationStep3Title => 'Обновить профиль';
@@ -2080,11 +2074,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get celebSkip => 'Пропустить';
 
   @override
-  String get celebScopesTitle => 'Области действия токена API v2';
+  String get celebScopesTitle => 'Области доступа для токена API v2';
 
   @override
   String get celebScopesBody =>
-      'При создании нового токена в интерфейсе Wavelog (Профиль → Токены API → Новый токен) выберите следующие области:';
+      'При создании нового токена в интерфейсе Wavelog (Профиль → Ключи API → Создать новый токен API) выберите следующие области:';
 
   @override
   String get celebDone => 'Понятно';
@@ -2099,13 +2093,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scopeQsoDelete => 'Удаление QSO';
 
   @override
-  String get scopeStationRead => 'Чтение профилей станций';
+  String get scopeStationRead => 'Чтение профилей QTH';
 
   @override
-  String get scopeStationWrite => 'Создание / обновление станций';
+  String get scopeStationWrite => 'Создание / обновление профилей QTH';
 
   @override
-  String get scopeStationDelete => 'Удаление станций';
+  String get scopeStationDelete => 'Удаление профилей QTH';
 
   @override
   String get scopeLogbookRead => 'Чтение журналов';
@@ -2117,16 +2111,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scopeLogbookDelete => 'Удаление журналов';
 
   @override
-  String get scopeContestRead => 'Чтение контестных сессий';
+  String get scopeContestRead => 'Чтение контест-сессий';
 
   @override
-  String get scopeContestWrite => 'Создание / обновление контестных сессий';
+  String get scopeContestWrite => 'Создание / обновление контест-сессий';
 
   @override
-  String get scopeContestDelete => 'Удаление контестных сессий';
+  String get scopeContestDelete => 'Удаление контест-сессий';
 
   @override
-  String get scopeCatalogRead => 'DXCC, подразделения и список контестов';
+  String get scopeCatalogRead =>
+      'DXCC, административное деление и список контестов';
 
   @override
   String get scopeLookupRead => 'Поиск позывных';
@@ -2139,7 +2134,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Чтение подтверждений LoTW / eQSL / QRZ.com';
 
   @override
-  String get scopeTestStation => 'Станция';
+  String get scopeTestStation => 'Профиль QTH';
 
   @override
   String get scopeTestLogbook => 'Журнал';
@@ -2160,21 +2155,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scopeTestLookup => 'Поиск';
 
   @override
-  String get apiScopeGuideBtn => 'Руководство по областям API';
+  String get apiScopeGuideBtn => 'Руководство по областям доступа API';
 
   @override
-  String get apiScopeGuideTitle => 'Руководство по областям токена API';
+  String get apiScopeGuideTitle => 'Руководство по областям доступа токена API';
 
   @override
   String get apiScopeGuideIntro =>
-      'При создании нового токена API в Wavelog (Настройки → Токены API) выберите все области ниже для полной функциональности приложения.';
+      'При создании нового токена API в Wavelog (Ваш профиль → Ключи API) выберите все области ниже для полной функциональности приложения.';
 
   @override
   String get apiTokenNoticeTitle => 'Создайте новый токен API';
 
   @override
   String get apiTokenNoticeBody =>
-      'API v2 Wavelog требует новый токен с определёнными областями. Перейдите в Wavelog → Настройки → Токены API и создайте новый токен со всеми необходимыми областями. Нажмите кнопку «Руководство по областям API» ниже для полного списка.';
+      'API v2 Wavelog требует новый токен с определёнными областями доступа. Перейдите в Wavelog → Ваш профиль → Ключи API и создайте новый токен со всеми необходимыми областями. Нажмите кнопку «Руководство по токенам API» ниже для подробной информации.';
 
   @override
   String get apiTokenNoticeDontShow => 'Не показывать снова';

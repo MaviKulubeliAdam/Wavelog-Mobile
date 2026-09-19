@@ -11,7 +11,9 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
+import '../../../core/utils/qso_scope.dart';
 import '../../../data/models/qso_model.dart';
+import '../../../providers/qso_provider.dart';
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -93,9 +95,12 @@ LatLng? _gridToLatLng(String grid) {
 // ── Provider ──────────────────────────────────────────────────────────────────
 
 final _mapMarkersProvider = FutureProvider<List<_QsoMarker>>((ref) async {
-  final box = Hive.box<QsoModel>('qso_cache');
+  // Only the QSOs of the active scope (logbook first, then station) are drawn.
+  final scopeIds = ref.watch(scopeStationIdsProvider);
+  final qsos = filterByStations(
+      Hive.box<QsoModel>('qso_cache').values.toList(), scopeIds);
   final fmt = DateFormat('dd MMM yyyy  HH:mm');
-  final raw = box.values.map((q) => {
+  final raw = qsos.map((q) => {
     'c': q.callsign,
     'g': q.gridSquare ?? '',
     'b': q.band,

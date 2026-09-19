@@ -1,24 +1,27 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../core/utils/qso_scope.dart';
+import '../data/datasources/local/qso_cache_datasource.dart';
 import '../data/models/detailed_statistics_model.dart';
-import 'qso_provider.dart'; // logbookSummaryProvider lives here
+import 'qso_provider.dart'; // logbookSummaryProvider + scope live here
 import 'remote_datasource_provider.dart';
 import 'station_provider.dart';
-import 'statistics_provider.dart';
 
 final detailedStatisticsProvider =
     FutureProvider<DetailedStatisticsModel>((ref) async {
-  // Server-side totals (today/month/year/total)
-  final serverStats = await ref.watch(statisticsProvider.future);
-
   // Watching logbookSummaryProvider (not qsoProvider) ensures we re-run
   // AFTER Hive is updated. All QSO operations (add/edit/delete) invalidate
-  // logbookSummaryProvider only after the Hive write completes, so computeStats()
-  // below always reads consistent data.
+  // logbookSummaryProvider only after the Hive write completes, so the cache
+  // read below always sees consistent data.
   await ref.watch(logbookSummaryProvider.future);
 
-  // Local cache stats (band/mode/station/streak/unique callsigns)
+  // Everything is computed from the QSOs in the active scope (logbook first,
+  // then active station) — the server statistic endpoint can't filter by
+  // station or logbook, so its instance-wide totals would mix callsigns.
+  final scopeIds = ref.watch(scopeStationIdsProvider);
   final cache = ref.read(qsoCacheDatasourceProvider);
-  final cacheStats = cache.computeStats();
+  final scoped = filterByStations(await cache.getCachedQsos(), scopeIds);
+  final counts = countQsos(scoped);
+  final cacheStats = QsoCacheDatasource.computeStatsFor(scoped);
 
   // Map per-station counts to station names
   final stations = await ref.read(stationProvider.future);
@@ -40,10 +43,10 @@ final detailedStatisticsProvider =
     ..sort((a, b) => b.value.compareTo(a.value));
 
   return DetailedStatisticsModel(
-    totalQsos: serverStats.totalQsos,
-    yearQsos: serverStats.yearQsos,
-    monthQsos: serverStats.monthQsos,
-    todayQsos: cacheStats.todayQsos,
+    totalQsos: counts.totalQsos,
+    yearQsos: counts.yearQsos,
+    monthQsos: counts.monthQsos,
+    todayQsos: counts.todayQsos,
     uniqueCallsigns: cacheStats.uniqueCallsigns,
     currentStreakDays: cacheStats.currentStreakDays,
     qsosByBand: qsosByBand,

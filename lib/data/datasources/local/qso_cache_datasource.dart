@@ -177,8 +177,10 @@ class QsoCacheDatasource {
     }
   }
 
-  CacheStats computeStats() {
-    final all = _box.values.toList();
+  CacheStats computeStats() => computeStatsFor(_box.values);
+
+  static CacheStats computeStatsFor(Iterable<QsoModel> qsos) {
+    final all = qsos.toList();
 
     final uniqueCallsigns =
         all.map((q) => q.callsign.toUpperCase()).toSet().length;
