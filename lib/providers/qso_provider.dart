@@ -59,6 +59,14 @@ final scopeStationIdsProvider = Provider<Set<int>?>((ref) {
   );
 });
 
+// DXCC için kapsam: aktif kapsamdaki istasyonların çağrı işaretini taşıyan
+// tüm istasyonlar (ödüller çağrı işaretine aittir, logbook'a değil).
+final dxccStationIdsProvider = Provider<Set<int>?>((ref) {
+  final scope = ref.watch(scopeStationIdsProvider);
+  final stations = ref.watch(stationProvider).valueOrNull ?? const [];
+  return dxccStationIds(scope, stations);
+});
+
 final scopedQsoProvider = Provider<AsyncValue<List<QsoModel>>>((ref) {
   final raw = ref.watch(qsoProvider);
   final ids = ref.watch(scopeStationIdsProvider);

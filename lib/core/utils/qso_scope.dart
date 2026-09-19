@@ -1,5 +1,6 @@
 import '../../data/models/qso_model.dart';
 import '../../data/models/station_logbook_model.dart';
+import '../../data/models/station_model.dart';
 
 /// Station IDs the UI should currently show QSOs for, or null for "all".
 ///
@@ -16,6 +17,27 @@ Set<int>? activeScopeStationIds({
   }
   if (stationId != null) return {stationId};
   return null;
+}
+
+/// Station IDs whose QSOs count towards DXCC for the current [scopeIds].
+///
+/// DXCC awards belong to a callsign, not to a logbook: every station that
+/// shares a callsign with the scoped stations contributes (e.g. all logbooks
+/// of SP9AQG), while other callsigns of the same operator (e.g. TA4RX) do not.
+/// Returns null ("everything") when there is no scope.
+Set<int>? dxccStationIds(Set<int>? scopeIds, List<StationModel> stations) {
+  if (scopeIds == null) return null;
+  String norm(String c) => c.trim().toUpperCase();
+  final calls = stations
+      .where((s) => scopeIds.contains(s.id))
+      .map((s) => norm(s.callsign))
+      .where((c) => c.isNotEmpty)
+      .toSet();
+  if (calls.isEmpty) return scopeIds;
+  return {
+    ...scopeIds,
+    ...stations.where((s) => calls.contains(norm(s.callsign))).map((s) => s.id),
+  };
 }
 
 List<QsoModel> filterByStations(List<QsoModel> qsos, Set<int>? stationIds) =>

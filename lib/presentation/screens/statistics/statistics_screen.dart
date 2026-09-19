@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../core/utils/error_l10n.dart';
 import '../../../core/utils/l10n_extension.dart';
+import '../../../core/utils/qso_scope.dart';
 import '../../../data/models/detailed_statistics_model.dart';
 import '../../../data/models/dxcc_entity_model.dart';
 import '../../../data/models/pota_stats_model.dart';
@@ -102,17 +103,24 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
   // Used as fallback when local QSOs lack dxcc/country fields (v2 API).
   final serverStats = await ref.watch(statisticsProvider.future);
 
+  // DXCC belongs to a callsign: only QSOs of stations sharing the active
+  // scope's callsign(s) count. The server summary is instance-wide, so it is
+  // only trusted when nothing is scoped.
+  final dxccIds = ref.watch(dxccStationIdsProvider);
+  final scoped = dxccIds != null;
+
   // v2 QSO list does not return QSL fields — use /api/v2/confirmation as source of truth.
   final confirmationMap = ref.watch(confirmationProvider).valueOrNull ?? {};
 
-  final box = Hive.box<QsoModel>('qso_cache');
+  final qsos = filterByStations(
+      Hive.box<QsoModel>('qso_cache').values.toList(), dxccIds);
 
   // Build worked map from QSO cache: adif → confirmation status + continent
   final workedByAdif = <int, ({int count, bool lotw, bool eqsl, bool qsl, String cont})>{};
   // Fallback by country name (when dxcc field missing)
   final workedByName = <String, ({String cont, int count, bool lotw, bool eqsl, bool qsl})>{};
 
-  for (final qso in box.values) {
+  for (final qso in qsos) {
     final types = confirmationMap[qso.serverId] ?? [];
     final lotwY = qso.lotwRcvd?.toUpperCase() == 'Y' || types.contains('LoTW');
     final eqslY = qso.eqslRcvd?.toUpperCase() == 'Y' || types.contains('eQSL');
@@ -159,7 +167,7 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
         .toList()
         ..sort((a, b) => b.prefix.length.compareTo(a.prefix.length));
 
-    for (final qso in box.values) {
+    for (final qso in qsos) {
       final call = _normalizeQsoCall(qso.callsign);
       if (call.isEmpty) continue;
       final entity = _matchDxccByCall(call, sortedByPrefix);
@@ -244,8 +252,8 @@ final _dxccStatsProvider = FutureProvider<_DxccData>((ref) async {
 
   // Summary card always shows server-authoritative counts.
   // Prefix-matched local counts power the per-entity breakdown but may differ slightly.
-  final workedCount    = serverStats.dxccWorked > 0    ? serverStats.dxccWorked    : localWorked;
-  final confirmedCount = serverStats.dxccConfirmed > 0 ? serverStats.dxccConfirmed : localConfirmed;
+  final workedCount    = !scoped && serverStats.dxccWorked > 0    ? serverStats.dxccWorked    : localWorked;
+  final confirmedCount = !scoped && serverStats.dxccConfirmed > 0 ? serverStats.dxccConfirmed : localConfirmed;
   final entityTotal    = serverStats.dxccAvailable > 0 ? serverStats.dxccAvailable : total;
 
   return _DxccData(
