@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../core/errors/app_exception.dart';
+import '../core/utils/qso_scope.dart';
 import '../data/models/qso_model.dart';
 import 'remote_datasource_provider.dart';
 import 'settings_provider.dart';
@@ -45,6 +46,31 @@ class QsoFilter {
 
 final qsoFilterProvider = StateProvider<QsoFilter>((ref) => const QsoFilter());
 
+// Aktif kapsam: logbook öncelikli, yoksa aktif istasyon, yoksa hepsi (null).
+// Ana ekran, logbook listesi ve istatistikler aynı kuralı paylaşır.
+final scopeStationIdsProvider = Provider<Set<int>?>((ref) {
+  final scope = ref.watch(settingsProvider
+      .select((s) => (s.activeLogbookId, s.activeStationProfileId)));
+  final logbooks = ref.watch(stationLogbookProvider).valueOrNull;
+  return activeScopeStationIds(
+    logbookId: scope.$1,
+    stationId: scope.$2,
+    logbooks: logbooks,
+  );
+});
+
+final scopedQsoProvider = Provider<AsyncValue<List<QsoModel>>>((ref) {
+  final raw = ref.watch(qsoProvider);
+  final ids = ref.watch(scopeStationIdsProvider);
+  return raw.whenData((qsos) => filterByStations(qsos, ids));
+});
+
+// Ana ekran sayaçları: API'nin istatistik ucu istasyon/logbook filtresi
+// desteklemediği için kapsamdaki QSO listesinden yerelde hesaplanır.
+final scopedCountsProvider = Provider<AsyncValue<QsoCounts>>((ref) {
+  return ref.watch(scopedQsoProvider).whenData(countQsos);
+});
+
 final qsoProvider =
     AsyncNotifierProvider<QsoNotifier, List<QsoModel>>(QsoNotifier.new);
 
@@ -52,33 +78,12 @@ final qsoProvider =
 // Eskiden her arama tuş vuruşu tüm istasyonlar için sunucudan tam yeniden
 // çekim + Hive yeniden yazımı tetikliyordu.
 final filteredQsoProvider = Provider<AsyncValue<List<QsoModel>>>((ref) {
-  final raw = ref.watch(qsoProvider);
+  final scoped = ref.watch(scopedQsoProvider);
   final filter = ref.watch(qsoFilterProvider);
-  final settings = ref.watch(settingsProvider);
-  final logbooksAsync = ref.watch(stationLogbookProvider);
 
-  // Aktif logbook'a göre filtrele
-  AsyncValue<List<QsoModel>> logbookFiltered = raw;
-  final activeLogbookId = settings.activeLogbookId;
-  if (activeLogbookId != null) {
-    logbookFiltered = logbooksAsync.when(
-      loading: () => const AsyncValue.loading(),
-      error: (e, st) => AsyncValue.error(e, st),
-      data: (logbooks) {
-        final lb = logbooks.where((l) => l.id == activeLogbookId).firstOrNull;
-        if (lb == null || lb.stationIds.isEmpty) return raw;
-        return raw.whenData(
-          (qsos) => qsos
-              .where((q) => lb.stationIds.contains(q.stationProfileId))
-              .toList(),
-        );
-      },
-    );
-  }
+  if (!filter.hasFilters) return scoped;
 
-  if (!filter.hasFilters) return logbookFiltered;
-
-  return logbookFiltered.whenData((qsos) {
+  return scoped.whenData((qsos) {
     final band = filter.band?.toLowerCase();
     final mode = filter.mode?.toLowerCase();
     final callsign = filter.callsign?.toUpperCase();
@@ -304,14 +309,15 @@ final previousQsosByCallsignProvider =
 // Reading from in-memory state (not Hive) ensures that localIds here always
 // match those in qsoProvider, so QsoDetailScreen can find QSOs by id.
 final recentQsoProvider = FutureProvider<List<QsoModel>>((ref) async {
+  final ids = ref.watch(scopeStationIdsProvider);
   final inMemory = ref.read(qsoProvider).valueOrNull;
   if (inMemory != null && inMemory.isNotEmpty) {
-    return inMemory.take(20).toList();
+    return filterByStations(inMemory, ids).take(20).toList();
   }
   // Fallback: read Hive while qsoProvider hasn't loaded yet
   final cache = ref.read(qsoCacheDatasourceProvider);
   final all = await cache.getCachedQsos();
-  return all.take(20).toList();
+  return filterByStations(all, ids).take(20).toList();
 });
 
 // Son 5 QSO + bugünün sayacı — add QSO ekranında kullanılır.
@@ -323,15 +329,17 @@ final logbookSummaryProvider =
     FutureProvider<({List<QsoModel> last5, int todayCount})>((ref) async {
   // In-memory state'i tercih et — Hive'a göre her zaman güncel ve optimistik
   // operasyonları (add/delete) hemen yansıtır.
+  final ids = ref.watch(scopeStationIdsProvider);
   final inMemory = ref.read(qsoProvider).valueOrNull;
-  final List<QsoModel> all;
+  final List<QsoModel> source;
   if (inMemory != null) {
-    all = inMemory;
+    source = inMemory;
   } else {
     // qsoProvider henüz yüklenmediyse Hive'a düş.
     final cache = ref.read(qsoCacheDatasourceProvider);
-    all = await cache.getCachedQsos();
+    source = await cache.getCachedQsos();
   }
+  final all = filterByStations(source, ids);
   final now = DateTime.now();
   final todayCount = all.where((q) {
     final d = q.dateTimeOn.toLocal();

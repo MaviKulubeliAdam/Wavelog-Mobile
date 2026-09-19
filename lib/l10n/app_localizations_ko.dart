@@ -747,20 +747,6 @@ class AppLocalizationsKo extends AppLocalizations {
       'QSO를 기록하기 전에 앱을 Wavelog 서버에 연결하세요. 아래 단계를 따르세요.';
 
   @override
-  String get setupGuidePatchWarning =>
-      '이 앱은 서버에 Wavelog Mobile 패치가 설치되어 있어야 합니다.';
-
-  @override
-  String get setupGuidePatchStepTitle => '서버 패치 설치';
-
-  @override
-  String get setupGuidePatchStepBody =>
-      '앱은 Wavelog의 API v2를 사용하며 서버에 작은 패치가 필요합니다. 아직 설치하지 않았다면 설치 가이드를 열고 단계에 따르세요.';
-
-  @override
-  String get setupGuidePatchBtn => '설치 가이드';
-
-  @override
   String get setupGuideStep1Title => '1. 서버 주소';
 
   @override
@@ -772,7 +758,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get setupGuideStep2Body =>
-      'Wavelog에서 설정 → API → API 토큰 (v2) → 새 토큰으로 이동합니다. \"Wavelog Mobile\" 프리셋을 선택하고 확인합니다. 생성된 토큰(wl2_로 시작)을 복사하여 앱에 붙여넣으세요.';
+      'Wavelog에서 설정 → API → API 토큰 (v2) → 새 토큰으로 이동하여 앱에 필요한 스코프를 선택합니다 (토큰을 붙여넣으면 앱이 자동으로 확인해 줍니다). 생성된 토큰(wl2_로 시작)을 복사하여 앱에 붙여넣으세요.';
 
   @override
   String get setupGuideStep3Title => '3. 콜사인 및 표시 이름';

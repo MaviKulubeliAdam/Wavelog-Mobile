@@ -95,7 +95,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final settings = ref.watch(settingsProvider);
-    final statistics = ref.watch(statisticsProvider);
+    // Sayaçlar aktif kapsamdan (logbook > istasyon) yerelde hesaplanır.
+    final statistics = ref.watch(scopedCountsProvider);
     final recentQsos = ref.watch(recentQsoProvider);
     // Yerel "bugün" sayısı — computeStats() her build'de tüm Hive
     // kutusunu tarıyordu; logbookSummaryProvider zaten bunu hesaplıyor.

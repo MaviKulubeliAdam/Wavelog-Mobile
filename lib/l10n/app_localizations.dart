@@ -1540,30 +1540,6 @@ abstract class AppLocalizations {
   /// **'Before you can log QSOs, connect the app to your Wavelog server. Follow the steps below.'**
   String get setupGuideIntro;
 
-  /// No description provided for @setupGuidePatchWarning.
-  ///
-  /// In en, this message translates to:
-  /// **'This app requires the Wavelog Mobile patch to be installed on your server. Even if you generate an API v2 token without it, the app will not work correctly.'**
-  String get setupGuidePatchWarning;
-
-  /// No description provided for @setupGuidePatchStepTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Install Server Patch'**
-  String get setupGuidePatchStepTitle;
-
-  /// No description provided for @setupGuidePatchStepBody.
-  ///
-  /// In en, this message translates to:
-  /// **'The app uses Wavelog\'s API v2, which requires a small patch on your server. If you haven\'t installed it yet, open the Installation Guide and follow the steps for your setup (Classic or Docker).'**
-  String get setupGuidePatchStepBody;
-
-  /// No description provided for @setupGuidePatchBtn.
-  ///
-  /// In en, this message translates to:
-  /// **'Installation Guide'**
-  String get setupGuidePatchBtn;
-
   /// No description provided for @setupGuideStep1Title.
   ///
   /// In en, this message translates to:
@@ -1585,7 +1561,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupGuideStep2Body.
   ///
   /// In en, this message translates to:
-  /// **'In Wavelog, go to Settings → API → API Tokens (v2) → New Token. Select the \"Wavelog Mobile\" preset and confirm. Copy the generated token (starts with wl2_) and paste it into the app.'**
+  /// **'In Wavelog, go to Settings → API → API Tokens (v2) → New Token and select the scopes the app needs (the app checks them for you after you paste the token). Copy the generated token (starts with wl2_) and paste it into the app.'**
   String get setupGuideStep2Body;
 
   /// No description provided for @setupGuideStep3Title.
