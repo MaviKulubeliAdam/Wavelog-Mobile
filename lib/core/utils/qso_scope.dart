@@ -4,16 +4,25 @@ import '../../data/models/station_model.dart';
 
 /// Station IDs the UI should currently show QSOs for, or null for "all".
 ///
-/// Mirrors the Wavelog web behaviour: an active logbook wins and brings all
+/// Mirrors the Wavelog web behaviour: the active logbook wins and brings all
 /// of its linked stations along; without one, only the active station counts.
+/// The server's `active` flag is authoritative (it is what the web UI uses and
+/// can change there at any time); the locally stored [logbookId] is only a
+/// fallback for when the server flags none.
 Set<int>? activeScopeStationIds({
   required int? logbookId,
   required int? stationId,
   required List<StationLogbookModel>? logbooks,
 }) {
-  if (logbookId != null && logbooks != null) {
-    final lb = logbooks.where((l) => l.id == logbookId).firstOrNull;
-    if (lb != null && lb.stationIds.isNotEmpty) return lb.stationIds.toSet();
+  if (logbooks != null) {
+    final serverActive = logbooks
+        .where((l) => l.active && l.stationIds.isNotEmpty)
+        .firstOrNull;
+    if (serverActive != null) return serverActive.stationIds.toSet();
+    if (logbookId != null) {
+      final lb = logbooks.where((l) => l.id == logbookId).firstOrNull;
+      if (lb != null && lb.stationIds.isNotEmpty) return lb.stationIds.toSet();
+    }
   }
   if (stationId != null) return {stationId};
   return null;

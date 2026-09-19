@@ -61,6 +61,14 @@ class StationLogbookNotifier
           .read(stationLogbookRepositoryProvider)
           .setActiveLogbook(logbookId);
       await ref.read(settingsProvider.notifier).setActiveLogbook(logbookId);
+      // Keep the cached list's `active` flag in step (no loading flash), since
+      // the QSO scope follows it.
+      final current = state.valueOrNull;
+      if (current != null) {
+        state = AsyncData([
+          for (final l in current) l.copyWith(active: l.id == logbookId),
+        ]);
+      }
       return null;
     } catch (e) {
       return e.toString();

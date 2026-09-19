@@ -27,6 +27,22 @@ void main() {
       expect(ids, {10, 20});
     });
 
+    test('server-active logbook wins over the local selection', () {
+      const flagged = [
+        StationLogbookModel(id: 1, name: 'Both', stationIds: [10, 20]),
+        StationLogbookModel(
+            id: 3, name: 'Web active', active: true, stationIds: [30, 31]),
+      ];
+      expect(
+          activeScopeStationIds(
+              logbookId: 1, stationId: 10, logbooks: flagged),
+          {30, 31});
+      expect(
+          activeScopeStationIds(
+              logbookId: null, stationId: 10, logbooks: flagged),
+          {30, 31});
+    });
+
     test('falls back to the active station without a logbook', () {
       expect(
           activeScopeStationIds(
