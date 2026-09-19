@@ -161,7 +161,11 @@ class _LogbooksTab extends ConsumerWidget {
           itemCount: list.length,
           itemBuilder: (ctx, i) => _LogbookTile(
             logbook: list[i],
-            isActive: settings.activeLogbookId == list[i].id,
+            // The server's flag is what the web UI and the QSO scope use; the
+            // local id is only a fallback while the server flags none.
+            isActive: list.any((l) => l.active)
+                ? list[i].active
+                : settings.activeLogbookId == list[i].id,
           ),
         );
       },
