@@ -82,8 +82,8 @@ class _AboutScreenState extends State<AboutScreen> {
                   onTap: () => _open('https://ta4rx.tr')),
               _InfoRow(Icons.email_outlined, 'erkin@ta4rx.tr',
                   onTap: () => _mail('erkin@ta4rx.tr')),
-              _InfoRow(Icons.code, 'github.com/MaviKulubeliAdam/Wavelog-Mobile',
-                  onTap: () => _open('https://github.com/MaviKulubeliAdam/Wavelog-Mobile')),
+              _InfoRow(Icons.code, 'github.com/TA4RX-SP9AQG/Wavelog-Mobile',
+                  onTap: () => _open('https://github.com/TA4RX-SP9AQG/Wavelog-Mobile')),
             ],
           ),
 
